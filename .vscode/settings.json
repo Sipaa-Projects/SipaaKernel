@@ -1,0 +1,15 @@
+{
+    "C_Cpp.default.compilerPath": "g++",
+    "C_Cpp.default.compilerArgs": [
+        "-fpermissive"
+    ],
+    "C_Cpp.errorSquiggles": "enabled",
+    "files.associations": {
+        "compare": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "cstdint": "cpp"
+    }
+}

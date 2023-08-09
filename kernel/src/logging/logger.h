@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdarg>
 
 namespace Sk {
 namespace Logging {
@@ -17,6 +18,7 @@ public:
     static void PrintOK();
     static void PrintFail();
     static void Log(LogType logtype, char *message);
+    static void LogFormatted(LogType logtype, char *message, ...);
 };
 
 } // namespace Dev

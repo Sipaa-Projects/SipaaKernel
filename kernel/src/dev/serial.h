@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdarg>
 
 #define SERIAL_COLOR_BLUE "\033[1;34m"
 #define SERIAL_COLOR_GREEN "\033[1;32m"
@@ -20,6 +21,7 @@ public:
     static void SetColor(char *color);
     static void WriteStr(char *string);
     static void WriteChar(char ch);
+    static void WriteStrFormatted(char *str, ...);
 };
 
 } // namespace Dev

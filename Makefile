@@ -71,12 +71,12 @@ clean:
 
 run:
 	@make iso
-	qemu-system-x86_64 -m 4g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -display sdl -vga vmware
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -display sdl -vga vmware
 
 debug-int:
 	@make iso
-	qemu-system-x86_64 -m 4g -serial stdio -cdrom ./sipaakernel.iso -d int -M smm=off -display sdl
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./sipaakernel.iso -d int -M smm=off -display sdl
 
 debug:
 	@make iso
-	qemu-system-x86_64 -m 4g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -s -S -display sdl
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -s -S -display sdl

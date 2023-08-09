@@ -5,6 +5,7 @@
 #include <dev/serial.h>
 #include <dev/pci.h>
 #include <console/console.h>
+#include <lib/lib.h>
 #include <limine/limine.h>
 #include <logging/logger.h>
 #include <memory/memory.h>
@@ -21,10 +22,59 @@ using namespace Sk::Memory;
 
 uint64_t kernel_stack[8192];
 
-struct limine_framebuffer_request fbr = {
+static volatile struct limine_framebuffer_request fbr = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
     .revision = 0
 };
+
+static volatile struct limine_memmap_request memmap_request = {
+    .id = LIMINE_MEMMAP_REQUEST,
+    .revision = 0
+};
+
+
+void memory_test()
+{
+    Logger::Log(LogType_Info, "Starting memory test...\n");
+
+    Logger::Log(LogType_Info, "Allocating memory...\n");
+    char *test_block1 = (char *)MemoryAllocator::Allocate(1000);
+    char *test_block2 = (char *)MemoryAllocator::Allocate(2000);
+
+    if (test_block1)
+    {
+        Logger::Log(LogType_Info, "Writing to allocated memory block 1...\n");
+        Lib::CopyString(test_block1, "Hello, World!");
+        Logger::Log(LogType_Info, "Reading from allocated memory block 1\n");
+    }
+    else
+    {
+        Logger::Log(LogType_Error, "Failed to allocate memory block 1.\n");
+    }
+
+    if (test_block2)
+    {
+        Logger::Log(LogType_Info, "Writing to allocated memory block 2...\n");
+        Lib::CopyString(test_block2, "Testing 123...");
+        Logger::Log(LogType_Info, "Reading from allocated memory block 2\n");
+    }
+    else
+    {
+        Logger::Log(LogType_Error, "Failed to allocate memory block 2.\n");
+    }
+
+    Logger::Log(LogType_Info, "Freeing allocated memory...\n");
+    if (test_block1)
+    {
+        MemoryAllocator::Free(test_block1);
+    }
+    if (test_block2)
+    {
+        MemoryAllocator::Free(test_block2);
+    }
+
+    Logger::Log(LogType_Info, "Memory test completed.\n");
+}
 
 extern "C" void SK_Main()
 {
@@ -37,7 +87,10 @@ extern "C" void SK_Main()
     Serial::Init();
     Gdt::Init((uint64_t)&kernel_stack + sizeof(kernel_stack));
     Idt::Init();
-
+    MemoryAllocator::Init(memmap_request.response->entries, memmap_request.response->entry_count);
+    MemoryAllocator::InitVMM(memmap_request.response->entries, memmap_request.response->entry_count);
+    memory_test();
+    
     f.UseDoubleBuffer = true;
     int x = 0;
     int y = 0;

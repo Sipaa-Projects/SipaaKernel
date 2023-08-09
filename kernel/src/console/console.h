@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdarg>
 #include <video/video.h>
-
 using namespace Sk::Graphic;
 
 namespace Sk {
@@ -26,5 +26,6 @@ public:
     static void Reset();
     static void PrintChar(char c);
     static void Print(char *str);
+    static void PrintFormatted(char *str, ...);
 };
 } // namespace Sk

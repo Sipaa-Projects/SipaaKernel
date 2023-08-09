@@ -1,5 +1,4 @@
-#ifndef MEMORY_H
-#define MEMORY_H
+#pragma once
 
 #include <cstdint>
 #include <cstddef>
@@ -7,6 +6,7 @@
 namespace Sk {
 namespace Memory {
 
+/// @brief Class used to do basic operations with memory.
 class BasicMemoryManagement {
 
 public:
@@ -20,6 +20,3 @@ public:
 
 } // namespace name    
 } // namespace Sk
-
-
-#endif

@@ -1,30 +1,52 @@
+#include "global.h"
+
+#include <arch/gdt.h>
+#include <arch/idt.h>
+#include <dev/serial.h>
+#include <dev/pci.h>
+#include <console/console.h>
 #include <limine/limine.h>
+#include <logging/logger.h>
+#include <memory/memory.h>
 #include <video/video.h>
 
 #include <cstdint>
 
+using namespace Sk;
+using namespace Sk::Arch;
+using namespace Sk::Dev;
 using namespace Sk::Graphic;
+using namespace Sk::Logging;
+using namespace Sk::Memory;
 
-struct limine_framebuffer_request framebuffer_request = {
+uint64_t kernel_stack[8192];
+
+struct limine_framebuffer_request fbr = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
     .revision = 0
 };
 
 extern "C" void SK_Main()
 {
-    limine_framebuffer *lf = framebuffer_request.response->framebuffers[0];
+    Framebuffer f = Framebuffer::FromLimine(fbr.response->framebuffers[0]);
+    f.UseDoubleBuffer = false;
 
-    Framebuffer f = Framebuffer::from_limine(lf);
-    
+    Global::Framebuffer = f;
+
+    Console::Init(f);
+    Serial::Init();
+    Gdt::Init((uint64_t)&kernel_stack + sizeof(kernel_stack));
+    Idt::Init();
+
+    f.UseDoubleBuffer = true;
     int x = 0;
     int y = 0;
     bool ttb = true;
     bool ltr = true;
 
-    // Hello Worldd
     while (1)
     {
-        f.clear(0x0);
+        f.Clear(0x0);
 
         if (x == f.Width - 100)
             ltr = false;
@@ -50,10 +72,10 @@ extern "C" void SK_Main()
         {
             for (int i = x; i < x + 100; i++)
             {
-                f.set_pixel(i, j, 0xFFFFFF);
+                f.SetPixel(i, j, 0xFFFFFF);
             }
         }
 
-        f.swap_buffers();
+        f.SwapBuffers();
     }
 }

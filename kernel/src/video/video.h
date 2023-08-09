@@ -1,5 +1,4 @@
-#ifndef VIDEO_H
-#define VIDEO_H
+#pragma once
 
 #include <limine/limine.h>
 #include <cstdint>
@@ -7,6 +6,7 @@
 namespace Sk {
 namespace Graphic {
 
+/// @brief Class used for basic rendering to a framebuffer.
 class Framebuffer {
 public:
     int Width = 0;
@@ -27,14 +27,13 @@ public:
     Framebuffer::Framebuffer(int width, int height, uint16_t bpp, uint64_t pitch, uint32_t *address);
     Framebuffer::Framebuffer(bool usedoublebuffer, int width, int height, uint16_t bpp, uint64_t pitch, uint32_t *address);
 
-    static Framebuffer from_limine(limine_framebuffer *framebuf);
+    static Framebuffer FromLimine(limine_framebuffer *framebuf);
 
-    void clear(uint32_t color);
-    void set_pixel(int x, int y, uint32_t color);
-    void swap_buffers();
+    void Clear(uint32_t color);
+    uint32_t GetPixel(int x, int y);
+    void SetPixel(int x, int y, uint32_t color);
+    void SwapBuffers();
 };
 
 } // namespace Graphic
 } // namespace Sk
-
-#endif // FRAMEBUFFER_H

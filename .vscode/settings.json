@@ -3,13 +3,17 @@
     "C_Cpp.default.compilerArgs": [
         "-fpermissive"
     ],
-    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
         "compare": "cpp",
         "array": "cpp",
         "string_view": "cpp",
         "initializer_list": "cpp",
         "utility": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "system_error": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp"
     }
 }

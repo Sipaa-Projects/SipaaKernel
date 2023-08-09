@@ -1,8 +1,10 @@
 #include "video.h"
 
 #include <memory/memory.h>
+#include <logging/logger.h>
 
 using namespace Sk::Memory;
+using namespace Sk::Logging;
 
 namespace Sk {
 namespace Graphic {
@@ -32,24 +34,36 @@ Framebuffer::Framebuffer(bool usedoublebuffer, int width, int height, uint16_t b
     }
 }
 
-Framebuffer Framebuffer::from_limine(limine_framebuffer *framebuf) {
+Framebuffer Framebuffer::FromLimine(limine_framebuffer *framebuf) {
     // Implementation of from_limine method
     // Create and return a new Framebuffer object
     return Framebuffer(true, (int)framebuf->width, (int)framebuf->height, framebuf->bpp, framebuf->pitch, (uint32_t*)framebuf->address);
 }
 
-void Framebuffer::clear(uint32_t color)
+void Framebuffer::Clear(uint32_t color)
 {
     for (int j = 0; j < this->Height; j++)
     {
         for (int i = 0; i < this->Width; i++)
         {
-            this->set_pixel(i, j, color);
+            this->SetPixel(i, j, color);
         }
     }
 }
 
-void Framebuffer::set_pixel(int x, int y, uint32_t color) {
+uint32_t Framebuffer::GetPixel(int x, int y)
+{
+    uint32_t *pixel_address = 0;
+
+    if (this->UseDoubleBuffer)
+        pixel_address = (uint32_t *)((uint64_t)this->BackBuffer + y * this->Pitch + x * (this->Bpp / 8));
+    else
+        pixel_address = (uint32_t *)((uint64_t)this->FrontBuffer + y * this->Pitch + x * (this->Bpp / 8));
+
+    return *pixel_address;
+}
+
+void Framebuffer::SetPixel(int x, int y, uint32_t color) {
     uint32_t *pixel_address = 0;
 
     if (this->UseDoubleBuffer)
@@ -60,7 +74,7 @@ void Framebuffer::set_pixel(int x, int y, uint32_t color) {
     *pixel_address = color;
 }
 
-void Framebuffer::swap_buffers() {
+void Framebuffer::SwapBuffers() {
     if (!this->UseDoubleBuffer)
         return;
 

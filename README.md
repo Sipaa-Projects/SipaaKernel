@@ -1,7 +1,7 @@
 <p align="center">
 
   <img src="https://raw.githubusercontent.com/SipaaOS-Project/SipaaKernel/main/meta/artwork/logo.png" />
-  <p>The modern, elegant, easy-to-understand kernel.</p>
+  <p align="center">The modern, elegant, easy-to-understand kernel.</p>
 
 </p>
 
@@ -16,4 +16,4 @@ It features an easy & elegant API.
 Maybe, if i get an ARM device.
 
 ### Will it have a desktop environment & apps?
-Nope, but you can make these with the SipaaKernel API.
+Nope, but you can make an OS with the SipaaKernel APIs.

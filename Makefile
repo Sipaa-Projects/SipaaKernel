@@ -73,6 +73,10 @@ run:
 	@make iso
 	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -display sdl -vga vmware
 
+run-uefi:
+	@make iso
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -display sdl -vga vmware -bios /usr/share/qemu/OVMF.fd
+
 debug-int:
 	@make iso
 	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./sipaakernel.iso -d int -M smm=off -display sdl

@@ -15,6 +15,7 @@ enum LogType {
 
 class Logger {
 public:
+    static void PrintNewLine();
     static void PrintOK();
     static void PrintFail();
     static void Log(LogType logtype, char *message);

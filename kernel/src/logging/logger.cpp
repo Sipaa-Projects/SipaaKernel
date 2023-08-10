@@ -10,6 +10,14 @@ using namespace Sk::Dev;
 namespace Sk {
 namespace Logging {
 
+void Logger::PrintNewLine()
+{
+    Serial::WriteChar('\n');
+
+    if (!Global::Framebuffer.UseDoubleBuffer)
+        Serial::WriteChar('\n');
+}
+
 void Logger::PrintOK()
 {
     Serial::SetColor((char*)SERIAL_COLOR_GREEN);

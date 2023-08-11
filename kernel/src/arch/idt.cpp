@@ -4,6 +4,7 @@
 
 #include <global.h>
 #include <dev/serial.h>
+#include <dev/ps2.h>
 #include <console/console.h>
 #include <logging/logger.h>
 #include <system/system.h>
@@ -91,6 +92,16 @@ __attribute__((interrupt)) void SimdFloatingPointHandler(struct Registers64 *r)
 __attribute__((interrupt)) void VirtualizationExceptionHandler(struct Registers64 *r)
 {
     System::panic("Did you try to run KVM in SipaaKernel??", r);
+}
+
+__attribute__((interrupt)) void MouseHandler(struct Registers64 *r)
+{
+    Logger::Log(LogType_Debug, "Interrupt raised!\n");
+    uint8_t mouseData = Io::InB(0x60);
+
+    Dev::PS2::MouseHandler(mouseData);
+
+    Idt::PicEoi(12);
 }
 
 __attribute__((interrupt)) void KeyboardHandler(struct Registers64 *r)
@@ -210,6 +221,8 @@ void Idt::Init()
     SetEntry(20, (uint64_t)VirtualizationExceptionHandler, 0x8E);
 
     SetEntry(33, (uint64_t)KeyboardHandler, 0x8E);
+    SetEntry(44, (uint64_t)MouseHandler, 0x8E);
+
     Logger::PrintOK();
 
     Logger::Log(LogType_Debug, "Setting up PIC...");

@@ -484,6 +484,7 @@ void Console::Init(Framebuffer f)
 
 void Console::Reset()
 {
+    framebuf.Clear(0x0);
     termx = 0;
     termy = 0;
     term_color = 0xFFFFFF;

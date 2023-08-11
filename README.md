@@ -1,6 +1,6 @@
 <p align="center">
-
-  <img src="https://raw.githubusercontent.com/SipaaOS-Project/SipaaKernel/main/meta/artwork/logo.png" />
+  <img src="meta/artwork/LogoLight.png#gh-light-mode-only" height="96" />
+  <img src="meta/artwork/LogoDark.png#gh-dark-mode-only" height="96" />
   <p align="center">The modern, elegant, easy-to-understand kernel.</p>
 
 </p>

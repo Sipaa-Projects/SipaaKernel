@@ -16,7 +16,7 @@ private:
 public:
     static void panic(char *msg, struct Registers64 *regs)
     {
-        _panic(msg, __FILE__, STRINGIFY(__LINE__), regs);
+        _panic(msg, __FILE__, __LINE__, regs);
     }
 };
 

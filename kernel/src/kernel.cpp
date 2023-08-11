@@ -4,6 +4,7 @@
 #include <arch/idt.h>
 #include <dev/serial.h>
 #include <dev/pci.h>
+#include <dev/ps2.h>
 #include <console/console.h>
 #include <lib/lib.h>
 #include <limine/limine.h>
@@ -31,7 +32,6 @@ static volatile struct limine_memmap_request memmap_request = {
     .id = LIMINE_MEMMAP_REQUEST,
     .revision = 0
 };
-
 
 void memory_test()
 {
@@ -89,8 +89,11 @@ extern "C" void SK_Main()
     Idt::Init();
     MemoryAllocator::Init(memmap_request.response->entries, memmap_request.response->entry_count);
     MemoryAllocator::InitVMM(memmap_request.response->entries, memmap_request.response->entry_count);
+    PS2::Init();
     memory_test();
     
+    //asm("int $0x14");
+
     f.UseDoubleBuffer = true;
     int x = 0;
     int y = 0;
@@ -129,6 +132,7 @@ extern "C" void SK_Main()
             }
         }
 
+        f.SetPixel(PS2::CurrentMouseStatus.X, PS2::CurrentMouseStatus.Y, 0xFFFFFF);
         f.SwapBuffers();
     }
 }

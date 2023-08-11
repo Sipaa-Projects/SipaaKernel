@@ -15,7 +15,15 @@ void Logger::PrintNewLine()
     Serial::WriteChar('\n');
 
     if (!Global::Framebuffer.UseDoubleBuffer)
-        Serial::WriteChar('\n');
+        Console::PrintChar('\n');
+}
+
+void Logger::PrintNoStart(char *str)
+{
+    Serial::WriteStr(str);
+
+    if (!Global::Framebuffer.UseDoubleBuffer)
+        Console::Print(str);
 }
 
 void Logger::PrintOK()

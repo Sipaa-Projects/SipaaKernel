@@ -68,6 +68,7 @@ clean:
 	rm -f kernel.elf
 	rm sipaakernel.iso
 	rm *.o
+	rm -f skpt/skpt
 
 run:
 	@make iso
@@ -92,3 +93,11 @@ debug-int:
 debug:
 	@make iso
 	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -s -S -display sdl
+
+sipaakpt:
+	@echo [GCC] skpt/main.c to skpt/skpt
+	@gcc ./skpt/main.c -o ./skpt/skpt -lcjson
+	@echo [CP] skpt/skpt to /usr/bin/skpt
+	@cp ./skpt/skpt /usr/bin/skpt
+	@echo [CHMOD] Allowing user to run skpt...
+	@chmod +x /usr/bin/skpt

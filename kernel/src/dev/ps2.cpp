@@ -1,5 +1,7 @@
 #include "ps2.h"
 
+#include <global.h>
+
 using namespace Sk::Arch;
 
 namespace Sk {

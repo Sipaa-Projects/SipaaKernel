@@ -1,9 +1,10 @@
-SRCS := $(shell find kernel/ -name '*.cpp')  # Modifier l'extension des fichiers sources
-OBJS := $(SRCS:.cpp=.o)  # Modifier l'extension des fichiers objets
-CC = g++  # Utiliser le compilateur C++
+SRCS := $(shell find kernel/ -name '*.cpp')
+OBJS := $(patsubst kernel/%.cpp,kernel/obj/%.o,$(SRCS))
+ASMS := $(patsubst kernel/%.asm,kernel/obj/asm/%.o,$(shell find kernel/ -name '*.asm'))
+CC = g++
 LD = ld
 
-CFLAGS :=                  \
+CFLAGS := \
 	-w \
 	-Dlimine \
 	-std=gnu++11 \
@@ -24,75 +25,76 @@ CFLAGS :=                  \
 	-mno-sse \
 	-mno-sse2 \
 	-mno-red-zone \
-	-mcmodel=kernel                   \
+	-mcmodel=kernel
 
-ASM_FLAGS :=                \
+ASM_FLAGS := \
 	-f elf64
 
-LD_FLAGS :=                 \
+LD_FLAGS := \
 	-nostdlib \
 	-static \
 	-m elf_x86_64 \
 	-z max-page-size=0x1000 \
 	-T kernel/link.ld
 
-.SUFFIXE: .cpp  # Modifier l'extension des fichiers sources
-%.o: %.cpp  # Modifier l'extension des fichiers sources
+kernel.elf: $(OBJS) $(ASMS)
+	@mkdir -p kernel/bin
+	@echo [LD] kernel.elf
+	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o kernel/bin/kernel.elf
+
+kernel/obj/%.o: kernel/%.cpp
+	@mkdir -p $(@D)
 	@echo [CC] $<
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-kernel.elf: $(OBJS)
-	@echo [NASM] kernel/src/arch/gdt.asm
-	@nasm kernel/src/arch/gdt.asm -felf64 -o gdt.o
-	@echo [LD] kernel.elf
-	@$(LD) $(LD_FLAGS) $(OBJS) gdt.o -o $@
+kernel/obj/asm/%.o: kernel/%.asm
+	@mkdir -p $(@D)
+	@echo [NASM] $<
+	@nasm $< $(ASM_FLAGS) -o $@
 
 iso:
-	@rm -rf iso_root
-	@mkdir -p iso_root
+	@mkdir -p kernel/bin/iso_root
 	@echo [CP] Copying kernel files to the ISO file root...
-	@cp kernel.elf \
-		limine.cfg wallpaper.bmp limine/limine.sys limine/limine-cd.bin limine/limine-cd-efi.bin iso_root/
-	@echo [XORRISO] sipaakernel.iso
+	@cp kernel/bin/kernel.elf \
+		kernel/config/limine.cfg kernel/res/wallpaper.bmp limine/limine.sys limine/limine-cd.bin limine/limine-cd-efi.bin kernel/bin/iso_root/
+	@echo [XORRISO] kernel/bin/sipaakernel.iso
 	@xorriso -as mkisofs -b limine-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--efi-boot limine-cd-efi.bin \
 		-efi-boot-part --efi-boot-image --protective-msdos-label \
-		iso_root -o sipaakernel.iso
-	@echo [LIMINE-DEPLOY] sipaakernel.iso
-	@limine/limine-deploy sipaakernel.iso
-	@rm -rf iso_root
+		kernel/bin/iso_root -o kernel/bin/sipaakernel.iso
+	@echo [LIMINE-DEPLOY] kernel/bin/sipaakernel.iso
+	@limine/limine-deploy kernel/bin/sipaakernel.iso
 
 clean:
-	rm -f $(OBJS)
-	rm -f kernel.elf
-	rm sipaakernel.iso
-	rm *.o
+	rm -rf kernel/obj
+	rm -rf kernel/bin
+	rm -f *.o
 	rm -f skpt/skpt
 
 run:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -display sdl -vga vmware
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -display sdl -vga vmware
 
 run-uefi:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -display sdl -vga vmware -bios /usr/share/qemu/OVMF.fd
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -display sdl -vga vmware -bios /usr/share/qemu/OVMF.fd
 
 run-gtk:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -vga vmware
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -vga vmware
 
 run-gtk-uefi:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -vga vmware -bios /usr/share/qemu/OVMF.fd
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -vga vmware -bios /usr/share/qemu/OVMF.fd
 
 debug-int:
 	@make iso
-	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./sipaakernel.iso -d int -M smm=off -display sdl
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -d int -M smm=off -display sdl
 
 debug:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./sipaakernel.iso -s -S -display sdl
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -s -S -display sdl
 
 sipaakpt:
 	@echo [GCC] skpt/main.c to skpt/skpt

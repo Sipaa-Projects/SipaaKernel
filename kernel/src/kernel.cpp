@@ -5,6 +5,7 @@
 #include <dev/serial.h>
 #include <dev/pci.h>
 #include <dev/ps2.h>
+#include <disk/disk.h>
 #include <console/console.h>
 #include <lib/lib.h>
 #include <limine/limine.h>
@@ -17,6 +18,7 @@
 using namespace Sk;
 using namespace Sk::Arch;
 using namespace Sk::Dev;
+using namespace Sk::Disk;
 using namespace Sk::Graphic;
 using namespace Sk::Logging;
 using namespace Sk::Memory;
@@ -32,6 +34,61 @@ static volatile struct limine_memmap_request memmap_request = {
     .id = LIMINE_MEMMAP_REQUEST,
     .revision = 0
 };
+
+char *cat(const char *filename, struct BootSector *_bs) {
+    char formatted_name[12];
+    DiskUtil::FormatFilename83(filename, formatted_name);
+
+    uint32_t sector = _bs->reserved_sector_count + (_bs->fat_count * _bs->table_size_32);
+    struct DirectoryEntry entries[_bs->bytes_per_sector / sizeof(struct DirectoryEntry)];
+    bool file_found = false;
+    char *file_contents = 0x0;
+
+    for (uint32_t i = 0; i < _bs->sectors_per_cluster && !file_found; i++) {
+        DiskUtil::ReadSector(sector + i, entries);
+
+        for (uint32_t j = 0; j < _bs->bytes_per_sector / sizeof(struct DirectoryEntry); j++) {
+            if (entries[j].name[0] == 0x00) {
+                break;
+            } else if ((uint8_t)entries[j].name[0] == 0xE5) {
+                continue;
+            }
+
+            char entry_name[12];
+            BasicMemoryManagement::MemorySet32(entry_name, 0, sizeof(entry_name));
+            BasicMemoryManagement::MemoryCopy(entry_name, entries[j].name, 11);
+
+            if (Lib::StringCompare(entry_name, formatted_name) == 0) {
+                file_found = true;
+                uint32_t cluster = (entries[j].cluster_high << 16) | entries[j].cluster_low;
+                uint32_t file_size = entries[j].size;
+                char buffer[_bs->bytes_per_sector];
+
+                while (file_size > 0) {
+                    DiskUtil::ReadSector(DiskUtil::ClusterToSector(cluster, _bs), buffer);
+                    uint32_t size_to_print = (file_size > _bs->bytes_per_sector) ? _bs->bytes_per_sector : file_size;
+                    for (uint32_t k = 0; k < size_to_print; k++) {
+                        file_contents[k] = buffer[k];
+                    }
+                    file_size -= size_to_print;
+
+                    uint32_t fat_sector = _bs->reserved_sector_count + (cluster * 4) / _bs->bytes_per_sector;
+                    uint32_t fat_offset = (cluster * 4) % _bs->bytes_per_sector;
+                    DiskUtil::ReadSector(fat_sector, buffer);
+                    cluster = *(uint32_t *)&buffer[fat_offset] & 0x0FFFFFFF;
+
+                    if (cluster == 0x0FFFFFFF) {
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    return file_contents;
+}
+
 
 void memory_test()
 {
@@ -90,6 +147,24 @@ extern "C" void SK_Main()
     MemoryAllocator::Init(memmap_request.response->entries, memmap_request.response->entry_count);
     MemoryAllocator::InitVMM(memmap_request.response->entries, memmap_request.response->entry_count);
     PS2::Init();
+
+    if (DiskUtil::GetDiskFormat(0) == FAT32)
+    {
+        Logger::Log(LogType_Debug, "FAT32-formatted disk detected\n");
+    }
+    DiskUtil::BootSector = MemoryAllocator::Allocate(sizeof(struct BootSector));
+    if (DiskUtil::BootSector == NULL)
+    {
+        Logger::Log(LogType_Error, "Failed to allocate memory for boot sector.\n");
+        while (1)
+            ;
+    }
+    DiskUtil::ReadSector(0, DiskUtil::BootSector);
+    DiskUtil::CurrentDirectoryCluster = DiskUtil::BootSector->root_cluster;
+    char *filecontent = cat("file.txt", DiskUtil::BootSector);
+    Logger::LogFormatted(LogType_Info, "file.txt content : %s", filecontent);
+    Logger::PrintNewLine();
+
     memory_test();
     
     //asm("int $0x14");

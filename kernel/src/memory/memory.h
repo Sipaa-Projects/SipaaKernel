@@ -22,6 +22,7 @@ namespace Memory {
 class BasicMemoryManagement {
 
 public:
+    static int MemoryCompare(const void *s1, const void *s2, size_t n);
     static void MemorySet(void* start, uint8_t value, size_t size);
     static void MemorySet16(void* start, uint16_t value, size_t size);
     static void MemorySet32(void* start, uint32_t value, size_t size);

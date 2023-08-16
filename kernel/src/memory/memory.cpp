@@ -7,6 +7,21 @@ using namespace Sk::Logging;
 namespace Sk {
 namespace Memory {
 
+int BasicMemoryManagement::MemoryCompare(const void *s1, const void *s2, size_t n)
+{
+    const unsigned char *p1 = s1, *p2 = s2;
+    while (n--)
+    {
+        if (*p1 != *p2)
+        {
+            return *p1 - *p2;
+        }
+        p1++;
+        p2++;
+    }
+    return 0;
+}
+
 void BasicMemoryManagement::MemorySet(void* start, uint8_t value, size_t size) {
     for (uint64_t i = 0; i < size; i += sizeof(uint8_t)){
         *(uint8_t*)((uint64_t)start + i) = value;

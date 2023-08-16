@@ -1,3 +1,5 @@
+MAKEFLAGS += --no-print-directory
+
 SRCS := $(shell find kernel/ -name '*.cpp')
 OBJS := $(patsubst kernel/%.cpp,kernel/obj/%.o,$(SRCS))
 ASMS := $(patsubst kernel/%.asm,kernel/obj/asm/%.o,$(shell find kernel/ -name '*.asm'))
@@ -37,7 +39,10 @@ LD_FLAGS := \
 	-z max-page-size=0x1000 \
 	-T kernel/link.ld
 
+FAT_IMAGE := kernel/disk.img
+
 kernel.elf: $(OBJS) $(ASMS)
+	@make disk_img
 	@mkdir -p kernel/bin
 	@echo [LD] kernel.elf
 	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o kernel/bin/kernel.elf
@@ -51,6 +56,15 @@ kernel/obj/asm/%.o: kernel/%.asm
 	@mkdir -p $(@D)
 	@echo [NASM] $<
 	@nasm $< $(ASM_FLAGS) -o $@
+
+disk_img:
+	@echo [DD] Creating disk image...
+	@dd if=/dev/zero of=kernel/disk.img bs=1M count=64 status=none
+	@echo [MKFS.FAT] Formatting disk image to FAT32...
+	@mformat -i $(FAT_IMAGE) -F ::
+	@echo [CP] Copying files to the disk image...
+	@mcopy -i $(FAT_IMAGE) ./disk/* ::/
+	@echo [DONE] FAT32 disk image created: $(FAT_IMAGE)
 
 iso:
 	@mkdir -p kernel/bin/iso_root
@@ -70,31 +84,32 @@ clean:
 	rm -rf kernel/obj
 	rm -rf kernel/bin
 	rm -f *.o
+	rm -f kernel/disk.img
 	rm -f skpt/skpt
 
 run:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -display sdl -vga vmware
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -display sdl -vga vmware -hda kernel/disk.img -boot d
 
 run-uefi:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -display sdl -vga vmware -bios /usr/share/qemu/OVMF.fd
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -display sdl -vga vmware -bios /usr/share/qemu/OVMF.fd -hda kernel/disk.img -boot d
 
 run-gtk:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -vga vmware
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -vga vmware -boot d
 
 run-gtk-uefi:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -vga vmware -bios /usr/share/qemu/OVMF.fd
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -vga vmware -bios /usr/share/qemu/OVMF.fd -hda kernel/disk.img -boot d
 
 debug-int:
 	@make iso
-	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -d int -M smm=off -display sdl
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -d int -M smm=off -display sdl -hda kernel/disk.img -boot d
 
 debug:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -s -S -display sdl
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -s -S -display sdl -hda kernel/disk.img -boot d
 
 sipaakpt:
 	@echo [GCC] skpt/main.c to skpt/skpt

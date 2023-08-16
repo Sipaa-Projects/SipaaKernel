@@ -2,6 +2,41 @@
 
 namespace Sk {
 
+int Lib::StringCompare(const char *str1, const char *str2)
+{
+    while (*str1 && (*str1 == *str2))
+    {
+        str1++;
+        str2++;
+    }
+
+    return *(unsigned char *)str1 - *(unsigned char *)str2;
+}
+
+int Lib::ToUpper(int c)
+{
+    if (c >= 'a' && c <= 'z')
+    {
+        return c - ('a' - 'A');
+    }
+    else
+    {
+        return c;
+    }
+}
+
+int Lib::ToLower(int c)
+{
+    if (c >= 'A' && c <= 'Z')
+    {
+        return c + ('a' - 'A');
+    }
+    else
+    {
+        return c;
+    }
+}
+
 void Lib::IToString(int value, char *str, int base)
 {
     static char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";

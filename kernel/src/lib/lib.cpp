@@ -2,6 +2,19 @@
 
 namespace Sk {
 
+uint32_t Lib::RNGSeed = 0;
+
+void Lib::InitRNG(uint32_t seed)
+{
+    RNGSeed = seed;
+}
+
+uint32_t Lib::Random()
+{
+    RNGSeed = (214013 * RNGSeed + 2531011);
+    return (RNGSeed >> 16) & 0x7FFF;
+}
+
 int Lib::StringCompare(const char *str1, const char *str2)
 {
     while (*str1 && (*str1 == *str2))

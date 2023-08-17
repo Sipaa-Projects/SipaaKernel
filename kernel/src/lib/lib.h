@@ -6,6 +6,10 @@ namespace Sk {
 
 class Lib {
 public:
+    static uint32_t RNGSeed;
+
+    static void InitRNG(uint32_t Seed);
+    static uint32_t Random();
     static int StringCompare(const char *str1, const char *str2);
     static int ToUpper(int c);
     static int ToLower(int c);

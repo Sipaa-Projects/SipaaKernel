@@ -1,3 +1,4 @@
+#ifndef __aarch64__
 #include "gdt.h"
 
 #include <memory/memory.h>
@@ -86,3 +87,4 @@ int Gdt::Init(uint64_t kernel_stack)
 
 } // namespace Arch
 }
+#endif

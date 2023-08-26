@@ -1,7 +1,7 @@
 #pragma once
 
 #include <limine/limine.h>
-#include <cstdint>
+#include <stdint.h>
 
 namespace Sk {
 namespace Graphic {

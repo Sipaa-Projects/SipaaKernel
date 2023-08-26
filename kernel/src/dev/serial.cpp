@@ -12,6 +12,7 @@ namespace Dev {
 
 void Serial::Init()
 {
+    #ifndef __aarch64__
     Logger::Log(LogType_Info, "Initializing serial console...");
     Io::OutB(SERIAL_PORT + 1, 0x00);
     Io::OutB(SERIAL_PORT + 3, 0x80);
@@ -21,11 +22,16 @@ void Serial::Init()
     Io::OutB(SERIAL_PORT + 2, 0xC7);
     Io::OutB(SERIAL_PORT + 4, 0x0B);
     Logger::PrintOK();
+    #endif
 }
 
 bool Serial::IsReady()
 {
+    #ifndef __aarch64__
     return Io::InB(SERIAL_PORT + 5) & 0x20;
+    #else
+    return true;
+    #endif
 }
 
 void Serial::SetColor(char *color)
@@ -36,10 +42,13 @@ void Serial::SetColor(char *color)
 
 void Serial::WriteChar(char ch)
 {
+    #ifndef __aarch64__
     while (!IsReady())
         ;
     
     Io::OutB(SERIAL_PORT, ch);
+
+    #endif
 }
 
 void Serial::WriteStr(char *str)

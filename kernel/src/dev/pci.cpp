@@ -7,6 +7,7 @@ namespace Dev {
 
 uint32_t Pci::ReadConfig(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset)
 {
+    #ifndef __aarch64__
     uint32_t address = (1 << 31) | (bus << 16) | (slot << 11) | (func << 8) | (offset & 0xFC);
     
     // Write address to CONFIG_ADDRESS register
@@ -14,10 +15,14 @@ uint32_t Pci::ReadConfig(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset
     
     // Read data from CONFIG_DATA register
     return Io::InL(PCI_CONFIG_DATA);
+    #else
+    return 0;
+    #endif
 }
 
 void Pci::GetDevice(uint16_t vendor_id, uint16_t device_id, struct PCIDevice *device_info)
 {
+    #ifndef __aarch64__
     int st = 0;
 
     for (uint8_t bus = 0; bus < 256; ++bus) {
@@ -66,6 +71,7 @@ void Pci::GetDevice(uint16_t vendor_id, uint16_t device_id, struct PCIDevice *de
     device_info->class_code = 0xFF;
     device_info->subclass = 0xFF;
     device_info->prog_if = 0xFF;
+    #endif
 }
 
 }

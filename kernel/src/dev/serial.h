@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
-#include <cstdarg>
+#include <stdint.h>
+#include <stdarg.h>
 
 #define SERIAL_COLOR_BLUE "\033[1;34m"
 #define SERIAL_COLOR_GREEN "\033[1;32m"

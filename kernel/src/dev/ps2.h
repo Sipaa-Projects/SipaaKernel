@@ -1,7 +1,7 @@
 #pragma once
 
 #include <arch/io.h>
-#include <cstdint>
+#include <stdint.h>
 #include <video/video.h>
 
 #define PS2Leftbutton 0b00000001

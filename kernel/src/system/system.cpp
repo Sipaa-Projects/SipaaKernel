@@ -1,3 +1,5 @@
+#ifndef __aarch64__
+
 #include "system.h"
 #include <logging/logger.h>
 #include <console/console.h>
@@ -28,3 +30,5 @@ void System::_panic(char *msg, char *file, char *line, struct Registers64 *regs)
 }
 
 }
+
+#endif

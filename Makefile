@@ -43,9 +43,9 @@ FAT_IMAGE := kernel/disk.img
 
 kernel.elf: $(OBJS) $(ASMS)
 	@make disk_img
-	@mkdir -p kernel/bin
+	@mkdir -p kernel/bin/x86_64
 	@echo [LD] kernel.elf
-	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o kernel/bin/kernel.elf
+	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o kernel/bin/x86_64/kernel.elf
 
 kernel/obj/%.o: kernel/%.cpp
 	@mkdir -p $(@D)
@@ -67,18 +67,18 @@ disk_img:
 	@echo [DONE] FAT32 disk image created: $(FAT_IMAGE)
 
 iso:
-	@mkdir -p kernel/bin/iso_root
+	@mkdir -p kernel/bin/x86_64/iso_root
 	@echo [CP] Copying kernel files to the ISO file root...
-	@cp kernel/bin/kernel.elf \
-		kernel/config/limine.cfg kernel/res/wallpaper.bmp limine/limine.sys limine/limine-cd.bin limine/limine-cd-efi.bin kernel/bin/iso_root/
-	@echo [XORRISO] kernel/bin/sipaakernel.iso
+	@cp kernel/bin/x86_64/kernel.elf \
+		kernel/config/limine.cfg kernel/res/wallpaper.bmp limine/limine.sys limine/limine-cd.bin limine/limine-cd-efi.bin kernel/bin/x86_64/iso_root/
+	@echo [XORRISO] kernel/bin/x86_64/sipaakernel.iso
 	@xorriso -as mkisofs -b limine-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--efi-boot limine-cd-efi.bin \
 		-efi-boot-part --efi-boot-image --protective-msdos-label \
-		kernel/bin/iso_root -o kernel/bin/sipaakernel.iso
-	@echo [LIMINE-DEPLOY] kernel/bin/sipaakernel.iso
-	@limine/limine-deploy kernel/bin/sipaakernel.iso
+		kernel/bin/x86_64/iso_root -o kernel/bin/x86_64/sipaakernel.iso
+	@echo [LIMINE-DEPLOY] kernel/bin/x86_64/sipaakernel.iso
+	@limine/limine-deploy kernel/bin/x86_64/sipaakernel.iso
 
 clean:
 	rm -rf kernel/obj

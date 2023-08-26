@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include <stdint.h>
 #include <arch/idt.h>
 
 #define STRINGIFY(x) #x

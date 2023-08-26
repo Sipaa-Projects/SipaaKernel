@@ -1,3 +1,4 @@
+#ifndef __aarch64__
 #include "idt.h"
 
 #include "io.h"
@@ -246,3 +247,4 @@ void Idt::Init()
 
 }
 }
+#endif

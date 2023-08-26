@@ -13,7 +13,7 @@
 #include <memory/memory.h>
 #include <video/video.h>
 
-#include <cstdint>
+#include <stdint.h>
 
 using namespace Sk;
 using namespace Sk::Arch;
@@ -50,6 +50,7 @@ static volatile struct limine_memmap_request memmap_request = {
     .revision = 0
 };
 
+#ifndef AARCH64
 void memory_test()
 {
     Logger::Log(LogType_Info, "Starting memory test...\n");
@@ -92,6 +93,7 @@ void memory_test()
 
     Logger::Log(LogType_Info, "Memory test completed.\n");
 }
+#endif
 
 extern "C" void SK_Main()
 {
@@ -102,32 +104,34 @@ extern "C" void SK_Main()
 
     Console::Init(f);
     Serial::Init();
-    Gdt::Init((uint64_t)&kernel_stack + sizeof(kernel_stack));
-    Idt::Init();
-    MemoryAllocator::Init(memmap_request.response->entries, memmap_request.response->entry_count);
-    MemoryAllocator::InitVMM(memmap_request.response->entries, memmap_request.response->entry_count);
-    PS2::Init();
 
-    if (DiskUtil::GetDiskFormat(0) == FAT32)
-    {
-        Logger::Log(LogType_Debug, "FAT32-formatted disk detected\n");
-    }
-    DiskUtil::BootSector = MemoryAllocator::Allocate(sizeof(struct BootSector));
-    if (DiskUtil::BootSector == NULL)
-    {
-        Logger::Log(LogType_Error, "Failed to allocate memory for boot sector.\n");
-        while (1)
-            ;
-    }
-    DiskUtil::ReadSector(0, DiskUtil::BootSector);
-    DiskUtil::CurrentDirectoryCluster = DiskUtil::BootSector->root_cluster;
-    //char *filecontent = cat("file.txt", DiskUtil::BootSector);
-    //Logger::LogFormatted(LogType_Info, "file.txt content : %s", filecontent);
-    //Logger::PrintNewLine();
+    #if defined(__aarch64__)
+        Logger::Log(LogType_Debug, "Welcome to SipaaKernel on AArch64!\n");
+    #elif defined(__x86_64__)
+        Gdt::Init((uint64_t)&kernel_stack + sizeof(kernel_stack));
+        Idt::Init();
+        MemoryAllocator::Init(memmap_request.response->entries, memmap_request.response->entry_count);
+        MemoryAllocator::InitVMM(memmap_request.response->entries, memmap_request.response->entry_count);
+        PS2::Init();
 
-    memory_test();
-    
-    //asm("int $0x14");
+        if (DiskUtil::GetDiskFormat(0) == FAT32)
+        {
+            Logger::Log(LogType_Debug, "FAT32-formatted disk detected\n");
+        }
+        DiskUtil::BootSector = MemoryAllocator::Allocate(sizeof(struct BootSector));
+        if (DiskUtil::BootSector == NULL)
+        {
+            Logger::Log(LogType_Error, "Failed to allocate memory for boot sector.\n");
+            while (1)
+                ;
+        }
+        DiskUtil::ReadSector(0, DiskUtil::BootSector);
+        DiskUtil::CurrentDirectoryCluster = DiskUtil::BootSector->root_cluster;
+
+        memory_test();
+    #else
+
+    #endif
 
     f.UseDoubleBuffer = true;
 

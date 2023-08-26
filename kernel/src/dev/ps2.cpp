@@ -15,36 +15,46 @@ PS2MouseStatus PS2::OldMouseStatus;
 
 void PS2::MouseWait()
 {
+    #ifndef __aarch64__
     uint64_t timeout = 100000;
     while (timeout--){
         if ((Io::InB(0x64) & 0b10) == 0){
             return;
         }
     }
+    #endif
 }
 
 void PS2::MouseWaitInput()
 {
+    #ifndef __aarch64__
     uint64_t timeout = 100000;
     while (timeout--){
         if (Io::InB(0x64) & 0b1){
             return;
         }
     }
+    #endif
 }
 
 void PS2::MouseWrite(uint8_t value)
 {
+    #ifndef __aarch64__
     MouseWait();
     Io::OutB(0x64, 0xD4);
     MouseWait();
     Io::OutB(0x60, value);
+    #endif
 }
 
 uint8_t PS2::MouseRead()
 {
+    #ifndef __aarch64__
     MouseWaitInput();
     return Io::InB(0x60);
+    #else
+    return 0;
+    #endif
 }
 
 void PS2::MouseHandler(uint8_t data)
@@ -157,6 +167,7 @@ void PS2::MouseProcessPacket(){
 
 void PS2::Init()
 {
+    #ifndef __aarch64__
     Io::OutB(0x64, 0xA8); //enabling the auxiliary device - mouse
 
     MouseWait();
@@ -174,6 +185,7 @@ void PS2::Init()
 
     MouseWrite(0xF4);
     MouseRead();
+    #endif
 }
 
 }

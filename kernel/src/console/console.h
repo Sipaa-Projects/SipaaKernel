@@ -1,8 +1,9 @@
 #pragma once
 
-#include <cstdint>
-#include <cstdarg>
+#include <stdint.h>
+#include <stdarg.h>
 #include <video/video.h>
+
 using namespace Sk::Graphic;
 
 namespace Sk {

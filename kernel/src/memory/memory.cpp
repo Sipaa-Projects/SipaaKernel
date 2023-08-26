@@ -48,7 +48,15 @@ void BasicMemoryManagement::MemorySet64(void* start, uint64_t value, size_t size
 
 void BasicMemoryManagement::MemoryCopy(void* Destination, void* Source, size_t Size)
 {
-    long d0, d1, d2; 
+    char *dest_c = (char *)Destination;
+    const char *src_c = (const char *)Source;
+    for (size_t i = 0; i < Size; i++)
+    {
+        dest_c[i] = src_c[i];
+    }
+    return Destination;
+    /**long d0, d1, d2; 
+
     asm volatile(
             "rep ; movsq\n\t movq %4,%%rcx\n\t""rep ; movsb\n\t": "=&c" (d0),
             "=&D" (d1),
@@ -56,9 +64,10 @@ void BasicMemoryManagement::MemoryCopy(void* Destination, void* Source, size_t S
             "g" (Size & 7), 
             "1" (Destination),
             "2" (Source): "memory"
-    );  
+    );  **/
 }
 
+#ifndef __aarch64__
 struct limine_kernel_address_request kernel_address_request = {
     .id = LIMINE_KERNEL_ADDRESS_REQUEST,
     .revision = 0,
@@ -307,3 +316,8 @@ void MemoryAllocator::InitVMM(struct limine_memmap_entry **entries, uint64_t ent
 
 }
 }
+#else
+
+}
+}
+#endif

@@ -1,3 +1,4 @@
+#ifndef __aarch64__
 #include "io.h"
 
 namespace Sk {
@@ -69,3 +70,4 @@ void Io::Wait()
 
 } // namespace Arch
 } // namespace Sk
+#endif

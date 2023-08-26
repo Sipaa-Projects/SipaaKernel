@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
-#include <cstdarg>
+#include <stdint.h>
+#include <stdarg.h>
 
 namespace Sk {
 namespace Logging {

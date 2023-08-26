@@ -1,3 +1,4 @@
+#ifndef __aarch64__
 #include "disk.h"
 
 using namespace Sk::Memory;
@@ -184,3 +185,4 @@ DiskFormat DiskUtil::GetDiskFormat(uint32_t sector)
 
 }
 }
+#endif

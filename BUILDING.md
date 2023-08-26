@@ -9,6 +9,10 @@ Before building the kernel, you may install this packages on your system :
 ### 2 : Clone the repo
 Just easy as paste `git clone https://github.com/SipaaOS-Project/SipaaKernel` in your terminal
 
+### 2.1 : Build Limine command
+If you don't see any 'limine' executable in the 'limine' directory, you must build it.
+To do that, go in that 'limine' directory, and run make.
+
 ### 3 : Build it
 Go in the SipaaKernel directory by typing `cd SipaaKernel` in your terminal.
 

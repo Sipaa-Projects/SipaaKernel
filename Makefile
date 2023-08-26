@@ -70,15 +70,15 @@ iso:
 	@mkdir -p kernel/bin/x86_64/iso_root
 	@echo [CP] Copying kernel files to the ISO file root...
 	@cp kernel/bin/x86_64/kernel.elf \
-		kernel/config/limine.cfg kernel/res/wallpaper.bmp limine/limine.sys limine/limine-cd.bin limine/limine-cd-efi.bin kernel/bin/x86_64/iso_root/
+		kernel/config/limine.cfg kernel/res/wallpaper.bmp limine/limine-bios.sys limine/limine-bios-cd.bin limine/limine-uefi-cd.bin kernel/bin/x86_64/iso_root/
 	@echo [XORRISO] kernel/bin/x86_64/sipaakernel.iso
-	@xorriso -as mkisofs -b limine-cd.bin \
+	@xorriso -as mkisofs -b limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
-		--efi-boot limine-cd-efi.bin \
+		--efi-boot limine-uefi-cd.bin \
 		-efi-boot-part --efi-boot-image --protective-msdos-label \
 		kernel/bin/x86_64/iso_root -o kernel/bin/x86_64/sipaakernel.iso
 	@echo [LIMINE-DEPLOY] kernel/bin/x86_64/sipaakernel.iso
-	@limine/limine-deploy kernel/bin/x86_64/sipaakernel.iso
+	@limine/limine bios-install kernel/bin/x86_64/sipaakernel.iso
 
 clean:
 	rm -rf kernel/obj
@@ -89,27 +89,27 @@ clean:
 
 run:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -display sdl -vga vmware -hda kernel/disk.img -boot d
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -display sdl -vga vmware -hda kernel/disk.img -boot d
 
 run-uefi:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -display sdl -vga vmware -bios /usr/share/qemu/OVMF.fd -hda kernel/disk.img -boot d
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -display sdl -vga vmware -bios /usr/share/qemu/OVMF.fd -hda kernel/disk.img -boot d
 
 run-gtk:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -vga vmware -boot d
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -boot d
 
 run-gtk-uefi:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -vga vmware -bios /usr/share/qemu/OVMF.fd -hda kernel/disk.img -boot d
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -bios /usr/share/qemu/OVMF.fd -hda kernel/disk.img -boot d
 
 debug-int:
 	@make iso
-	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -d int -M smm=off -display sdl -hda kernel/disk.img -boot d
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -d int -M smm=off -display sdl -hda kernel/disk.img -boot d
 
 debug:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/sipaakernel.iso -s -S -display sdl -hda kernel/disk.img -boot d
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -s -S -display sdl -hda kernel/disk.img -boot d
 
 sipaakpt:
 	@echo [GCC] skpt/main.c to skpt/skpt

@@ -1,5 +1,3 @@
-#ifndef __aarch64__
-
 #include "system.h"
 #include <logging/logger.h>
 #include <console/console.h>
@@ -10,7 +8,7 @@ using namespace Sk::Logging;
 namespace Sk
 {
 
-void System::_panic(char *msg, char *file, char *line, struct Registers64 *regs)
+void System::_panic(char *msg, char *file, char *line)
 {
     Global::Framebuffer.UseDoubleBuffer = false;
     Sk::Console::Reset();
@@ -26,9 +24,13 @@ void System::_panic(char *msg, char *file, char *line, struct Registers64 *regs)
     Logger::LogFormatted(LogType_Error, "System halted.\n");
 
     while (1)
+    {
+        #if defined(__aarch64__)
+        asm("wfi");
+        #elif defined(__x86_64__)
         asm("hlt");
+        #endif
+    }
 }
 
 }
-
-#endif

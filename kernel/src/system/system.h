@@ -1,22 +1,19 @@
 #pragma once
 
 #include <stdint.h>
-#include <arch/idt.h>
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
-
-using namespace Sk::Arch;
 
 namespace Sk {
 
 class System {
 private:
-    static void _panic(char *msg, char *file, char *line, struct Registers64 *regs);
+    static void _panic(char *msg, char *file, char *line);
 public:
-    static void panic(char *msg, struct Registers64 *regs)
+    static void panic(char *msg)
     {
-        _panic(msg, __FILE__, __LINE__, regs);
+        _panic(msg, __FILE__, __LINE__);
     }
 };
 

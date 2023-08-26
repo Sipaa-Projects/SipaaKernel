@@ -20,79 +20,79 @@ IdtPtr Idt::idtr;
 
 __attribute__((interrupt)) void DivZeroHandler(struct Registers64 *r)
 {
-    System::panic("The CPU tried to do a division by 0.", r);
+    System::panic("The CPU tried to do a division by 0.");
 }
 __attribute__((interrupt)) void DebugHandler(struct Registers64 *r)
 {
-    System::panic("Debug.", r);
+    System::panic("Debug.");
 }
 __attribute__((interrupt)) void NonMaskableInterruptHandler(struct Registers64 *r)
 {
-    System::panic("The PIC tried to mask a non-maskable interrupt.", r);
+    System::panic("The PIC tried to mask a non-maskable interrupt.");
 }
 __attribute__((interrupt)) void BreakPointHandler(struct Registers64 *r)
 {
-    System::panic("Instruction 'int3' has been raised.", r);
+    System::panic("Instruction 'int3' has been raised.");
 }
 __attribute__((interrupt)) void OverflowHandler(struct Registers64 *r)
 {
-    System::panic("Overflow.", r);
+    System::panic("Overflow.");
 }
 __attribute__((interrupt)) void BoundRangeExceeded(struct Registers64 *r)
 {
-    System::panic("Bound range has been exceeded.", r);
+    System::panic("Bound range has been exceeded.");
 }
 __attribute__((interrupt)) void InvalidOpcodeHandler(struct Registers64 *r)
 {
-    System::panic("The CPU tried run an invalid opcode.", r);
+    System::panic("The CPU tried run an invalid opcode.");
 }
 __attribute__((interrupt)) void DeviceNotAvailableHandler(struct Registers64 *r)
 {
-    System::panic("The kernel tried to access a not available device.", r);
+    System::panic("The kernel tried to access a not available device.");
 }
 __attribute__((interrupt)) void DoubleFaultHandler(struct Registers64 *r)
 {
-    System::panic("Somehow, you managed to get a fault in a fault! Congratulations!", r);
+    System::panic("Somehow, you managed to get a fault in a fault! Congratulations!");
 }
 __attribute__((interrupt)) void InvalidTssHandler(struct Registers64 *r)
 {
-    System::panic("Invalid TSS.", r);
+    System::panic("Invalid TSS.");
 }
 __attribute__((interrupt)) void SegNotPresentHandler(struct Registers64 *r)
 {
-    System::panic("Segment not present.", r);
+    System::panic("Segment not present.");
 }
 __attribute__((interrupt)) void StackFaultHandler(struct Registers64 *r)
 {
-    System::panic("S\nt\na\nc\nk\n\nf\na\nu\nt\nl\n.", r);
+    System::panic("S\nt\na\nc\nk\n\nf\na\nu\nt\nl\n.");
 }
 __attribute__((interrupt)) void GpfHandler(struct Registers64 *r)
 {
-    System::panic("Looks like the CPU did go in his bunker because he doesn't like your code...", r);
+    System::panic("Looks like the CPU did go in his bunker because he doesn't like your code...");
 }
 __attribute__((interrupt)) void PfHandler(struct Registers64 *r)
 {
-    System::panic("Looks like there was a fault with your book's pages...", r);
+    System::panic("Looks like there was a fault with your book's pages...");
 }
 __attribute__((interrupt)) void FloatingPointHandler(struct Registers64 *r)
 {
-    System::panic("The CPU was floating... But somehow, your code managed to get a gun and destroy the thing who makes the CPU float...", r);
+    System::panic("The CPU was floating... But somehow, your code managed to get a gun and destroy the thing who makes the CPU float...");
 }
 __attribute__((interrupt)) void AlignmentCheckHandler(struct Registers64 *r)
 {
-    System::panic("Alminteng Halnred", r);
+    System::panic("Alminteng Halnred");
 }
 __attribute__((interrupt)) void MachineCheckHandler(struct Registers64 *r)
 {
-    System::panic("Machine check.", r);
+    System::panic("Machine check.");
 }
 __attribute__((interrupt)) void SimdFloatingPointHandler(struct Registers64 *r)
 {
-    System::panic("Simd Floating Point.", r);
+    System::panic("Simd Floating Point.");
 }
 __attribute__((interrupt)) void VirtualizationExceptionHandler(struct Registers64 *r)
 {
-    System::panic("Did you try to run KVM in SipaaKernel??", r);
+    System::panic("Did you try to run KVM in SipaaKernel??");
 }
 
 __attribute__((interrupt)) void MouseHandler(struct Registers64 *r)

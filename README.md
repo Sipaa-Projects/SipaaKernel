@@ -6,7 +6,7 @@
 </p>
 
 ## What is SipaaKernel?
-SipaaKernel is a monolithic kernel made in C++ for the x86-64 architecture.
+SipaaKernel is a monolithic kernel made in C++ for the x86-64 & AArch64 architecture
 
 It features an easy & elegant API.
 

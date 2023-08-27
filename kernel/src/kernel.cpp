@@ -50,7 +50,7 @@ static volatile struct limine_memmap_request memmap_request = {
     .revision = 0
 };
 
-#ifndef AARCH64
+#ifdef __x86_64__
 void memory_test()
 {
     Logger::Log(LogType_Info, "Starting memory test...\n");
@@ -95,6 +95,21 @@ void memory_test()
 }
 #endif
 
+void SK_ShowBootInfo()
+{
+    Logger::Log(LogType_Debug, "Bootloader : Limine\n");
+
+    #if defined(__aarch64__)
+    Logger::Log(LogType_Debug, "Architecture : 64bits ARM (aarch64)\n");
+    #elif defined(__riscv64__)
+    Logger::Log(LogType_Debug, "Architecture : 64bits RISC-V (riscv64)\n");
+    #elif defined(__x86_64__)
+    Logger::Log(LogType_Debug, "Architecture : 64bits x86 (x86-64)\n");
+    #endif
+
+    Logger::LogFormatted(LogType_Debug, "Framebuffer : %dx%dx%d\n", fbr.response->framebuffers[0]->width, fbr.response->framebuffers[0]->height, fbr.response->framebuffers[0]->bpp);
+}
+
 extern "C" void SK_Main()
 {
     Framebuffer f = Framebuffer::FromLimine(fbr.response->framebuffers[0]);
@@ -105,9 +120,10 @@ extern "C" void SK_Main()
     Console::Init(f);
     Serial::Init();
 
-    #if defined(__aarch64__)
-        Logger::Log(LogType_Debug, "Welcome to SipaaKernel on AArch64!\n");
-    #elif defined(__x86_64__)
+    Logger::Log(LogType_Info, "Welcome to SipaaKernel!\n");
+    SK_ShowBootInfo();
+
+    #if defined(__x86_64__)
         Gdt::Init((uint64_t)&kernel_stack + sizeof(kernel_stack));
         Idt::Init();
         MemoryAllocator::Init(memmap_request.response->entries, memmap_request.response->entry_count);

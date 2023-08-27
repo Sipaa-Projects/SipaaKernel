@@ -3,8 +3,8 @@ MAKEFLAGS += --no-print-directory
 SRCS := $(shell find kernel/ -name '*.cpp')
 OBJS := $(patsubst kernel/%.cpp,kernel/obj/%.o,$(SRCS))
 ASMS := $(patsubst kernel/%.asm,kernel/obj/asm/%.o,$(shell find kernel/ -name '*.asm'))
-CC = g++
-LD = ld
+CC = x86_64-elf-g++
+LD = x86_64-elf-ld
 
 CFLAGS := \
 	-w \
@@ -34,8 +34,6 @@ ASM_FLAGS := \
 
 LD_FLAGS := \
 	-nostdlib \
-	-static \
-	-m elf_x86_64 \
 	-z max-page-size=0x1000 \
 	-T kernel/link.ld
 
@@ -93,7 +91,7 @@ run:
 
 run-uefi:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -display sdl -vga vmware -bios /usr/share/qemu/OVMF.fd -hda kernel/disk.img -boot d
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -display sdl -vga vmware -bios ./assets/OVMF-x86_64.fd -hda kernel/disk.img -boot d
 
 run-gtk:
 	@make iso
@@ -101,7 +99,7 @@ run-gtk:
 
 run-gtk-uefi:
 	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -bios /usr/share/qemu/OVMF.fd -hda kernel/disk.img -boot d
+	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -bios ./assets/OVMF-x86_64.fd -hda kernel/disk.img -boot d
 
 debug-int:
 	@make iso

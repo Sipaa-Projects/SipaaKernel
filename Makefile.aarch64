@@ -82,6 +82,10 @@ run:
 	@make -f Makefile.aarch64 iso
 	qemu-system-aarch64 -m 1g -cpu cortex-a72 -machine virt -serial stdio -cdrom ./kernel/bin/aarch64/sipaakernel.iso -display sdl -device ramfb -bios ./assets/QEMU-EFI-aarch64.fd -hda kernel/disk.img -boot d -device qemu-xhci -device usb-kbd
 
+run-macos:
+	@make -f Makefile.aarch64 iso
+	qemu-system-aarch64 -m 1g -cpu cortex-a72 -machine virt -serial stdio -cdrom ./kernel/bin/aarch64/sipaakernel.iso -device ramfb -bios ./assets/QEMU-EFI-aarch64.fd -hda kernel/disk.img -boot d -device qemu-xhci -device usb-kbd
+
 run-gtk:
 	@make -f Makefile.aarch64 iso
 	qemu-system-aarch64 -m 1g -cpu cortex-a72 -machine virt -serial stdio -cdrom ./kernel/bin/aarch64/sipaakernel.iso -device ramfb -bios ./assets/QEMU-EFI-aarch64.fd -hda kernel/disk.img -boot d -device qemu-xhci -device usb-kbd

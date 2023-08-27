@@ -99,6 +99,14 @@ run-gtk:
 
 run-gtk-uefi:
 	@make iso
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -bios ./assets/OVMF-x86_64.fd -hda kernel/disk.img -boot d
+
+run-macos:
+	@make iso
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -hda kernel/disk.img -boot d
+
+run-macos-uefi:
+	@make iso
 	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -bios ./assets/OVMF-x86_64.fd -hda kernel/disk.img -boot d
 
 debug-int:

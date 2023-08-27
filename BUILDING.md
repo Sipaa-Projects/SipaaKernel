@@ -36,7 +36,7 @@ You can flash the SipaaKernel ISO for x86_64 (located in ./kernel/bin/x86_64/sip
 You can't build SipaaKernel on native Windows, unless you install the Linux subsystem.
 
 ## macOS
-There are no known ports of the GNU Linker (who's used to link kernel objects to a kernel.elf file) on macOS.
+Same build instructions as Linux, but you need to run it using `make run-macos` or `make run-macos-uefi`
 
 ## SerenityOS
 Unchecked. You can try, but it's not guaranteed to work.

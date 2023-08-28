@@ -110,10 +110,6 @@ void SK_ShowBootInfo()
     Logger::LogFormatted(LogType_Debug, "Framebuffer : %dx%dx%d\n", fbr.response->framebuffers[0]->width, fbr.response->framebuffers[0]->height, fbr.response->framebuffers[0]->bpp);
 }
 
-// Define addresses for the kernel and user-space
-#define KERNEL_BASE 0x00100000
-#define USER_BASE   0x00400000
-
 // User-space function
 extern "C" void usr_main() {
     Logger::Log(LogType_Debug, "Welcome to userspace!");
@@ -122,7 +118,7 @@ extern "C" void usr_main() {
     }
 }
 
-extern "C" void switch_to_user();
+extern "C" void jump_usermode();
 
 extern "C" void SK_Main()
 {
@@ -164,14 +160,10 @@ extern "C" void SK_Main()
     #endif
 
     f.UseDoubleBuffer = true;
-    
-    uint64_t* user_program = (uint64_t*)USER_BASE;
-    // Copy user_function machine code to user_program
-    
-    // Switch to user mode
-    switch_to_user();
 
-    /**Lib::InitRNG(0);
+    jump_usermode();
+
+    Lib::InitRNG(0);
     Star stars[256];
 
     for (int i = 0; i < 256; i++) {
@@ -190,5 +182,5 @@ extern "C" void SK_Main()
         }
 
         f.SwapBuffers();
-    }**/
+    }
 }

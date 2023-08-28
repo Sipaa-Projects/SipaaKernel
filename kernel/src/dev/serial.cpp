@@ -4,6 +4,8 @@
 #include <logging/logger.h>
 #include <lib/lib.h>
 
+//#define SERIAL_DISABLED // You can uncomment this so you will have the serial console disabled, then faster performance. Will be disabled in each SipaaKernel release.
+
 using namespace Sk::Arch;
 using namespace Sk::Logging;
 
@@ -13,6 +15,7 @@ namespace Dev {
 void Serial::Init()
 {
     #ifndef __aarch64__
+    #ifndef SERIAL_DISABLED
     Logger::Log(LogType_Info, "Initializing serial console...");
     Io::OutB(SERIAL_PORT + 1, 0x00);
     Io::OutB(SERIAL_PORT + 3, 0x80);
@@ -23,13 +26,17 @@ void Serial::Init()
     Io::OutB(SERIAL_PORT + 4, 0x0B);
     Logger::PrintOK();
     #endif
+    #endif
 }
 
 bool Serial::IsReady()
 {
     #ifndef __aarch64__
+    #ifndef SERIAL_DISABLED
     return Io::InB(SERIAL_PORT + 5) & 0x20;
     #else
+    return true;
+    #endif
     return true;
     #endif
 }
@@ -43,11 +50,12 @@ void Serial::SetColor(char *color)
 void Serial::WriteChar(char ch)
 {
     #ifndef __aarch64__
+    #ifndef SERIAL_DISABLED
     while (!IsReady())
         ;
     
     Io::OutB(SERIAL_PORT, ch);
-
+    #endif
     #endif
 }
 

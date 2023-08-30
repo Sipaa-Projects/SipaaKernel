@@ -19,8 +19,8 @@ public:
     static void PrintNewLine();
     static void PrintOK();
     static void PrintFail();
-    static void Log(LogType logtype, char *message);
-    static void LogFormatted(LogType logtype, char *message, ...);
+    static void Log(LogType logtype, char *comp, char *message);
+    static void LogFormatted(LogType logtype, char *comp, char *message, ...);
 };
 
 } // namespace Dev

@@ -35,7 +35,7 @@ ASM_FLAGS := \
 LD_FLAGS := \
 	-nostdlib \
 	-z max-page-size=0x1000 \
-	-T kernel/link.ld
+	-T kernel/lnk/x86_64.ld
 
 FAT_IMAGE := kernel/disk.img
 

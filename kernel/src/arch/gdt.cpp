@@ -50,14 +50,14 @@ void Gdt::SetTssGate(int32_t num, uint64_t base, uint32_t limit)
 
 int Gdt::Init(uint64_t kernel_stack)
 {
-    Logger::Log(LogType_Info, "Starting GDT initialization...\n");
+    Logger::Log(LogType_Info, "GDT", "Starting initialization...\n");
 
-    Logger::Log(LogType_Debug, "Initializing GDT pointer...");
+    Logger::Log(LogType_Debug, "GDT", "Initializing pointer...");
     ptr.size = sizeof(entries) - 1;
     ptr.offset = (uint64_t)&entries;
     Logger::PrintOK();
 
-    Logger::Log(LogType_Debug, "Initializing GDT entries...");
+    Logger::Log(LogType_Debug, "GDT", "Initializing entries...");
     SetEntry(0, 0, 0, 0, 0);
     SetEntry(1, 0, 0, 0x9A, 0xA0);
     SetEntry(2, 0, 0, 0x92, 0xA0);
@@ -65,23 +65,23 @@ int Gdt::Init(uint64_t kernel_stack)
     SetEntry(4, 0, 0, 0xF2, 0xA0);
     Logger::PrintOK();
 
-    Logger::Log(LogType_Debug, "Initializing TSS...");
+    Logger::Log(LogType_Debug, "GDT", "Initializing TSS...");
     InitTss(kernel_stack);
     Logger::PrintOK();
     
-    Logger::Log(LogType_Debug, "Setting up TSS gate in GDT...");
+    Logger::Log(LogType_Debug, "GDT", "Setting up TSS gate in GDT...");
     SetTssGate(5, (uint64_t)&tssentry, sizeof(TssEntry));
     Logger::PrintOK();
 
-    Logger::Log(LogType_Debug, "Loading GDT into CPU...");
+    Logger::Log(LogType_Debug, "GDT", "Loading into CPU...");
     load_gdt(&ptr);
     Logger::PrintOK();
 
-    Logger::Log(LogType_Debug, "Loading TSS into CPU...");
+    Logger::Log(LogType_Debug, "GDT", "Loading TSS into CPU...");
     load_tss();
     Logger::PrintOK();
 
-    Logger::Log(LogType_Info, "GDT initialization is sucessful!\n");
+    Logger::Log(LogType_Info, "GDT", "Initialization is sucessful!\n");
     return 0;
 }
 

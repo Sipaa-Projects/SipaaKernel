@@ -16,6 +16,18 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "cstdarg": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "optional": "cpp",
+        "ratio": "cpp",
+        "variant": "cpp",
+        "__bit_reference": "cpp",
+        "__node_handle": "cpp",
+        "atomic": "cpp",
+        "bitset": "cpp",
+        "deque": "cpp",
+        "__memory": "cpp",
+        "limits": "cpp",
+        "locale": "cpp",
+        "vector": "cpp"
     }
 }

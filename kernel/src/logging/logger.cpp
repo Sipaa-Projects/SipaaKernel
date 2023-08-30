@@ -58,55 +58,71 @@ void Logger::PrintFail()
     }
 }
 
-void Logger::Log(LogType logtype, char *message)
+void Logger::Log(LogType logtype, char *comp, char *message)
 {
     switch (logtype)
     {
     case LogType_Error:
         Serial::SetColor((char *)SERIAL_COLOR_RED);
-        Serial::WriteStr("[ERROR] ");
+        Serial::WriteChar('[');
+        Serial::WriteStr(comp);
+        Serial::WriteStr(" / ERROR] ");
         Serial::SetColor((char *)SERIAL_COLOR_WHITE);
 
         if (!Global::Framebuffer.UseDoubleBuffer)
         { 
             Console::term_color = 0xC0392B;
-            Console::Print("[ERROR] ");
+            Console::PrintChar('[');
+            Console::Print(comp);
+            Console::Print(" / ERROR] ");
             Console::term_color = 0xFFFFFF;
         }
         break;
     case LogType_Warning:
         Serial::SetColor((char *)SERIAL_COLOR_YELLOW);
-        Serial::WriteStr("[WARN] ");
+        Serial::WriteChar('[');
+        Serial::WriteStr(comp);
+        Serial::WriteStr(" / WARN] ");
         Serial::SetColor((char *)SERIAL_COLOR_WHITE);
 
         if (!Global::Framebuffer.UseDoubleBuffer)
         { 
             Console::term_color = 0xF39C12;
-            Console::Print("[WARN] ");
+            Console::PrintChar('[');
+            Console::Print(comp);
+            Console::Print(" / WARN] ");
             Console::term_color = 0xFFFFFF;
         }
         break;
     case LogType_Info:
         Serial::SetColor((char *)SERIAL_COLOR_BLUE);
-        Serial::WriteStr("[INFO] ");
+        Serial::WriteChar('[');
+        Serial::WriteStr(comp);
+        Serial::WriteStr(" / INFO] ");
         Serial::SetColor((char *)SERIAL_COLOR_WHITE);
 
         if (!Global::Framebuffer.UseDoubleBuffer)
         { 
             Console::term_color = 0x27AE60;
-            Console::Print("[INFO] ");
+            Console::PrintChar('[');
+            Console::Print(comp);
+            Console::Print(" / INFO] ");
             Console::term_color = 0xFFFFFF;
         }
         break;
     case LogType_Debug:
         Serial::SetColor((char *)SERIAL_COLOR_GREEN);
-        Serial::WriteStr("[DEBUG] ");
+        Serial::WriteChar('[');
+        Serial::WriteStr(comp);
+        Serial::WriteStr(" / DEBUG] ");
         Serial::SetColor((char *)SERIAL_COLOR_WHITE);
 
         if (!Global::Framebuffer.UseDoubleBuffer)
         { 
             Console::term_color = 0x2980B9;
-            Console::Print("[DEBUG] ");
+            Console::PrintChar('[');
+            Console::Print(comp);
+            Console::Print(" / DEBUG] ");
             Console::term_color = 0xFFFFFF;
         }
         break;
@@ -123,55 +139,71 @@ void Logger::Log(LogType logtype, char *message)
         Console::Print(message);
 }
 
-void Logger::LogFormatted(LogType logtype, char *message, ...)
+void Logger::LogFormatted(LogType logtype, char *comp, char *message, ...)
 {
     switch (logtype)
     {
     case LogType_Error:
         Serial::SetColor((char *)SERIAL_COLOR_RED);
-        Serial::WriteStr("[ERROR] ");
+        Serial::WriteChar('[');
+        Serial::WriteStr(comp);
+        Serial::WriteStr(" / ERROR] ");
         Serial::SetColor((char *)SERIAL_COLOR_WHITE);
 
         if (!Global::Framebuffer.UseDoubleBuffer)
         { 
             Console::term_color = 0xC0392B;
-            Console::Print("[ERROR] ");
+            Console::PrintChar('[');
+            Console::Print(comp);
+            Console::Print(" / ERROR] ");
             Console::term_color = 0xFFFFFF;
         }
         break;
     case LogType_Warning:
         Serial::SetColor((char *)SERIAL_COLOR_YELLOW);
-        Serial::WriteStr("[WARN] ");
+        Serial::WriteChar('[');
+        Serial::WriteStr(comp);
+        Serial::WriteStr(" / WARN] ");
         Serial::SetColor((char *)SERIAL_COLOR_WHITE);
 
         if (!Global::Framebuffer.UseDoubleBuffer)
         { 
             Console::term_color = 0xF39C12;
-            Console::Print("[WARN] ");
+            Console::PrintChar('[');
+            Console::Print(comp);
+            Console::Print(" / WARN] ");
             Console::term_color = 0xFFFFFF;
         }
         break;
     case LogType_Info:
         Serial::SetColor((char *)SERIAL_COLOR_BLUE);
-        Serial::WriteStr("[INFO] ");
+        Serial::WriteChar('[');
+        Serial::WriteStr(comp);
+        Serial::WriteStr(" / INFO] ");
         Serial::SetColor((char *)SERIAL_COLOR_WHITE);
 
         if (!Global::Framebuffer.UseDoubleBuffer)
         { 
             Console::term_color = 0x27AE60;
-            Console::Print("[INFO] ");
+            Console::PrintChar('[');
+            Console::Print(comp);
+            Console::Print(" / INFO] ");
             Console::term_color = 0xFFFFFF;
         }
         break;
     case LogType_Debug:
         Serial::SetColor((char *)SERIAL_COLOR_GREEN);
-        Serial::WriteStr("[DEBUG] ");
+        Serial::WriteChar('[');
+        Serial::WriteStr(comp);
+        Serial::WriteStr(" / DEBUG] ");
         Serial::SetColor((char *)SERIAL_COLOR_WHITE);
 
         if (!Global::Framebuffer.UseDoubleBuffer)
         { 
             Console::term_color = 0x2980B9;
-            Console::Print("[DEBUG] ");
+            Console::PrintChar('[');
+            Console::Print(comp);
+            Console::Print(" / DEBUG] ");
             Console::term_color = 0xFFFFFF;
         }
         break;

@@ -28,7 +28,7 @@ LD_FLAGS := \
 	-ffreestanding \
 	-lgcc \
 	-O2 \
-	-T kernel/link-aarch64.ld
+	-T kernel/lnk/aarch64.ld
 
 FAT_IMAGE := kernel/disk.img
 

@@ -27,6 +27,8 @@ public:
     static void Reset();
     static void PrintChar(char c);
     static void Print(char *str);
+    static void PrintInt(int v, int base, const char *digits);
+    static void PrintInt64(uint64_t v, int base, const char *digits);
     static void PrintFormatted(char *str, ...);
 };
 } // namespace Sk

@@ -1,6 +1,7 @@
 #include "memory.h"
 #include <stddef.h>
 #include <logging/logger.h>
+#include <limine/limine.h>
 
 using namespace Sk::Logging;
 
@@ -67,257 +68,135 @@ void BasicMemoryManagement::MemoryCopy(void* Destination, void* Source, size_t S
     );  **/
 }
 
-#ifndef __aarch64__
-struct limine_kernel_address_request kernel_address_request = {
-    .id = LIMINE_KERNEL_ADDRESS_REQUEST,
-    .revision = 0,
-    .response = NULL};
+uintptr_t PhysicalMemoryManager::Stack[STACK_SIZE];
+uint32_t PhysicalMemoryManager::Stack_top;
+MemoryBlock *PhysicalMemoryManager::Free_blocks;
 
-struct limine_kernel_file_request kernel_file_request = {
-    .id = LIMINE_KERNEL_FILE_REQUEST,
-    .revision = 0,
-    .response = NULL};
+uintptr_t PhysicalMemoryManager::kernel_base = 0;
+uintptr_t PhysicalMemoryManager::kernel_end = 0;
+uintptr_t PhysicalMemoryManager::kernel_size = 0;
 
-Page *MemoryAllocator::free_pages = NULL;
-page_directory_t *MemoryAllocator::current_directory;
-page_directory_t *MemoryAllocator::kernel_directory;
+static volatile struct limine_memmap_request memmap {
+    .id = LIMINE_MEMMAP_REQUEST,
+    .revision = 0
+};
 
-uint64_t MemoryAllocator::kernel_physical_base;
-uint64_t MemoryAllocator::kernel_virtual_base;
-struct limine_file *MemoryAllocator::kernel_file;
-uint64_t MemoryAllocator::kernel_size;
-
-void MemoryAllocator::Init(struct limine_memmap_entry **entries, uint64_t entry_count)
+void PhysicalMemoryManager::Init()
 {
-    Logger::Log(LogType_Info, "Stating memory initialization...\n");
+    Stack_top = 0;
 
-    Logger::Log(LogType_Debug, "Searching for all usable memory map entries... (This can take a while)");
-    uint64_t total_memory = 0;
-
-    for (uint64_t i = 0; i < entry_count; i++)
+    for (uint64_t entry; entry < memmap.response->entry_count; entry++)
     {
-        struct limine_memmap_entry *entry = entries[i];
-        if (entry->type != LIMINE_MEMMAP_USABLE)
+        limine_memmap_entry *mentry = memmap.response->entries[entry];
+        
+        if (mentry->type == LIMINE_MEMMAP_USABLE && mentry->length >= PMM_BLOCK_SIZE)
         {
-            continue;
-        }
+            uintptr_t addr = mentry->base;
+            uint64_t length = mentry->length;
 
-        total_memory += entry->length;
-
-        uint64_t num_pages = entry->length / PAGE_SIZE;
-
-        for (uint64_t j = 0; j < num_pages; j++)
-        {
-            uint64_t page_address = entry->base + (j * PAGE_SIZE);
-            Page *page = (Page *)page_address;
-            page->next = free_pages;
-            free_pages = page;
+            while (length >= PMM_BLOCK_SIZE)
+            {
+                FreeBlock((void *)addr);
+                addr += PMM_BLOCK_SIZE;
+                length -= PMM_BLOCK_SIZE;
+            }
         }
     }
-    Logger::PrintOK();
-
-    Logger::Log(LogType_Info, "Memory has been sucessfully initialized!\n");
 }
 
-void MemoryAllocator::DetectTotalMemory(struct limine_memmap_entry **entries, uint64_t entry_count)
+void PhysicalMemoryManager::FreeBlock(void *block)
 {
-    uint64_t total_memory = 0;
+    if (Stack_top == STACK_SIZE)
+        return;
 
-    for (uint64_t i = 0; i < entry_count; i++)
-    {
-        struct limine_memmap_entry *entry = entries[i];
-        if (entry->type == LIMINE_MEMMAP_USABLE)
-        {
-            total_memory += entry->length;
-        }
-    }
-
-    uint64_t total_memory_in_mb = total_memory / (1024 * 1024);
-
-    Logger::LogFormatted(LogType_Info, "Total usable memory: %lu MB\n", total_memory_in_mb);
+    Stack[Stack_top] = (uintptr_t)block;
+    Stack_top++;
 }
 
-void *MemoryAllocator::Allocate(size_t size)
+void *PhysicalMemoryManager::AllocBlock()
 {
-    Logger::LogFormatted(LogType_Debug, "Attempting to allocate memory of size %lu\n", size);
-    size_t num_pages = (size / PAGE_SIZE) + 1;
-    Header *header = (Header *)AllocPage();
-    if (!header)
+    if (Stack_top == 0)
+        return NULL;
+
+    Stack_top--;
+    return (void *)Stack[Stack_top];
+}
+
+void *PhysicalMemoryManager::MAlloc(size_t size)
+{
+
+    if (size == 0)
     {
-        Logger::LogFormatted(LogType_Error, "Failed to allocate header page for malloc.\n");
         return NULL;
     }
-    header->num_pages = num_pages;
 
-    for (size_t i = 1; i < num_pages; i++)
+    size += sizeof(MemoryBlock);
+
+    MemoryBlock *block = Free_blocks;
+    MemoryBlock *prev_block = NULL;
+
+    while (block)
     {
-        if (!AllocPage())
+        if (block->is_free && block->size >= size)
         {
-            Logger::LogFormatted(LogType_Error, "Failed to allocate additional page %llu for malloc.\n", i);
-            for (size_t j = i - 1; j > 0; j--)
+            block->is_free = false;
+
+            if (block->size > size + sizeof(MemoryBlock))
             {
-                FreePage((Page *)((uintptr_t)(header + 1) + j * PAGE_SIZE));
+                MemoryBlock *new_block = (MemoryBlock *)((uint8_t *)block + size);
+                new_block->size = block->size - size;
+                new_block->next = block->next;
+                new_block->is_free = true;
+
+                block->size = size;
+                block->next = new_block;
             }
-            FreePage((Page *)header);
-            return NULL;
+
+            return (uint8_t *)block + sizeof(MemoryBlock);
         }
+
+        prev_block = block;
+        block = block->next;
     }
 
-    Logger::LogFormatted(LogType_Debug, "Allocated memory block of size %llu starting at 0x%x\n", size, header + 1);
-    return header + 1;
-}
-
-void MemoryAllocator::Free(void *ptr)
-{
-    Logger::LogFormatted(LogType_Debug, "Attempting to free memory block at 0x%x\n", ptr);
-    Header *header = (Header *)ptr - 1;
-    for (size_t i = 0; i < header->num_pages; i++)
+    block = (MemoryBlock *)AllocBlock();
+    if (!block)
     {
-        FreePage((Page *)((uintptr_t)(header + 1) + i * PAGE_SIZE));
-    }
-    Logger::LogFormatted(LogType_Debug, "Freed memory block at 0x%x\n", ptr);
-}
-
-Page *MemoryAllocator::AllocPage()
-{
-    if (!free_pages)
-    {
-        Logger::LogFormatted(LogType_Error, "No available frames.\n");
-        while (1)
-        {
-            asm("hlt");
-        }
+        return NULL;
     }
 
-    Page *page = free_pages;
-    free_pages = free_pages->next;
-    page->next = NULL;
-    Logger::LogFormatted(LogType_Debug, "Allocated page at address 0x%x\n", page);
-    return page;
-}
+    block->size = size;
+    block->is_free = false;
+    block->next = NULL;
 
-void MemoryAllocator::FreePage(Page *page)
-{
-    Logger::LogFormatted(LogType_Debug, "Freeing page at address 0x%x\n", page);
-    page->next = free_pages;
-    free_pages = page;
-    Logger::LogFormatted(LogType_Debug, "Freed page at address 0x%x\n", page);
-}
-
-void MemoryAllocator::MapPage(void *physaddr, void *virtualaddr, uint32_t flags)
-{
-    Logger::LogFormatted(LogType_Debug, "Mapping physical address 0x%x to virtual address 0x%x with flags 0x%x\n", (uint64_t)physaddr, (uint64_t)virtualaddr, flags);
-
-    uint32_t dir_idx = PAGE_DIRECTORY_INDEX((uint32_t)virtualaddr);
-    uint32_t tbl_idx = PAGE_TABLE_INDEX((uint32_t)virtualaddr);
-    Logger::LogFormatted(LogType_Debug, "Directory index: %d, Table index: %d\n", dir_idx, tbl_idx);
-
-    if (current_directory->tables[dir_idx] == NULL)
+    if (prev_block)
     {
-        current_directory->tables[dir_idx] = (page_table_t *)Allocate(sizeof(page_table_t));
-        if (!current_directory->tables[dir_idx])
-        {
-            Logger::LogFormatted(LogType_Error, "Failed to allocate space for the page table!\n");
-            return;
-        }
-        BasicMemoryManagement::MemorySet32(current_directory->tables[dir_idx], 0, PAGE_SIZE);
+        prev_block->next = block;
+    }
+    else
+    {
+        Free_blocks = block;
     }
 
-    current_directory->tables[dir_idx]->pages[tbl_idx].frame = (uint32_t)physaddr >> 12;
-    current_directory->tables[dir_idx]->pages[tbl_idx].present = 1;
-    current_directory->tables[dir_idx]->pages[tbl_idx].rw = (flags & 0x2) ? 1 : 0;
-    current_directory->tables[dir_idx]->pages[tbl_idx].user = (flags & 0x4) ? 1 : 0;
-
-    Logger::LogFormatted(LogType_Debug, "Mapped physical address 0x%x to virtual address 0x%x successfully\n", (uint64_t)physaddr, (uint64_t)virtualaddr);
+    return (uint8_t *)block + sizeof(MemoryBlock);
 }
 
-void MemoryAllocator::UnmapPage(void *virtualaddr)
+void PhysicalMemoryManager::Free(void *ptr)
 {
-    Logger::LogFormatted(LogType_Debug, "Unmapping virtual address 0x%x\n", (uint64_t)virtualaddr);
-    uint32_t dir_idx = PAGE_DIRECTORY_INDEX((uint32_t)virtualaddr);
-    uint32_t tbl_idx = PAGE_TABLE_INDEX((uint32_t)virtualaddr);
-
-    if (current_directory->tables[dir_idx] == NULL)
+    if (!ptr)
     {
-        Logger::LogFormatted(LogType_Warning, "Page table not present for virtual address 0x%x\n", (uint64_t)virtualaddr);
         return;
     }
 
-    current_directory->tables[dir_idx]->pages[tbl_idx].present = 0;
-    Logger::LogFormatted(LogType_Debug, "Unmapped virtual address 0x%x successfully\n", (uint64_t)virtualaddr);
-}
+    MemoryBlock *block = (MemoryBlock *)((uint8_t *)ptr - sizeof(MemoryBlock));
+    block->is_free = true;
 
-void MemoryAllocator::SwitchPageDirectory(page_directory_t *new_directory)
-{
-    Logger::LogFormatted(LogType_Debug, "Switching to page directory at 0x%x\n", (uint64_t)new_directory);
-    current_directory = new_directory;
-    asm volatile("mov %%cr3, %0"
-                 : "=r"(new_directory));
-    Logger::LogFormatted(LogType_Debug, "Switched to page directory successfully\n");
-}
-
-page_directory_t *MemoryAllocator::CloneDirectory(page_directory_t *src)
-{
-    Logger::LogFormatted(LogType_Debug, "Cloning page directory at 0x%x\n", (uint64_t)src);
-    page_directory_t *dir = (page_directory_t *)Allocate(sizeof(page_directory_t));
-    if (!dir)
+    while (block->next && block->next->is_free)
     {
-        Logger::LogFormatted(LogType_Error, "Failed to allocate space for the cloned directory!\n");
-        return NULL;
+        block->size += block->next->size;
+        block->next = block->next->next;
     }
-    BasicMemoryManagement::MemorySet32(dir, 0, sizeof(page_directory_t));
-
-    for (int i = 0; i < 1024; i++)
-    {
-        if (src->tables[i])
-        {
-            dir->tables[i] = (page_table_t *)Allocate(sizeof(page_table_t));
-            if (!dir->tables[i])
-            {
-                Logger::LogFormatted(LogType_Error, "Failed to allocate space for the cloned page table!\n");
-                return NULL;
-            }
-            BasicMemoryManagement::MemoryCopy(dir->tables[i], src->tables[i], sizeof(page_table_t));
-            Logger::LogFormatted(LogType_Debug, "Cloned page table at index %d\n", i);
-        }
-    }
-    Logger::LogFormatted(LogType_Debug, "Cloned page directory successfully to 0x%x\n", (uint64_t)dir);
-    return dir;
-}
-
-void MemoryAllocator::InitVMM(struct limine_memmap_entry **entries, uint64_t entry_count)
-{
-    kernel_file = kernel_file_request.response->kernel_file;
-    kernel_size = kernel_file->size;
-
-    kernel_physical_base = kernel_address_request.response->physical_base;
-    kernel_virtual_base = kernel_address_request.response->virtual_base;
-
-    uint64_t kernel_start = kernel_virtual_base;
-    uint64_t kernel_end = kernel_virtual_base + kernel_size;
-
-    kernel_directory = (page_directory_t *)Allocate(sizeof(page_directory_t));
-    if (!kernel_directory)
-    {
-        Logger::LogFormatted(LogType_Error, "Failed to allocate space for the kernel page directory!\n");
-        return;
-    }
-    BasicMemoryManagement::MemorySet32(kernel_directory, 0, sizeof(page_directory_t));
-
-    for (uint64_t i = kernel_start; i < kernel_end; i += PAGE_SIZE)
-    {
-        MapPage((void *)(i - kernel_start + kernel_physical_base), (void *)i, PAGE_PRESENT | PAGE_RW);
-    }
-
-    SwitchPageDirectory(kernel_directory);
-
-    Logger::LogFormatted(LogType_Info, "VMM initialized and kernel pages mapped using PML4 at 0x%llx\n", kernel_directory);
 }
 
 }
 }
-#else
-
-}
-}
-#endif

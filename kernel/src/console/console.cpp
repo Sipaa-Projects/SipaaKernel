@@ -542,91 +542,118 @@ void Console::Print(char *str)
     }
 }
 
-void Console::PrintFormatted(char *str, ...)
+void Console::PrintInt(int v, int base, const char *digits)
 {
-    if (framebuf.UseDoubleBuffer)
+    char buf[33];
+    char *ptr = &buf[sizeof(buf) - 1];
+    *ptr = '\0';
+
+    if (v == 0)
     {
+        PrintChar('0');
         return;
     }
-    va_list args;
-    va_start(args, str);
 
-    char buffer[256];
-
-    for (const char *p = str; *p != '\0'; p++)
+    if (v < 0 && base == 10)
     {
-        if (*p != '%')
-        {
-            PrintChar(*p);
-            continue;
-        }
+        PrintChar('-');
+        v = -v;
+    }
 
-        switch (*++p)
+    while (v)
+    {
+        *--ptr = digits[v % base];
+        v /= base;
+    }
+
+    Print(ptr);
+}
+
+void Console::PrintInt64(uint64_t v, int base, const char *digits)
+{
+    char buf[65];
+    char *pointer = &buf[sizeof(buf) - 1];
+    *pointer = '\0';
+
+    if (v == 0)
+    {
+        PrintChar('0');
+        return;
+    }
+
+    while (v)
+    {
+        *--pointer = digits[v % base];
+        v /= base;
+    }
+
+    Print(pointer);
+}
+
+void Console::PrintFormatted(char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    const char *hex_digits = "0123456789ABCDEF";
+
+    while (*format != '\0')
+    {
+        if (*format == '%')
         {
-        case 'c':
-            PrintChar(va_arg(args, int));
-            break;
-        case 'd':
-            Lib::IToString(va_arg(args, int), buffer, 10);
-            for (char *p = buffer; *p != '\0'; p++)
-                PrintChar(*p);
-            break;
-        case 'u':
-            Lib::UToString(va_arg(args, unsigned int), buffer, 10);
-            for (char *p = buffer; *p != '\0'; p++)
-                PrintChar(*p);
-            break;
-        case 'x':
-            Lib::UToString(va_arg(args, unsigned int), buffer, 16);
-            for (char *p = buffer; *p != '\0'; p++)
-                PrintChar(*p);
-            break;
-        case 's':
-            for (char *p = va_arg(args, char *); *p != '\0'; p++)
-                PrintChar(*p);
-            break;
-        case 'l':
-            switch (*++p)
+            format++;
+            switch (*format)
             {
-            case 'l':
-                switch (*++p)
-                {
-                case 'u':
-                    Lib::UlliToString(va_arg(args, unsigned long long int), buffer, 10);
-                    for (char *p = buffer; *p != '\0'; p++)
-                        PrintChar(*p);
-                    break;
-                case 'x':
-                    Lib::UlliToString(va_arg(args, unsigned long long int), buffer, 16);
-                    for (char *p = buffer; *p != '\0'; p++)
-                        PrintChar(*p);
-                    break;
-                }
-                break;
-            case 'd':
-                Lib::IToString(va_arg(args, long int), buffer, 10);
-                for (char *p = buffer; *p != '\0'; p++)
-                    PrintChar(*p);
-                break;
-            case 'u':
-                Lib::UToString(va_arg(args, unsigned long int), buffer, 10);
-                for (char *p = buffer; *p != '\0'; p++)
-                    PrintChar(*p);
-                break;
-            case 'x':
-                Lib::UToString(va_arg(args, unsigned long int), buffer, 16);
-                for (char *p = buffer; *p != '\0'; p++)
-                    PrintChar(*p);
+            case 's':
+            {
+                char *str = va_arg(args, char *);
+                Print(str);
                 break;
             }
-            break;
-
-        case 'p':
-            Lib::UToString(va_arg(args, uintptr_t), buffer, 16);
-            for (char *p = buffer; *p != '\0'; p++)
-                PrintChar(*p);
-            break;
+            case 'c':
+            {
+                char c = (char)va_arg(args, int);
+                PrintChar(c);
+                break;
+            }
+            case 'd':
+            {
+                int d = va_arg(args, int);
+                PrintInt(d, 10, hex_digits);
+                break;
+            }
+            case 'x':
+            {
+                int x = va_arg(args, int);
+                PrintInt(x, 16, hex_digits);
+                break;
+            }
+            case 'l':
+            {
+                format++;
+                if (*format == 'l' && *(format + 1) == 'x')
+                {
+                    format++;
+                    uint64_t llx = va_arg(args, uint64_t);
+                    PrintInt64(llx, 16, hex_digits);
+                }
+                else
+                {
+                    Print("Invalid format specifier");
+                }
+                break;
+            }
+            default:
+                PrintChar('%');
+                PrintChar(*format);
+                break;
+            }
         }
+        else
+        {
+            PrintChar(*format);
+        }
+        format++;
     }
 
     va_end(args);

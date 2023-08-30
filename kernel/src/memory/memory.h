@@ -15,6 +15,10 @@
 #define PAGE_TABLE_INDEX(x) (((x) >> 12) & 0x3FF)
 #define GET_PAGE_ADDRESS(x) ((x) & ~0xFFF)
 
+#define PMM_BLOCK_SIZE 4096
+#define PMM_MAX_BLOCKS 32768
+#define STACK_SIZE PMM_MAX_BLOCKS
+
 namespace Sk {
 namespace Memory {
 
@@ -31,63 +35,32 @@ public:
 
 };
 
-typedef struct page
+typedef struct memory_block
 {
-    uint32_t present : 1;
-    uint32_t rw : 1;
-    uint32_t user : 1;
-    uint32_t accessed : 1;
-    uint32_t dirty : 1;
-    uint32_t unused : 7;
-    uint32_t frame : 20;
-} page_t;
+        size_t size;
+        struct memory_block *next;
+        bool is_free;
+} MemoryBlock;
 
-typedef struct page_table
-{
-    page_t pages[1024];
-} page_table_t;
+class PhysicalMemoryManager {
 
-typedef struct page_directory
-{
-    page_table_t *tables[1024];
-    uint32_t tablesPhysical[1024];
-    uint32_t physicalAddr;
-} page_directory_t;
+private:
+    static uintptr_t Stack[STACK_SIZE];
+    static uint32_t Stack_top;
+    static MemoryBlock *Free_blocks = NULL;
 
-typedef struct Page
-{
-    struct Page *next;
-} Page;
+    static uintptr_t kernel_base;
+    static uintptr_t kernel_end;
+    static uintptr_t kernel_size;
 
-typedef struct
-{
-    size_t num_pages;
-} Header;
-
-/// @brief Class used for allocating/freeing memory
-class MemoryAllocator {
 public:
-    static Page *free_pages;
-    static page_directory_t *current_directory;
-    static page_directory_t *kernel_directory;
-
-    static uint64_t kernel_physical_base;
-    static uint64_t kernel_virtual_base;
-    static struct limine_file *kernel_file;
-    static uint64_t kernel_size;
-
-    static void Init(struct limine_memmap_entry **entries, uint64_t entry_count);
-    static void DetectTotalMemory(struct limine_memmap_entry **entries, uint64_t entry_count);
-    static void *Allocate(size_t size);
+    static void Init();
+    static void FreeBlock(void *block);
+    static void *AllocBlock();
     static void Free(void *ptr);
-    static Page *AllocPage();
-    static void FreePage(Page *page);
-    static void MapPage(void *physaddr, void *virtualaddr, uint32_t flags);
-    static void UnmapPage(void *virtualaddr);
-    static void SwitchPageDirectory(page_directory_t *new_directory);
-    static page_directory_t *CloneDirectory(page_directory_t *src);
-    static void InitVMM(struct limine_memmap_entry **entries, uint64_t entry_count);
+    static void *MAlloc(size_t size);
+
 };
 
-} // namespace name    
-} // namespace Sk
+}
+}

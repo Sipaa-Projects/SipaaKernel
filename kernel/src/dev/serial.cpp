@@ -16,7 +16,6 @@ void Serial::Init()
 {
     #ifndef __aarch64__
     #ifndef SERIAL_DISABLED
-    Logger::Log(LogType_Info, "Initializing serial console...");
     Io::OutB(SERIAL_PORT + 1, 0x00);
     Io::OutB(SERIAL_PORT + 3, 0x80);
     Io::OutB(SERIAL_PORT + 0, 0x01);
@@ -24,7 +23,6 @@ void Serial::Init()
     Io::OutB(SERIAL_PORT + 3, 0x03);
     Io::OutB(SERIAL_PORT + 2, 0xC7);
     Io::OutB(SERIAL_PORT + 4, 0x0B);
-    Logger::PrintOK();
     #endif
     #endif
 }
@@ -65,87 +63,119 @@ void Serial::WriteStr(char *str)
         WriteChar(str[i]);
 }
 
-void Serial::WriteStrFormatted(char *str, ...)
+
+void Serial::WriteInt(int v, int base, const char *digits)
+{
+    char buf[33];
+    char *ptr = &buf[sizeof(buf) - 1];
+    *ptr = '\0';
+
+    if (v == 0)
+    {
+        WriteChar('0');
+        return;
+    }
+
+    if (v < 0 && base == 10)
+    {
+        WriteChar('-');
+        v = -v;
+    }
+
+    while (v)
+    {
+        *--ptr = digits[v % base];
+        v /= base;
+    }
+
+    WriteStr(ptr);
+}
+
+void Serial::WriteInt64(uint64_t v, int base, const char *digits)
+{
+    char buf[65];
+    char *pointer = &buf[sizeof(buf) - 1];
+    *pointer = '\0';
+
+    if (v == 0)
+    {
+        WriteChar('0');
+        return;
+    }
+
+    while (v)
+    {
+        *--pointer = digits[v % base];
+        v /= base;
+    }
+
+    WriteStr(pointer);
+}
+
+void Serial::WriteStrFormatted(char *format, ...)
 {
     va_list args;
-    va_start(args, str);
+    va_start(args, format);
 
-    char buffer[256];
+    const char *hex_digits = "0123456789ABCDEF";
 
-    for (const char *p = str; *p != '\0'; p++)
+    while (*format != '\0')
     {
-        if (*p != '%')
+        if (*format == '%')
         {
-            WriteChar(*p);
-            continue;
-        }
-
-        switch (*++p)
-        {
-        case 'c':
-            WriteChar(va_arg(args, int));
-            break;
-        case 'd':
-            Lib::IToString(va_arg(args, int), buffer, 10);
-            for (char *p = buffer; *p != '\0'; p++)
-                WriteChar(*p);
-            break;
-        case 'u':
-            Lib::UToString(va_arg(args, unsigned int), buffer, 10);
-            for (char *p = buffer; *p != '\0'; p++)
-                WriteChar(*p);
-            break;
-        case 'x':
-            Lib::UToString(va_arg(args, unsigned int), buffer, 16);
-            for (char *p = buffer; *p != '\0'; p++)
-                WriteChar(*p);
-            break;
-        case 's':
-            for (char *p = va_arg(args, char *); *p != '\0'; p++)
-                WriteChar(*p);
-            break;
-        case 'l':
-            switch (*++p)
+            format++;
+            switch (*format)
             {
-            case 'l':
-                switch (*++p)
-                {
-                case 'u':
-                    Lib::UlliToString(va_arg(args, unsigned long long int), buffer, 10);
-                    for (char *p = buffer; *p != '\0'; p++)
-                        WriteChar(*p);
-                    break;
-                case 'x':
-                    Lib::UlliToString(va_arg(args, unsigned long long int), buffer, 16);
-                    for (char *p = buffer; *p != '\0'; p++)
-                        WriteChar(*p);
-                    break;
-                }
-                break;
-            case 'd':
-                Lib::IToString(va_arg(args, long int), buffer, 10);
-                for (char *p = buffer; *p != '\0'; p++)
-                    WriteChar(*p);
-                break;
-            case 'u':
-                Lib::UToString(va_arg(args, unsigned long int), buffer, 10);
-                for (char *p = buffer; *p != '\0'; p++)
-                    WriteChar(*p);
-                break;
-            case 'x':
-                Lib::UToString(va_arg(args, unsigned long int), buffer, 16);
-                for (char *p = buffer; *p != '\0'; p++)
-                    WriteChar(*p);
+            case 's':
+            {
+                char *str = va_arg(args, char *);
+                WriteStr(str);
                 break;
             }
-            break;
-
-        case 'p':
-            Lib::UToString(va_arg(args, uintptr_t), buffer, 16);
-            for (char *p = buffer; *p != '\0'; p++)
-                WriteChar(*p);
-            break;
+            case 'c':
+            {
+                char c = (char)va_arg(args, int);
+                WriteChar(c);
+                break;
+            }
+            case 'd':
+            {
+                int d = va_arg(args, int);
+                WriteInt(d, 10, hex_digits);
+                break;
+            }
+            case 'x':
+            {
+                int x = va_arg(args, int);
+                WriteInt(x, 16, hex_digits);
+                break;
+            }
+            case 'l':
+            {
+                format++;
+                if (*format == 'l' && *(format + 1) == 'x')
+                {
+                    format++;
+                    uint64_t llx = va_arg(args, uint64_t);
+                    WriteInt64(llx, 16, hex_digits);
+                }
+                else
+                {
+                    WriteStr("Invalid format specifier");
+                }
+                break;
+            }
+            default:
+                WriteChar('%');
+                WriteChar(*format);
+                break;
+            }
         }
+        else
+        {
+            WriteChar(*format);
+        }
+        format++;
     }
 
     va_end(args);

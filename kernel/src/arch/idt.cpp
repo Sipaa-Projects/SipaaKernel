@@ -5,7 +5,6 @@
 
 #include <global.h>
 #include <dev/serial.h>
-#include <dev/ps2.h>
 #include <console/console.h>
 #include <logging/logger.h>
 #include <system/system.h>
@@ -97,10 +96,8 @@ __attribute__((interrupt)) void VirtualizationExceptionHandler(struct Registers6
 
 __attribute__((interrupt)) void MouseHandler(struct Registers64 *r)
 {
-    Logger::Log(LogType_Debug, "Interrupt raised!\n");
+    Logger::Log(LogType_Debug, "IDT / Mouse Interrupt", "Interrupt raised!\n");
     uint8_t mouseData = Io::InB(0x60);
-
-    Dev::PS2::MouseHandler(mouseData);
 
     Idt::PicEoi(12);
 }
@@ -193,14 +190,14 @@ void Idt::SetEntry(uint8_t vector, void *isr, uint8_t flags)
 
 void Idt::Init()
 {
-    Logger::Log(LogType_Info, "Starting IDT initialization...\n");
+    Logger::Log(LogType_Info, "IDT", "Starting initialization...\n");
 
-    Logger::Log(LogType_Debug, "Loading IDT pointer...");
+    Logger::Log(LogType_Debug, "IDT", "Loading pointer...");
     idtr.base = (uintptr_t)&entries[0];
     idtr.limit = (uint16_t)sizeof(IdtEntry) * 256 - 1;
     Logger::PrintOK();
 
-    Logger::Log(LogType_Debug, "Loading IDT entries...");
+    Logger::Log(LogType_Debug, "IDT", "Loading entries...");
     SetEntry(0, (uint64_t)DivZeroHandler, 0x8E);
     SetEntry(1, (uint64_t)DebugHandler, 0x8E);
     SetEntry(2, (uint64_t)NonMaskableInterruptHandler, 0x8E);
@@ -226,23 +223,23 @@ void Idt::Init()
 
     Logger::PrintOK();
 
-    Logger::Log(LogType_Debug, "Setting up PIC...");
+    Logger::Log(LogType_Debug, "IDT", "Setting up PIC...");
     PicRemap();
     Io::OutB(PIC1_DATA, 0b11111101);
     Io::OutB(PIC2_DATA, 0b11111111);
     Logger::PrintOK();
 
-    Logger::Log(LogType_Debug, "Loading IDT into CPU...");
+    Logger::Log(LogType_Debug, "IDT", "Loading into CPU...");
     __asm__ volatile("lidt %0"
                      :
                      : "m"(idtr));
     Logger::PrintOK();
 
-    Logger::Log(LogType_Debug, "Enabling interrupts...");
+    Logger::Log(LogType_Debug, "IDT", "Enabling interrupts...");
     __asm__ volatile("sti");
     Logger::PrintOK();
 
-    Logger::Log(LogType_Info, "IDT initialization is sucessful!\n");
+    Logger::Log(LogType_Info, "IDT", "Initialization is sucessful!\n");
 }
 
 }

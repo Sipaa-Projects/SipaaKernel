@@ -4,7 +4,20 @@
 ### 1 : Get the required packages
 Before building the kernel, you may install this packages on your system :
 
-`build-essential nasm xorriso ld qemu-system-x86 make git` (*Debian/Ubuntu*)
+`build-essential nasm xorriso qemu-system-x86 mtools make git` (*Debian based systems*)
+
+`qemu-full nasm xorriso mtools make git` (*Arch Linux based systems*)
+
+### 1.1 : Get the required toolchain(s)
+To build SipaaKernel, you need a toolchain.
+
+You can build it by [yourself](https://wiki.osdev.org/GCC_Cross-Compiler), or you can install a pre-built copy using the Homebrew package manager.
+
+Do do that :
+* Install Homebrew, instructions can be found [here](https://brew.sh]
+* Add `PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"` to your `~/.bashrc` file.
+
+Now, if you wanna install the x86_64 toolchain, run `brew install x86_64-elf-gcc`, if you wanna install the aarch64 toolchain, run `brew install aarch64-elf-gcc`, or you can install the two toolchains
 
 ### 2 : Clone the repo
 Just easy as paste `git clone https://github.com/SipaaOS-Project/SipaaKernel` in your terminal

@@ -14,7 +14,7 @@ To build SipaaKernel, you need a toolchain.
 You can build it by [yourself](https://wiki.osdev.org/GCC_Cross-Compiler), or you can install a pre-built copy using the Homebrew package manager.
 
 Do do that :
-* Install Homebrew, instructions can be found [here](https://brew.sh]
+* Install Homebrew, instructions can be found [here](https://brew.sh)
 * Add `PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"` to your `~/.bashrc` file.
 
 Now, if you wanna install the x86_64 toolchain, run `brew install x86_64-elf-gcc`, if you wanna install the aarch64 toolchain, run `brew install aarch64-elf-gcc`, or you can install the two toolchains

@@ -1,33 +1,18 @@
 {
-    "C_Cpp.default.compilerPath": "g++",
-    "C_Cpp.default.compilerArgs": [
-        "-fpermissive"
-    ],
-    "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
-        "compare": "cpp",
-        "array": "cpp",
-        "string_view": "cpp",
-        "initializer_list": "cpp",
-        "utility": "cpp",
-        "cstdint": "cpp",
-        "system_error": "cpp",
-        "functional": "cpp",
-        "tuple": "cpp",
-        "type_traits": "cpp",
-        "cstdarg": "cpp",
-        "cmath": "cpp",
-        "optional": "cpp",
-        "ratio": "cpp",
-        "variant": "cpp",
-        "__bit_reference": "cpp",
-        "__node_handle": "cpp",
-        "atomic": "cpp",
-        "bitset": "cpp",
-        "deque": "cpp",
-        "__memory": "cpp",
-        "limits": "cpp",
-        "locale": "cpp",
-        "vector": "cpp"
-    }
+        "console.h": "c",
+        "stb_image.h": "c",
+        "memory.h": "c",
+        "stddef.h": "c",
+        "limine.h": "c",
+        "stdint.h": "c",
+        "typeinfo": "cpp",
+        "stdarg.h": "c",
+        "device.h": "c"
+    },
+    "C_Cpp.default.includePath": [
+        "kernel/inc"
+    ],
+    "C_Cpp.errorSquiggles": "enabled",
+    "files.encoding": "windows1252"
 }

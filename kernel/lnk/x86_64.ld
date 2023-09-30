@@ -1,7 +1,8 @@
+/* SipaaKernel linker script for x86_64 */
 OUTPUT_FORMAT(elf64-x86-64)
 OUTPUT_ARCH(i386:x86-64)
 
-ENTRY(SK_Main)
+ENTRY(main)
 
 PHDRS
 {

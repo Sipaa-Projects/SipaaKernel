@@ -1,9 +1,9 @@
-#pragma once
+#ifndef __MEMORY_H__
+#define __MEMORY_H__
 
 #include <stdint.h>
 #include <stddef.h>
-
-#include <limine/limine.h>
+#include <stdbool.h>
 
 #define PAGE_SIZE 4096
 #define PAGE_FLAGS 0xFFF
@@ -19,48 +19,20 @@
 #define PMM_MAX_BLOCKS 32768
 #define STACK_SIZE PMM_MAX_BLOCKS
 
-namespace Sk {
-namespace Memory {
-
-/// @brief Class used to do basic operations with memory.
-class BasicMemoryManagement {
-
-public:
-    static int MemoryCompare(const void *s1, const void *s2, size_t n);
-    static void MemorySet(void* start, uint8_t value, size_t size);
-    static void MemorySet16(void* start, uint16_t value, size_t size);
-    static void MemorySet32(void* start, uint32_t value, size_t size);
-    static void MemorySet64(void* start, uint64_t value, size_t size);
-    static void MemoryCopy(void* Destination, void* Source, size_t Size);
-
-};
-
-typedef struct memory_block
+typedef struct pmm_memory_block
 {
-        size_t size;
-        struct memory_block *next;
-        bool is_free;
-} MemoryBlock;
+    size_t size;
+    struct pmm_memory_block *next;
+    bool is_free;
+} pmm_memory_block;
 
-class PhysicalMemoryManager {
+void *memcpy(void *dest, const void *src, size_t n);
+void *memset(void *s, int c, size_t n);
+void *memmove(void *dest, const void *src, size_t n);
+int memcmp(const void *s1, const void *s2, size_t n);
 
-private:
-    static uintptr_t Stack[STACK_SIZE];
-    static uint32_t Stack_top;
-    static MemoryBlock *Free_blocks = NULL;
+void pmm_init();
+void *malloc(size_t size);
+void free(void *ptr);
 
-    static uintptr_t kernel_base;
-    static uintptr_t kernel_end;
-    static uintptr_t kernel_size;
-
-public:
-    static void Init();
-    static void FreeBlock(void *block);
-    static void *AllocBlock();
-    static void Free(void *ptr);
-    static void *MAlloc(size_t size);
-
-};
-
-}
-}
+#endif

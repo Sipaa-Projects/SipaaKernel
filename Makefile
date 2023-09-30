@@ -1,10 +1,19 @@
 MAKEFLAGS += --no-print-directory
 
-SRCS := $(shell find kernel/ -name '*.cpp')
-OBJS := $(patsubst kernel/%.cpp,kernel/obj/%.o,$(SRCS))
-ASMS := $(patsubst kernel/%.asm,kernel/obj/asm/%.o,$(shell find kernel/ -name '*.asm'))
-CC = x86_64-elf-g++
-LD = x86_64-elf-ld
+ARCH=x86_64
+
+INCLUDEDIR=kernel/inc
+BINDIR=kernel/bin-$(ARCH)
+SRCDIR=kernel/src
+RESDIR=kernel/res
+OBJDIR=kernel/obj-$(ARCH)
+
+SRCS := $(shell find $(SRCDIR) -name '*.c')
+OBJS := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o,$(SRCS))
+ASMS := $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/asm/%.o,$(shell find kernel/ -name '*.asm'))
+
+CC = $(ARCH)-elf-gcc
+LD = $(ARCH)-elf-ld
 
 CFLAGS := \
 	-w \
@@ -19,15 +28,19 @@ CFLAGS := \
 	-fno-PIC \
 	-m64 \
 	-Ikernel/src/ \
-	-march=x86-64 \
 	-mabi=sysv \
-	-g \
+	-g
+
+ifeq ($(ARCH),x86_64)
+CFLAGS += \
+	-march=x86-64 \
 	-mno-80387 \
 	-mno-mmx \
 	-mno-sse \
 	-mno-sse2 \
 	-mno-red-zone \
 	-mcmodel=kernel
+endif
 
 ASM_FLAGS := \
 	-f elf64
@@ -35,92 +48,79 @@ ASM_FLAGS := \
 LD_FLAGS := \
 	-nostdlib \
 	-z max-page-size=0x1000 \
-	-T kernel/lnk/x86_64.ld
+	-T kernel/lnk/$(ARCH).ld
 
 FAT_IMAGE := kernel/disk.img
 
-kernel.elf: $(OBJS) $(ASMS)
-	@make disk_img
-	@mkdir -p kernel/bin/x86_64
+kernel: $(OBJS) $(ASMS)
+	@mkdir -p $(BINDIR)
 	@echo [LD] kernel.elf
-	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o kernel/bin/x86_64/kernel.elf
+	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o $(BINDIR)/kernel.sk
 
-kernel/obj/%.o: kernel/%.cpp
+# Compile C files
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(@D)
 	@echo [CC] $<
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-kernel/obj/asm/%.o: kernel/%.asm
+# Compile ASM files
+$(OBJDIR)/asm/%.o: $(SRCDIR)/%.asm
 	@mkdir -p $(@D)
 	@echo [NASM] $<
 	@nasm $< $(ASM_FLAGS) -o $@
 
-disk_img:
-	@echo [DD] Creating disk image...
-	@dd if=/dev/zero of=kernel/disk.img bs=1M count=64 status=none
-	@echo [MKFS.FAT] Formatting disk image to FAT32...
-	@mformat -i $(FAT_IMAGE) -F ::
-	@echo [CP] Copying files to the disk image...
-	@mcopy -i $(FAT_IMAGE) ./disk/* ::/
-	@echo [DONE] FAT32 disk image created: $(FAT_IMAGE)
-
-iso:
-	@mkdir -p kernel/bin/x86_64/iso_root
+# Build ISO
+iso: kernel
+	@mkdir -p  $(BINDIR)/iso_root
 	@echo [CP] Copying kernel files to the ISO file root...
-	@cp kernel/bin/x86_64/kernel.elf \
-		kernel/config/limine.cfg kernel/res/wallpaper.bmp limine/limine-bios.sys limine/limine-bios-cd.bin limine/limine-uefi-cd.bin kernel/bin/x86_64/iso_root/
-	@echo [XORRISO] kernel/bin/x86_64/sipaakernel.iso
+	@cp -r $(BINDIR)/kernel.sk \
+		boot/limine.cfg boot/wlp.jpg boot/limine-bios.sys boot/limine-bios-cd.bin boot/limine-uefi-cd.bin $(BINDIR)/iso_root/
+	@echo [XORRISO] $(BINDIR)/sipaakernel.iso
 	@xorriso -as mkisofs -b limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--efi-boot limine-uefi-cd.bin \
 		-efi-boot-part --efi-boot-image --protective-msdos-label \
-		kernel/bin/x86_64/iso_root -o kernel/bin/x86_64/sipaakernel.iso
-	@echo [LIMINE-DEPLOY] kernel/bin/x86_64/sipaakernel.iso
-	@limine/limine bios-install kernel/bin/x86_64/sipaakernel.iso
+		 $(BINDIR)/iso_root -o $(BINDIR)/sipaakernel.iso
+	@echo [LIMINE-DEPLOY] $(BINDIR)/sipaakernel.iso
+	@boot/limine bios-install $(BINDIR)/sipaakernel.iso
 
+# Clean
 clean:
-	rm -rf kernel/obj
-	rm -rf kernel/bin
+	rm -rf $(OBJDIR)
+	rm -rf $(BINDIR)
 	rm -f *.o
 	rm -f kernel/disk.img
-	rm -f skpt/skpt
 
-run:
-	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -display sdl -vga vmware -hda kernel/disk.img -boot d
+# Run
+run: iso
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga vmware -boot d
 
-run-uefi:
-	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -display sdl -vga vmware -bios ./assets/OVMF-x86_64.fd -hda kernel/disk.img -boot d
+run-uefi: iso
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga vmware -bios ./assets/OVMF-x86_64.fd -boot d
 
-run-gtk:
-	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -boot d
+run-kvm: iso
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga vmware -boot d
 
-run-gtk-uefi:
-	@make iso
-	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -bios ./assets/OVMF-x86_64.fd -hda kernel/disk.img -boot d
+run-kvm-uefi: iso
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga vmware -bios ./assets/OVMF-x86_64.fd -boot d
 
-run-macos:
-	@make iso
-	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -hda kernel/disk.img -boot d
+run-gtk: iso
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga vmware -boot d
 
-run-macos-uefi:
-	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -vga vmware -bios ./assets/OVMF-x86_64.fd -hda kernel/disk.img -boot d
+run-gtk-uefi: iso
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga vmware -bios ./assets/OVMF-x86_64.fd -boot d
 
-debug-int:
-	@make iso
-	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -d int -M smm=off -display sdl -hda kernel/disk.img -boot d
+run-macos: iso
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga vmware -boot d
 
-debug:
-	@make iso
-	qemu-system-x86_64 -m 1g -enable-kvm -serial stdio -cdrom ./kernel/bin/x86_64/sipaakernel.iso -s -S -display sdl -hda kernel/disk.img -boot d
+run-macos-uefi: iso
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga vmware -bios ./assets/OVMF-x86_64.fd -boot d
 
-sipaakpt:
-	@echo [GCC] skpt/main.c to skpt/skpt
-	@gcc ./skpt/main.c -o ./skpt/skpt -lcjson
-	@echo [CP] skpt/skpt to /usr/bin/skpt
-	@cp ./skpt/skpt /usr/bin/skpt
-	@echo [CHMOD] Allowing user to run skpt...
-	@chmod +x /usr/bin/skpt
+debug-int: iso
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -d int -M smm=off -display sdl -boot d
+
+debug: iso
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -s -S -display sdl -boot d
+
+debug-kvm: iso
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -s -S -display sdl -boot d

@@ -2,7 +2,7 @@
 OUTPUT_FORMAT(elf64-littleaarch64)
 OUTPUT_ARCH(aarch64)
 
-ENTRY(SK_Main)
+ENTRY(main)
 
 /* Define the program headers we want so the bootloader gives us the right */
 /* MMU permissions */

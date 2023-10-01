@@ -10,6 +10,10 @@ SipaaKernel is a monolithic kernel made in C
 
 It features an easy & elegant API.
 
+## How it looks
+At front-end, it just shows text, but at back-end, it does many things!
+<img src="meta/artwork/Screenshot.png"/>
+
 ## Features
 * Boot :
   * UEFI/BIOS support
@@ -29,6 +33,6 @@ We choosed C to have an easy & elegant API for making the best OSes.
 Nope, but you can make an OS with the SipaaKernel APIs.
 
 ## Credits
-Limine Contributors : The Limine bootloader & his protocol. (boot/*, kernel/src/boot/limine.h)
-The ZAP group : Font (ZAP Light 16, kernel/src/main.c: `uint8_t zap_light16[]`)
-Kokolor : Terminal (kernel/src/lib/terminal.c/.h)
+* Limine Contributors : The Limine bootloader & his protocol. (boot/*, kernel/src/boot/limine.h)
+* The ZAP group : Font (ZAP Light 16, kernel/src/main.c: `uint8_t zap_light16[]`)
+* Kokolor : Terminal (kernel/src/lib/terminal.c/.h)

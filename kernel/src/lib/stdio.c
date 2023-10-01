@@ -13,7 +13,7 @@ void finit()
     for (int i = 0; i < MAX_FD; i++) {
         fd_table[i] = malloc(sizeof(file_descriptor));
         file_descriptor *fd = fd_table[i];
-        fd->mode = "";
+        fd->mode = NULL;
         fd->type = -1;
         fd->address = NULL;
         fd->used = 0;
@@ -32,7 +32,7 @@ int fopen(const char *filename, const char *mode) {
 
     for (int i = 0; i < MAX_FD; i++) {
         fd = fd_table[i];
-        
+
         if (fd->used != 0)
             continue;
 
@@ -99,4 +99,39 @@ size_t fread(void *ptr, size_t size, size_t count, int fd) {
     }
 
     return 0;
+}
+
+int fclose(int fd)
+{
+    // Validate the file descriptor
+    if (fd < 0 || fd >= MAX_FD) {
+        return -1;  // Invalid file descriptor
+    }
+
+    file_descriptor *fd_entry = fd_table[fd];
+    
+    // Check if the file descriptor is actually open
+    if (fd_entry == NULL || fd_entry->used == 0) {
+        return -2;  // File descriptor not in use
+    }
+
+    // If the file type is a device, you might want to close it here.
+    // This will depend on your device handling logic.
+    if (fd_entry->type == FILE_TYPE_DEV) {
+        // Free the device
+        free(fd_entry->address);
+    }
+
+    // Release resources (like memory allocated for mode)
+    if (fd_entry->mode) {
+        free(fd_entry->mode);
+        fd_entry->mode = NULL;
+    }
+
+    // Mark the file descriptor as unused
+    fd_entry->used = 0;
+    fd_entry->type = -1;
+    fd_entry->address = NULL;
+
+    return 0;  // Successfully closed
 }

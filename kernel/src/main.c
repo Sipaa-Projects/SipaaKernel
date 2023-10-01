@@ -366,14 +366,15 @@ int main()
     log(LOGTYPE_INFO, "fopen returned %d\n", serial_fd);
 
     int r = fwrite("Hello, World!", sizeof(char), 13, serial_fd);
-    if (r != 13)
-        log(LOGTYPE_ERROR, "fwrite failed with error code %d\n", r);
+    log(LOGTYPE_INFO, "fwrite returned %d\n", r);
 
     char *buf;
     r = fread(buf, sizeof(char), 14, serial_fd);
     if (!buf)
         log(LOGTYPE_INFO, "fread returned NULL\n");
 
+    r = fclose(serial_fd);
+    log(LOGTYPE_INFO, "fclose returned %d\n", r);
 
     // Halt
     log(LOGTYPE_INFO, "system: Halting now.\n");

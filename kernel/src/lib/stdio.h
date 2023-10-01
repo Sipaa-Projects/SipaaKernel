@@ -23,5 +23,6 @@ typedef struct {
 int fopen(const char *filename, const char *mode);
 size_t fwrite(const void *ptr, size_t size, size_t count, int fd);
 size_t fread(void *ptr, size_t size, size_t count, int fd);
+int fclose(int fd);
 
 #endif

@@ -1,5 +1,4 @@
 #include <dev/fb/fb.h>
-#include <memory/memory.h>
 
 framebuffer *fb_fromlimine(struct limine_framebuffer *lfb)
 {

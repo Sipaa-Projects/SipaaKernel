@@ -22,7 +22,11 @@ At front-end, it just shows text, but at back-end, it does many things!
 * Kernel :
   * AArch64 architecture
   * x86-64 architecture
+    * IDT / PIC / GDT / TSS (todo)
+    * Serial console
   * Generic
+    * Video terminal
+    * Physical Memory Manager
 
 ## Q&A
 

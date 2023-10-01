@@ -1,3 +1,4 @@
+#include <arch/arch.h>
 #include <boot/limine.h>
 #include <dev/fb/fb.h>
 #include <lib/log.h>
@@ -348,7 +349,7 @@ static volatile struct limine_framebuffer_request fb_request = {
     .revision = 0
 };
 
-int main()
+void main()
 {
     pmm_init();
 
@@ -360,6 +361,8 @@ int main()
     init_terminal(t, &zap_light16, f);
 
     log(LOGTYPE_INFO, "Welcome to SipaaKernel! Framebuf: a: %p w: %llu h: %llu p: %llu\n", f->address, f ->width, f->height, f->pitch);
+
+    arch_init_stage1();
 
     // Try the POSIX subsystem
     int serial_fd = fopen("/dev/ttyS0", "w");
@@ -377,10 +380,5 @@ int main()
     log(LOGTYPE_INFO, "fclose returned %d\n", r);
 
     // Halt
-    log(LOGTYPE_INFO, "system: Halting now.\n");
-
-    while (1)
-        ;;
-
-    return 0;
+    arch_idle();
 }

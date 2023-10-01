@@ -1,0 +1,53 @@
+#include <arch/arch.h>
+
+#ifdef __x86_64__
+#include <arch/x86_64/gdt.h>
+#endif
+#include <lib/log.h>
+#include <stdnoreturn.h>
+
+#ifdef __x86_64__
+uint64_t kernel_stack[8192];
+#endif
+
+void arch_init_stage1(void)
+{
+    #if defined(__x86_64__)
+    log(LOGTYPE_INFO, "arch: initializing for x86_64\n");
+    log(LOGTYPE_INFO, "arch: initializing gdt/tss\n");
+    gdt_init(kernel_stack);
+    log(LOGTYPE_SUCCESS, "arch: initialized gdt/tss\n");
+    log(LOGTYPE_SUCCESS, "arch: initialized\n");
+    #else
+    log(LOGTYPE_INFO, "arch: nothing to initialize\n");
+    #endif
+}
+
+noreturn void arch_idle(void)
+{
+    log(LOGTYPE_INFO, "arch: entering idle mode (halting system)\n");
+    while (1)
+    {
+        #if defined(__x86_64__)
+        __asm__ volatile("hlt");
+        #elif defined(__aarch64__) || defined(__riscv64__)
+        __asm__ volatile("wfi");
+        #endif 
+    }
+}
+
+void arch_pause(void) {
+    #ifdef __x86_64__
+    __asm__ volatile("pause");
+    #endif
+}
+
+noreturn void arch_reboot(void) {
+    // todo
+    arch_idle();
+}
+
+noreturn void arch_shutdown(void) {
+    // todo
+    arch_idle();
+}

@@ -10,7 +10,7 @@ OBJDIR=kernel/obj-$(ARCH)
 
 SRCS := $(shell find $(SRCDIR) -name '*.c')
 OBJS := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o,$(SRCS))
-ASMS := $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/asm/%.o,$(shell find kernel/ -name '*.asm'))
+x86_64_ASMS := $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/asm/%.o,$(shell find kernel/ -name '*.asm'))
 
 CC = $(ARCH)-elf-gcc
 LD = $(ARCH)-elf-ld
@@ -52,22 +52,28 @@ LD_FLAGS := \
 
 FAT_IMAGE := kernel/disk.img
 
-kernel: $(OBJS) $(ASMS)
+ifeq ($(ARCH), x86_64)
+$(OBJDIR)/asm/%.o: $(SRCDIR)/%.asm
+	@mkdir -p $(@D)
+	@echo [NASM] $<
+	@nasm $< $(ASM_FLAGS) -o $@
+
+kernel: $(OBJS) $(x86_64_ASMS)
 	@mkdir -p $(BINDIR)
 	@echo [LD] kernel.elf
-	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o $(BINDIR)/kernel.sk
+	@$(LD) $(LD_FLAGS) $(OBJS) $(x86_64_ASMS) -o $(BINDIR)/kernel.sk
+else
+kernel: $(OBJS)
+	@mkdir -p $(BINDIR)
+	@echo [LD] kernel.elf
+	@$(LD) $(LD_FLAGS) $(OBJS) -o $(BINDIR)/kernel.sk
+endif
 
 # Compile C files
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(@D)
 	@echo [CC] $<
 	@$(CC) $(CFLAGS) -c $< -o $@
-
-# Compile ASM files
-$(OBJDIR)/asm/%.o: $(SRCDIR)/%.asm
-	@mkdir -p $(@D)
-	@echo [NASM] $<
-	@nasm $< $(ASM_FLAGS) -o $@
 
 # Build ISO
 iso: kernel

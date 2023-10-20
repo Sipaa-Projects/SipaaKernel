@@ -365,10 +365,13 @@ void main()
     arch_init_stage1();
 
     // Try the POSIX subsystem
-    int serial_fd = fopen("/dev/ttyS0", "w");
+    int serial_fd = fopen("/dev/tty0", "w");
     log(LOGTYPE_INFO, "fopen returned %d\n", serial_fd);
 
-    int r = fwrite("Hello, World!", sizeof(char), 13, serial_fd);
+    int r = fprintf(serial_fd, "Welcome to SipaaKernel! Framebuf: a: %p w: %llu h: %llu p: %llu\n", f->address, f ->width, f->height, f->pitch);
+    log(LOGTYPE_INFO, "fprintf returned %d\n", r);
+
+    r = fwrite("Hello, World!\n\0", sizeof(char), 13, serial_fd);
     log(LOGTYPE_INFO, "fwrite returned %d\n", r);
 
     char *buf;

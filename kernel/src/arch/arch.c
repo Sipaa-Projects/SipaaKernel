@@ -13,12 +13,14 @@ uint64_t kernel_stack[8192];
 void arch_init_stage1(void)
 {
     #if defined(__x86_64__)
+    log(LOGTYPE_INFO, "arch: cpu arch: x64 x86-based (x86-64)\n");
     log(LOGTYPE_INFO, "arch: initializing for x86_64\n");
     log(LOGTYPE_INFO, "arch: initializing gdt/tss\n");
     gdt_init(kernel_stack);
     log(LOGTYPE_SUCCESS, "arch: initialized gdt/tss\n");
     log(LOGTYPE_SUCCESS, "arch: initialized\n");
-    #else
+    #elif defined(__aarch64__) | defined(__riscv64__)
+    log(LOGTYPE_INFO, "arch: cpu arch: x64 RISCV-based (RISCV64/AARCH64)\n");
     log(LOGTYPE_INFO, "arch: nothing to initialize\n");
     #endif
 }

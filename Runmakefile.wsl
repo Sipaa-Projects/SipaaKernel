@@ -1,0 +1,32 @@
+MAKEFLAGS += --no-print-directory
+
+ARCH=x86_64
+
+BINDIR=kernel\bin-$(ARCH)
+
+run: 
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom $(BINDIR)\sipaakernel.iso -display sdl -vga vmware -boot d
+
+run-uefi: 
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom $(BINDIR)\sipaakernel.iso -display sdl -vga vmware -bios assets\OVMF-x86_64.fd -boot d
+
+run-whpx: 
+	qemu-system-x86_64 -m 1g -accel whpx -serial stdio -cdrom $(BINDIR)\sipaakernel.iso -display sdl -vga vmware -boot d
+
+run-whpx-uefi: 
+	qemu-system-x86_64 -m 1g -accel whpx -serial stdio -cdrom $(BINDIR)\sipaakernel.iso -display sdl -vga vmware -bios assets\OVMF-x86_64.fd -boot d
+
+run-gtk: 
+	qemu-system-x86_64 -m 1g -accel whpx -serial stdio -cdrom $(BINDIR)\sipaakernel.iso -vga vmware -boot d
+
+run-gtk-uefi: 
+	qemu-system-x86_64 -m 1g -accel whpx -serial stdio -cdrom $(BINDIR)\sipaakernel.iso -vga vmware -bios assets\OVMF-x86_64.fd -boot d
+
+debug-int: 
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom $(BINDIR)\sipaakernel.iso -d int -M smm=off -display sdl -boot d
+
+debug: 
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom $(BINDIR)\sipaakernel.iso -s -S -display sdl -boot d
+
+debug-whpx: 
+	qemu-system-x86_64 -m 1g -accel whpx -serial stdio -cdrom $(BINDIR)\sipaakernel.iso -s -S -display sdl -boot d

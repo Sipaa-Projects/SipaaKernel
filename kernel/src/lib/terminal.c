@@ -1,4 +1,5 @@
 #include <lib/terminal.h>
+#include <dev/device.h>
 
 Terminal * current_terminal;
 Terminal * main_terminal;
@@ -224,4 +225,34 @@ void printf(unsigned char *format, ...)
         va_start(args, format);
         vprintf(format, args);
         va_end(args);
+}
+
+/* Device */
+void terminal_write(dev *self, const char *buf, size_t len) {
+    for (size_t i = 0; i < len; ++i) {
+        print_character(buf[i]);
+    }
+}
+
+void terminal_read(dev *self, char *buf, size_t len) {
+    // Reading from serial console can't be done.
+    buf = NULL;
+    return;
+}
+
+void *terminal_getdev()
+{
+    void *d = malloc(sizeof(dev));
+
+    if (!d)
+    {
+        return;
+        //log(LOGTYPE_WARNING, "serial_init: malloc returned NULL. You may encounter problems later.");
+    }
+
+    dev *d2 = (dev *)d;
+    d2->write = &terminal_write;
+    d2->read = &terminal_read;
+
+    return d;
 }

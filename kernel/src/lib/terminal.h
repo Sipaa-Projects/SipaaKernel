@@ -28,5 +28,6 @@ void print_character(unsigned char c);
 void print_string(unsigned char *c);
 void vprintf(unsigned char *format, va_list args);
 void printf(unsigned char *format, ...);
+void *terminal_getdev();
 
 #endif

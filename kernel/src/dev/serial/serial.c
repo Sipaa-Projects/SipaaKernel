@@ -8,16 +8,22 @@
 
 bool serial_isready()
 {
+    #ifdef __x86_64__
     return inb(SERIAL_PORT + 5) & 0x20;
+    #elif defined(__aarch64__)
+    return true;
+    #endif
 }
 
 void serial_write(dev *self, const char *buf, size_t len) {
+    #ifdef __x86_64__
     for (size_t i = 0; i < len; ++i) {
         while (!serial_isready())
             ;;
         
         outb(SERIAL_PORT, buf[i]);
     }
+    #endif
 }
 void serial_read(dev *self, char *buf, size_t len) {
     // Reading from serial console can't be done.
@@ -27,6 +33,7 @@ void serial_read(dev *self, char *buf, size_t len) {
 
 void *serial_init()
 {
+    #ifdef __x86_64__
     outb(SERIAL_PORT + 1, 0x00);
     outb(SERIAL_PORT + 3, 0x80);
     outb(SERIAL_PORT + 0, 0x01);
@@ -47,4 +54,7 @@ void *serial_init()
     d2->read = &serial_read;
 
     return d;
+    #else
+    return NULL;
+    #endif
 }

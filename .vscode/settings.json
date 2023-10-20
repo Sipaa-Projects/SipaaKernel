@@ -8,7 +8,8 @@
         "stdint.h": "c",
         "typeinfo": "cpp",
         "stdarg.h": "c",
-        "device.h": "c"
+        "device.h": "c",
+        "string.h": "c"
     },
     "C_Cpp.default.includePath": [
         "kernel/inc"

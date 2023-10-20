@@ -4,6 +4,8 @@
 #include <memory/memory.h>
 #include <lib/log.h>
 #include <lib/string.h>
+#include <lib/terminal.h>
+#include <stdarg.h>
 
 file_descriptor *fd_table[MAX_FD];
 bool is_init = false;
@@ -51,6 +53,11 @@ int fopen(const char *filename, const char *mode) {
             fd->type = FILE_TYPE_DEV;
             fd->address = serial_init();
         }
+        else if (strcmp(filename, "/dev/tty0") == 0) // Terminal device
+        { 
+            fd->type = FILE_TYPE_DEV;
+            fd->address = terminal_getdev();
+        }
 
         if (!fd->address) {
             return -1;  // File not found
@@ -62,7 +69,7 @@ int fopen(const char *filename, const char *mode) {
     return -2;  // No available file descriptor
 }
 
-size_t fwrite(const void *ptr, size_t size, size_t count, int fd) {
+size_t fwrite(const char *ptr, size_t size, size_t count, int fd) {
     file_descriptor *fd2 = fd_table[fd];
 
     if (fd < 0 || fd >= MAX_FD)
@@ -84,7 +91,146 @@ size_t fwrite(const void *ptr, size_t size, size_t count, int fd) {
     return 0;
 }
 
-size_t fread(void *ptr, size_t size, size_t count, int fd) {
+/* private methods for fprintf */
+size_t fprint_integer(int fd, int v, int base,
+    unsigned char * digits) {
+    char buf[33];
+    char * ptr = & buf[sizeof(buf) - 1];
+    * ptr = '\0';
+
+    if (v == 0) {
+        return fwrite('0', sizeof(char), 1, fd);
+    }
+
+    if (v < 0 && base == 10) {
+        fwrite('-', sizeof(char), 1, fd);
+        v = -v;
+    }
+
+    while (v) {
+        *--ptr = digits[v % base];
+        v /= base;
+    }
+
+    return fwrite(ptr, sizeof(char), sizeof(ptr), fd);
+}
+
+size_t fprint_integer_64(int fd, uint64_t v, int base,
+    unsigned char * digits) {
+    char buf[65];
+    char * pointer = & buf[sizeof(buf) - 1];
+    * pointer = '\0';
+
+    if (v == 0) {
+        return fwrite('0', sizeof(char), 1, fd);
+    }
+
+    while (v) {
+        *--pointer = digits[v % base];
+        v /= base;
+    }
+
+    return fwrite(pointer, sizeof(char), sizeof(pointer), fd);
+}
+/* end of private methods for fprintf */
+
+size_t fprintf(int fd, char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    size_t total_size = 0;
+
+    const char *hex_digits = "0123456789ABCDEF";
+    char *ifs = "Invalid format specifier";
+
+    while (*format != '\0')
+    {
+        if (*format == '%') {
+            format++;
+            switch (*format)
+            {
+            case 's':
+            {
+                char *str = va_arg(args, char *);
+                total_size += fwrite(str, sizeof(char), strlen(str), fd);
+                break;
+            }
+            case 'c':
+            {
+                char c = (char)va_arg(args, int);
+                total_size += fwrite(&c, sizeof(char), 1, fd);
+                break;
+            }
+            case 'd':
+            {
+                int d = va_arg(args, int);
+                fprint_integer(fd, d, 10, hex_digits);
+                break;
+            }
+            case 'u':
+            {
+                unsigned int u = va_arg(args, unsigned int);
+                fprint_integer(fd, u, 10, hex_digits);
+                break;
+            }
+            case 'x':
+            {
+                int x = va_arg(args, int);
+                fprint_integer(fd, x, 16, hex_digits);
+                break;
+            }
+            case 'p':
+            {
+                void *p = va_arg(args, void *);
+                fprint_integer_64(fd, (uint64_t)p, 16, hex_digits);
+                break;
+            }
+            case 'l':
+            {
+                format++;
+                if (*format == 'l')
+                {
+                    format++;
+                    if (*format == 'u')
+                    {
+                        uint64_t llu = va_arg(args, uint64_t);
+                        fprint_integer_64(fd, llu, 10, hex_digits);
+                    }
+                    else if (*format == 'x')
+                    {
+                        uint64_t llx = va_arg(args, uint64_t);
+                        fprint_integer_64(fd, llx, 16, hex_digits);
+                    }
+                    else
+                    {
+                        fwrite(ifs, sizeof(char), strlen(ifs), fd);
+                    }
+                }
+                else
+                {
+                    fwrite(ifs, sizeof(char), strlen(ifs), fd);
+                }
+                break;
+            }
+            default:
+                char c = '%';
+                fwrite(&c, sizeof(char), 1, fd);
+                fwrite(format, sizeof(char), 1, fd);
+                break;
+            }
+        }
+        else
+        {
+            total_size += fwrite(format, sizeof(char), 1, fd);
+        }
+        format++;
+    }
+
+    va_end(args);
+}
+
+size_t fread(char *ptr, size_t size, size_t count, int fd) {
     file_descriptor *fd2 = fd_table[fd];
 
     if (fd < 0 || fd >= MAX_FD || fd2->address == NULL || !strstr(fd2->mode, "r")) {

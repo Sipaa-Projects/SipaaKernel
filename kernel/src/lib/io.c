@@ -1,5 +1,5 @@
+#ifdef __x86_64__
 #include <lib/io.h>
-
 
 void outb(uint16_t port, uint8_t value)
 {
@@ -66,3 +66,4 @@ void io_wait()
                  :
                  : "a"(0));
 }
+#endif

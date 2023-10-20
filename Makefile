@@ -26,13 +26,13 @@ CFLAGS := \
 	-fno-lto \
 	-fno-PIE \
 	-fno-PIC \
-	-m64 \
 	-Ikernel/src/ \
-	-mabi=sysv \
 	-g
 
 ifeq ($(ARCH),x86_64)
 CFLAGS += \
+	-m64 \
+	-mabi=sysv \
 	-march=x86-64 \
 	-mno-80387 \
 	-mno-mmx \

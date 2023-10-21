@@ -1,26 +1,26 @@
 #ifndef __FB_H__
 #define __FB_H__
 
-#include <stdint.h>
+#include <lib/stdtype.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <boot/limine.h>
 
 typedef struct
 {
-    uint32_t size;
-    uint32_t shift;
+    ui32 size;
+    ui32 shift;
 } color_mask;
 
 typedef struct
 {
-    uint64_t width;
-    uint64_t height;
-    uint64_t pitch;
-    uint64_t bpp;
-    uint32_t *address;
-    uint32_t *frontbuf;
-    uint32_t *backbuf;
+    ui64 width;
+    ui64 height;
+    ui64 pitch;
+    ui64 bpp;
+    ui32 *address;
+    ui32 *frontbuf;
+    ui32 *backbuf;
     bool doubleBuffered;
     color_mask red_mask;
     color_mask green_mask;
@@ -30,7 +30,7 @@ typedef struct
 
 framebuffer *fb_fromlimine(struct limine_framebuffer *lfb);
 void fb_swapbuffers(framebuffer *fb);
-void fb_setpixel_32bpp(framebuffer *fb, int x, int y, uint32_t color);
-uint32_t fb_getpixel_32bpp(framebuffer *fb, int x, int y);
+void fb_setpixel_32bpp(framebuffer *fb, int x, int y, ui32 color);
+ui32 fb_getpixel_32bpp(framebuffer *fb, int x, int y);
 
 #endif

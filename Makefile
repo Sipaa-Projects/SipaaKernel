@@ -108,7 +108,7 @@ run-kvm: iso
 	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga vmware -boot d
 
 run-kvm-uefi: iso
-	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga vmware -bios ./assets/OVMF-x86_64.fd -boot d
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga vmware -bios ./assets/OVMF-x86_64.fd -boot d -smp 2
 
 run-gtk: iso
 	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga vmware -boot d

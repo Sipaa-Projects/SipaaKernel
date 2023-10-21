@@ -37,6 +37,7 @@ We choosed C to have an easy & elegant API for making the best OSes.
 Nope, but you can make an OS with the SipaaKernel APIs.
 
 ## Credits
-* Limine Contributors : The Limine bootloader & his protocol. (boot/*, kernel/src/boot/limine.h)
+* Limine Contributors : The Limine bootloader & his protocol. (boot/limine*, kernel/src/boot/limine.h)
 * The ZAP group : Font (ZAP Light 16, kernel/src/main.c: `uint8_t zap_light16[]`)
+* Lolguy91 : CPU utils & FPU (kernel/src/arch/x86_64/cpu.c & .h)
 * Kokolor : Terminal (kernel/src/lib/terminal.c/.h)

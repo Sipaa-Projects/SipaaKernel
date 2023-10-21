@@ -1,3 +1,8 @@
+/*
+ * string.c - String management functions.
+ *
+ * This file is part of the SipaaKernel's standard C library.
+ */
 #include <lib/string.h>
 
 #include <memory/memory.h>

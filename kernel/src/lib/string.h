@@ -1,3 +1,8 @@
+/*
+ * string.h - String management functions. (header)
+ *
+ * This file is part of the SipaaKernel's standard C library.
+ */
 #ifndef __STRING_H__
 #define __STRING_H__
 

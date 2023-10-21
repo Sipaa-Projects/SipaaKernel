@@ -9,7 +9,7 @@ framebuffer *fb_fromlimine(struct limine_framebuffer *lfb)
     fb->pitch = lfb->pitch;
     fb->address = lfb->address;
     fb->frontbuf = lfb->address;
-    fb->backbuf = (void *)((uint64_t)lfb->address + lfb->pitch * lfb->height);
+    fb->backbuf = (void *)((ui64)lfb->address + lfb->pitch * lfb->height);
     fb->doubleBuffered = false;
     fb->bpp = 32;
     fb->red_mask.shift = lfb->red_mask_shift;
@@ -36,30 +36,30 @@ void fb_swapbuffers(framebuffer *fb)
     memcpy(fb->address, fb->frontbuf, fb->pitch * fb->height);
 }
 
-void fb_setpixel_32bpp(framebuffer *fb, int x, int y, uint32_t color)
+void fb_setpixel_32bpp(framebuffer *fb, int x, int y, ui32 color)
 {
     if (fb->doubleBuffered)
     {
-        uint32_t *pixel_address = (uint32_t *)((uint64_t)fb->backbuf + y * fb->pitch + x * (fb->bpp / 8));
+        ui32 *pixel_address = (ui32 *)((ui64)fb->backbuf + y * fb->pitch + x * (fb->bpp / 8));
 
         *pixel_address = color;
     }
     else
     {
-        uint32_t *pixel_address = (uint32_t *)((uint64_t)fb->frontbuf + y * fb->pitch + x * (fb->bpp / 8));
+        ui32 *pixel_address = (ui32 *)((ui64)fb->frontbuf + y * fb->pitch + x * (fb->bpp / 8));
 
         *pixel_address = color;
     }
 }
 
-uint32_t fb_getpixel_32bpp(framebuffer *fb, int x, int y)
+ui32 fb_getpixel_32bpp(framebuffer *fb, int x, int y)
 {
     if (fb->doubleBuffered)
     {
-        return (uint32_t *)((uint64_t)fb->backbuf + y * fb->pitch + x * (fb->bpp / 8));
+        return (ui32 *)((ui64)fb->backbuf + y * fb->pitch + x * (fb->bpp / 8));
     }
     else
     {
-        return (uint32_t *)((uint64_t)fb->frontbuf + y * fb->pitch + x * (fb->bpp / 8));
+        return (ui32 *)((ui64)fb->frontbuf + y * fb->pitch + x * (fb->bpp / 8));
     }
 }

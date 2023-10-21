@@ -1,43 +1,43 @@
 #ifndef GDT_H
 #define GDT_H
 
-#include <stdint.h>
+#include <lib/stdtype.h>
 
 typedef struct
 {
-    uint16_t size;
-    uint64_t offset;
+    ui16 size;
+    ui64 offset;
 } __attribute__((packed)) gdt_pointer;
 
 typedef struct {
-    uint32_t reserved0;
-    uint64_t rsp0;
-    uint64_t rsp1;
-    uint64_t rsp2;
-    uint64_t reserved1;
-    uint64_t ist1;
-    uint64_t ist2;
-    uint64_t ist3;
-    uint64_t ist4;
-    uint64_t ist5;
-    uint64_t ist6;
-    uint64_t ist7;
-    uint64_t reserved2;
-    uint16_t reserved3;
-    uint16_t iomap_base;
+    ui32 reserved0;
+    ui64 rsp0;
+    ui64 rsp1;
+    ui64 rsp2;
+    ui64 reserved1;
+    ui64 ist1;
+    ui64 ist2;
+    ui64 ist3;
+    ui64 ist4;
+    ui64 ist5;
+    ui64 ist6;
+    ui64 ist7;
+    ui64 reserved2;
+    ui16 reserved3;
+    ui16 iomap_base;
 } __attribute__((packed)) tss_entry_t;
 
 typedef struct
 {
-    uint16_t limit0;
-    uint16_t base0;
-    uint8_t base1;
-    uint8_t access;
-    uint8_t limit1_flags;
-    uint8_t base2;
+    ui16 limit0;
+    ui16 base0;
+    ui8 base1;
+    ui8 access;
+    ui8 limit1_flags;
+    ui8 base2;
 } __attribute__((packed)) gdt_entry;
 
-int gdt_init(uint64_t rsp0);
-void set_kernel_stack(uint64_t stack);
+int gdt_init(ui64 rsp0);
+void set_kernel_stack(ui64 stack);
 
 #endif

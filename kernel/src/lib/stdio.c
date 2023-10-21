@@ -1,3 +1,8 @@
+/*
+ * stdio.c - Standard I/O functions.
+ *
+ * This file is part of the SipaaKernel's standard C library.
+ */
 #include <lib/stdio.h>
 
 #include <dev/serial/serial.h>

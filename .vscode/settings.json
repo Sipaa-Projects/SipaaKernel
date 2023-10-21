@@ -1,19 +1,21 @@
 {
-    "files.associations": {
-        "console.h": "c",
-        "stb_image.h": "c",
-        "memory.h": "c",
-        "stddef.h": "c",
-        "limine.h": "c",
-        "stdint.h": "c",
-        "typeinfo": "cpp",
-        "stdarg.h": "c",
-        "device.h": "c",
-        "string.h": "c"
-    },
+    "files.encoding": "windows1252",
+    "C_Cpp.default.compilerPath": "/home/.linuxbrew/linuxbrew/bin/x86_64-elf-gcc",
     "C_Cpp.default.includePath": [
-        "kernel/inc"
+        "${workspaceDirectory}/*",
+        "${workspaceDirectory}/kernel/src/*"
     ],
-    "C_Cpp.errorSquiggles": "enabled",
-    "files.encoding": "windows1252"
+    "files.associations": {
+        "arch.h": "c",
+        "stdint.h": "c",
+        "stdint-gcc.h": "c",
+        "cpu.h": "c",
+        "limine.h": "c",
+        "stdbool.h": "c",
+        "stdio.h": "c",
+        "terminal.h": "c",
+        "stdtype.h": "c",
+        "stdarg.h": "c",
+        "memory.h": "c"
+    }
 }

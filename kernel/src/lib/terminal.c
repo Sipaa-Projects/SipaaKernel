@@ -1,10 +1,11 @@
 #include <lib/terminal.h>
 #include <dev/device.h>
+#include "psf.h"
 
 Terminal * current_terminal;
 Terminal * main_terminal;
 
-void init_terminal(Terminal * terminal, uint8_t * font, framebuffer * framebuffer) {
+void init_terminal(Terminal * terminal, ui8 * font, framebuffer * framebuffer) {
     terminal -> font = font;
     terminal -> framebuffer = framebuffer;
     terminal -> cursor_x = 0;
@@ -18,7 +19,7 @@ void switch_terminal(Terminal * terminal) {
     current_terminal = terminal;
 }
 
-void clear_terminal(uint32_t color) {
+void clear_terminal(ui32 color) {
     unsigned int * pixel = current_terminal -> framebuffer -> address;
     for (unsigned int y = 0; y < current_terminal -> framebuffer -> height; ++y) {
         for (unsigned int x = 0; x < current_terminal -> framebuffer -> width; ++x) {
@@ -28,12 +29,12 @@ void clear_terminal(uint32_t color) {
     }
 }
 
-void terminal_putpixel(unsigned int x, unsigned int y, uint32_t color) {
+void terminal_putpixel(unsigned int x, unsigned int y, ui32 color) {
     unsigned int * pixel = current_terminal -> framebuffer -> address + (y * (current_terminal -> framebuffer -> pitch / 4) + x);
     * pixel = color;
 }
 
-uint32_t terminal_getpixel(unsigned int x, unsigned int y) {
+ui32 terminal_getpixel(unsigned int x, unsigned int y) {
     unsigned int * pixel = current_terminal -> framebuffer -> address + (y * (current_terminal -> framebuffer -> pitch / 4) + x);
     return * pixel;
 }
@@ -41,7 +42,7 @@ uint32_t terminal_getpixel(unsigned int x, unsigned int y) {
 void scroll_up() {
     for (int y = 0; y < current_terminal -> framebuffer -> height - 16; y++) {
         for (int x = 0; x < current_terminal -> framebuffer -> width; x++) {
-            uint32_t color = terminal_getpixel(x, y + 16);
+            ui32 color = terminal_getpixel(x, y + 16);
             terminal_putpixel(x, y, color);
         }
     }
@@ -69,7 +70,7 @@ void print_character(unsigned char c) {
     }
 
     if (c != '\n') {
-        uint8_t * offset = current_terminal -> font + sizeof(PSF1_HEADER) + 16 * c;
+        ui8 * offset = current_terminal -> font + sizeof(PSF1_HEADER) + 16 * c;
         
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 8; j++) {

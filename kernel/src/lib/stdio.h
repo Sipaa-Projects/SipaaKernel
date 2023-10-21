@@ -1,10 +1,15 @@
+/*
+ * stdio.h - Standard I/O functions. (header)
+ *
+ * This file is part of the SipaaKernel's standard C library.
+ */
 #ifndef __STDIO_H__
 #define __STDIO_H__
 
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdint.h>
+#include <lib/stdtype.h>
 #include <dev/device.h>
 
 #define MAX_FD 1000
@@ -16,7 +21,7 @@ typedef struct {
     void *address;
     char *mode;
     int type;
-    uint32_t used;
+    ui32 used;
     // Add other fields like mode, current position, etc.
 } file_descriptor;
 

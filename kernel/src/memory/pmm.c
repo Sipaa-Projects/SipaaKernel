@@ -2,13 +2,13 @@
 #include <boot/limine.h>
 #include <lib/log.h>
 
-uintptr_t pmm_stack[STACK_SIZE];
-uint32_t pmm_stack_top;
+uptr pmm_stack[STACK_SIZE];
+ui32 pmm_stack_top;
 pmm_memory_block *pmm_free_blocks;
 
-uintptr_t pmm_kernel_base = 0;
-uintptr_t pmm_kernel_end = 0;
-uintptr_t pmm_kernel_size = 0;
+uptr pmm_kernel_base = 0;
+uptr pmm_kernel_end = 0;
+uptr pmm_kernel_size = 0;
 
 static volatile struct limine_memmap_request memmap = {
     .id = LIMINE_MEMMAP_REQUEST,
@@ -19,15 +19,15 @@ void pmm_init()
 {
     pmm_stack_top = 0;
 
-    for (uint64_t entry = 0; entry < memmap.response->entry_count; entry++)
+    for (ui64 entry = 0; entry < memmap.response->entry_count; entry++)
     {
         struct limine_memmap_entry *mentry = memmap.response->entries[entry];
         
         if (mentry->type == LIMINE_MEMMAP_USABLE && mentry->length >= PMM_BLOCK_SIZE)
         {
             //log(LOGTYPE_INFO, "pmm: found usable memory entry");
-            uintptr_t addr = mentry->base;
-            uint64_t length = mentry->length;
+            uptr addr = mentry->base;
+            ui64 length = mentry->length;
 
             while (length >= PMM_BLOCK_SIZE)
             {
@@ -46,7 +46,7 @@ void pmm_free_block(void *block)
     if (pmm_stack_top == STACK_SIZE)
         return;
 
-    pmm_stack[pmm_stack_top] = (uintptr_t)block;
+    pmm_stack[pmm_stack_top] = (uptr)block;
     pmm_stack_top++;
 }
 
@@ -59,7 +59,7 @@ void *pmm_alloc_block()
     return (void *)pmm_stack[pmm_stack_top];
 }
 
-void *malloc(size_t size)
+void *pmm_alloc(size_t size)
 {
     if (size == 0)
         return NULL;
@@ -77,7 +77,7 @@ void *malloc(size_t size)
 
             if (block->size > size + sizeof(pmm_memory_block))
             {
-                pmm_memory_block *new_block = (pmm_memory_block *)((uint8_t *)block + size);
+                pmm_memory_block *new_block = (pmm_memory_block *)((ui8 *)block + size);
                 new_block->size = block->size - size;
                 new_block->next = block->next;
                 new_block->is_free = true;
@@ -86,7 +86,7 @@ void *malloc(size_t size)
                 block->next = new_block;
             }
 
-            return (uint8_t *)block + sizeof(pmm_memory_block);
+            return (ui8 *)block + sizeof(pmm_memory_block);
         }
 
         prev_block = block;
@@ -112,17 +112,17 @@ void *malloc(size_t size)
         pmm_free_blocks = block;
     }
 
-    return (uint8_t *)block + sizeof(pmm_memory_block);
+    return (ui8 *)block + sizeof(pmm_memory_block);
 }
 
-void free(void *ptr)
+void pmm_free(void *ptr)
 {
     if (!ptr)
     {
         return;
     }
 
-    pmm_memory_block *block = (pmm_memory_block *)((uint8_t *)ptr - sizeof(pmm_memory_block));
+    pmm_memory_block *block = (pmm_memory_block *)((ui8 *)ptr - sizeof(pmm_memory_block));
     block->is_free = true;
 
     while (block->next && block->next->is_free)

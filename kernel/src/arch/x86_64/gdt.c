@@ -9,7 +9,7 @@ tss_entry_t tss_entry;
 
 extern void load_gdt(gdt_pointer*);
 
-void set_gdt_entry(int i, uint16_t limit, uint16_t base, uint8_t access, uint8_t flags) {
+void set_gdt_entry(int i, ui16 limit, ui16 base, ui8 access, ui8 flags) {
     gdt[i].base0 = base & 0xFFFF;
     gdt[i].base1 = (base >> 16) & 0xFF;
     gdt[i].base2 = (base >> 24) & 0xFF;
@@ -17,7 +17,7 @@ void set_gdt_entry(int i, uint16_t limit, uint16_t base, uint8_t access, uint8_t
     gdt[i].access = access;
     gdt[i].limit1_flags = ((limit >> 16) & 0x0F) | (flags & 0xF0);
 }
-void set_tss_gate(int i, uint64_t base, uint32_t limit)
+void set_tss_gate(int i, ui64 base, ui32 limit)
 {
     gdt[i].base0 = base & 0xFFFF;
     gdt[i].base1 = (base >> 16) & 0xFF;
@@ -27,7 +27,7 @@ void set_tss_gate(int i, uint64_t base, uint32_t limit)
     gdt[i].limit1_flags = ((limit >> 16) & 0x0F) | 0x00;
 }
 
-void init_tss(uint64_t rsp0)
+void init_tss(ui64 rsp0)
 {
     char *ptr_c = (char *)&tss_entry;
     for (int i = 0; i < sizeof(tss_entry_t); i++)
@@ -37,7 +37,7 @@ void init_tss(uint64_t rsp0)
     tss_entry.rsp0 = rsp0;
 }
 
-int gdt_init(uint64_t rsp0) {
+int gdt_init(ui64 rsp0) {
     log(LOGTYPE_DBG, "gdt_init: setting up GDT entries...\n");
     set_gdt_entry(0, 0, 0, 0, 0);
     set_gdt_entry(1, 0xFFFFF, 0, 0x9A, 0xAF);
@@ -46,11 +46,11 @@ int gdt_init(uint64_t rsp0) {
     set_gdt_entry(4, 0xFFFFF, 0, 0xFA, 0xAF);
     set_gdt_entry(5, 0xFFFFF, 0, 0xF2, 0xAF);
     set_gdt_entry(6, 0xFFFFF, 0, 0xF6, 0xAF);
-    set_tss_gate(7, (uint64_t)&tss_entry, sizeof(tss_entry_t));
+    set_tss_gate(7, (ui64)&tss_entry, sizeof(tss_entry_t));
 
     log(LOGTYPE_DBG, "gdt_init: setting up GDT pointer...\n");
     gdtr.size = sizeof(gdt) - 1;
-    gdtr.offset = (uint64_t)&gdt;
+    gdtr.offset = (ui64)&gdt;
 
     log(LOGTYPE_DBG, "gdt_init: loading GDT/TSS into your computer...\n");
     init_tss(rsp0);
@@ -60,7 +60,7 @@ int gdt_init(uint64_t rsp0) {
     return 0;
 }
 
-void set_kernel_stack(uint64_t stack)
+void set_kernel_stack(ui64 stack)
 {
     tss_entry.rsp0 = stack;
 }

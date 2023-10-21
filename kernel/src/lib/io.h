@@ -1,16 +1,16 @@
 #ifndef __IO_H__
 #define __IO_H__
 
-#include <stdint.h>
+#include <lib/stdtype.h>
 
-void outb(uint16_t port, uint8_t value);
-void outw(uint16_t port, uint16_t value);
-void outsw(uint16_t port, const void *addr, uint32_t count);
-void outl(uint16_t port, uint32_t value);
-uint8_t inb(uint16_t port);
-uint16_t inw(uint16_t port);
-uint32_t inl(uint16_t port);
-void insw(uint16_t port, void *addr, int cnt);
+void outb(ui16 port, ui8 value);
+void outw(ui16 port, ui16 value);
+void outsw(ui16 port, const void *addr, ui32 count);
+void outl(ui16 port, ui32 value);
+ui8 inb(ui16 port);
+ui16 inw(ui16 port);
+ui32 inl(ui16 port);
+void insw(ui16 port, void *addr, int cnt);
 void io_wait();
 
 #endif

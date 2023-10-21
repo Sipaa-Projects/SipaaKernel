@@ -1,7 +1,7 @@
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
 
-#include <stdint.h>
+#include <lib/stdtype.h>
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -32,7 +32,7 @@ void *memmove(void *dest, const void *src, size_t n);
 int memcmp(const void *s1, const void *s2, size_t n);
 
 void pmm_init();
-void *malloc(size_t size);
-void free(void *ptr);
+void *pmm_alloc(size_t size);
+void pmm_free(void *ptr);
 
 #endif

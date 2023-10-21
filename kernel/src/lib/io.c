@@ -1,33 +1,33 @@
 #ifdef __x86_64__
 #include <lib/io.h>
 
-void outb(uint16_t port, uint8_t value)
+void outb(ui16 port, ui8 value)
 {
     asm volatile("outb %0, %1"
                  :
                  : "a"(value), "Nd"(port));
 }
 
-void outw(uint16_t port, uint16_t value)
+void outw(ui16 port, ui16 value)
 {
     asm volatile("outw %0, %1"
                  :
                  : "a"(value), "Nd"(port));
 }
 
-void outsw(uint16_t port, const void *addr, uint32_t count)
+void outsw(ui16 port, const void *addr, ui32 count)
 {
     asm volatile("cld; rep outsw"
                  : "+S"(addr), "+c"(count)
                  : "d"(port));
 }
 
-void outl(uint16_t port, uint32_t value)
+void outl(ui16 port, ui32 value)
 {
     asm volatile ("outl %0, %1" : : "a"(value), "Nd"(port));
 }
 
-uint8_t inb(uint16_t port)
+ui8 inb(ui16 port)
 {
     unsigned char result;
     asm volatile("inb %1, %0"
@@ -36,7 +36,7 @@ uint8_t inb(uint16_t port)
     return result;
     
 }
-uint16_t inw(uint16_t port)
+ui16 inw(ui16 port)
 {
     unsigned short result;
     asm volatile("inw %1, %0"
@@ -45,14 +45,14 @@ uint16_t inw(uint16_t port)
     return result;
 }
 
-uint32_t inl(uint16_t port)
+ui32 inl(ui16 port)
 {
-    uint32_t value;
+    ui32 value;
     asm volatile ("inl %1, %0" : "=a"(value) : "Nd"(port));
     return value;
 }
 
-void insw(uint16_t port, void *addr, int cnt)
+void insw(ui16 port, void *addr, int cnt)
 {
     asm volatile("cld; rep insw"
                  : "=D"(addr), "=c"(cnt)

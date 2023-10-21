@@ -361,7 +361,7 @@ void main()
 
     init_terminal(t, &zap_light16, f);
 
-    log(LOGTYPE_INFO, "Welcome to SipaaKernel! Framebuf: a: %p w: %llu h: %llu p: %llu\n", f->address, f ->width, f->height, f->pitch);
+    log(LOGTYPE_INFO, "Welcome to SipaaKernel! Framebuf: a: %p w: %llu h: %llu p: %llu, Random number: %d\n", f->address, f ->width, f->height, f->pitch, rand(999));
 
     arch_init_stage1();
 

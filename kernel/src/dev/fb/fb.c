@@ -11,7 +11,7 @@ framebuffer *fb_fromlimine(struct limine_framebuffer *lfb)
     fb->frontbuf = lfb->address;
     fb->backbuf = (void *)((ui64)lfb->address + lfb->pitch * lfb->height);
     fb->doubleBuffered = false;
-    fb->bpp = 32;
+    fb->bpp = 24;
     fb->red_mask.shift = lfb->red_mask_shift;
     fb->red_mask.size = lfb->red_mask_size;
     fb->green_mask.shift = lfb->green_mask_shift;

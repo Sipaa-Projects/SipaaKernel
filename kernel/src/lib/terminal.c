@@ -113,7 +113,7 @@ void print_integer(int v, int base,
     print_string(ptr);
 }
 
-void print_integer_64(uint64_t v, int base,
+void print_integer_64(ui64 v, int base,
     unsigned char * digits) {
     char buf[65];
     char * pointer = & buf[sizeof(buf) - 1];
@@ -176,7 +176,7 @@ void vprintf(unsigned char *format, va_list args)
                         case 'p':
                         {
                                 void *p = va_arg(args, void *);
-                                print_integer_64((uint64_t)p, 16, hex_digits);
+                                print_integer_64((ui64)p, 16, hex_digits);
                                 break;
                         }
                         case 'l':
@@ -187,12 +187,12 @@ void vprintf(unsigned char *format, va_list args)
                                         format++;
                                         if (*format == 'u')
                                         {
-                                                uint64_t llu = va_arg(args, uint64_t);
+                                                ui64 llu = va_arg(args, ui64);
                                                 print_integer_64(llu, 10, hex_digits);
                                         }
                                         else if (*format == 'x')
                                         {
-                                                uint64_t llx = va_arg(args, uint64_t);
+                                                ui64 llx = va_arg(args, ui64);
                                                 print_integer_64(llx, 16, hex_digits);
                                         }
                                         else

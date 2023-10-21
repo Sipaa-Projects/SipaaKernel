@@ -120,7 +120,7 @@ size_t fprint_integer(int fd, int v, int base,
     return fwrite(ptr, sizeof(char), sizeof(ptr), fd);
 }
 
-size_t fprint_integer_64(int fd, uint64_t v, int base,
+size_t fprint_integer_64(int fd, ui64 v, int base,
     unsigned char * digits) {
     char buf[65];
     char * pointer = & buf[sizeof(buf) - 1];
@@ -188,7 +188,7 @@ size_t fprintf(int fd, char *format, ...)
             case 'p':
             {
                 void *p = va_arg(args, void *);
-                fprint_integer_64(fd, (uint64_t)p, 16, hex_digits);
+                fprint_integer_64(fd, (ui64)p, 16, hex_digits);
                 break;
             }
             case 'l':
@@ -199,12 +199,12 @@ size_t fprintf(int fd, char *format, ...)
                     format++;
                     if (*format == 'u')
                     {
-                        uint64_t llu = va_arg(args, uint64_t);
+                        ui64 llu = va_arg(args, ui64);
                         fprint_integer_64(fd, llu, 10, hex_digits);
                     }
                     else if (*format == 'x')
                     {
-                        uint64_t llx = va_arg(args, uint64_t);
+                        ui64 llx = va_arg(args, ui64);
                         fprint_integer_64(fd, llx, 16, hex_digits);
                     }
                     else

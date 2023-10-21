@@ -1,0 +1,42 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/kernel/src/**"
+            ],
+            "defines": [],
+            "compilerPath": "/home/linuxbrew/.linuxbrew/bin/x86_64-elf-gcc",
+            "compilerArgs": [
+                "-w",
+                "-Dlimine",
+                "-ffreestanding",
+                "-fno-stack-protector",
+                "-fpermissive",
+                "-fno-stack-check",
+                "-fno-lto",
+                "-fno-PIE",
+                "-fno-PIC",
+                "-m64",
+                "-Ikernel/src/",
+                "-mabi=sysv",
+                "-g"
+            ],
+            "cStandard": "c17",
+            "intelliSenseMode": "linux-clang-x64"
+        },
+        {
+            "name": "SipaaKernel",
+            "includePath": [
+                "${default}"
+            ],
+            "defines": [],
+            "compilerPath": "/home/linuxbrew/.linuxbrew/bin/x86_64-elf-gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

@@ -12,42 +12,40 @@ It features an easy & elegant API.
 
 ## Features & Todo
 ### What does it mean?
-* [X] : Done
-* [-] : Buggy / Broken / Incomplete
-* [ ] : To do
+* ✅ : Done
+* ⚠️ : Buggy / Broken / Incomplete
+* ❌ : To do
 
 ### x86_64 architecture (src/kernel/sk-x86_64)
-* [X] IDT
-* [X] GDT
-* [X] PIC
-* [X] TSS
-* [ ] PCI
-* [X] IO port operations
+* ✅ IDT
+* ✅ GDT
+* ✅ PIC
+* ✅ TSS
+* ❌ PCI
+* ✅ IO port operations
 
-### AArch64
-To do.
+### AArch64 (src/kernel/sk-aarch64)
+SipaaKernel can be built & runned on AArch64, but not anything specific to this architecture is implemented.
 
-### Kernel
-* [X] Logging (graphical & serial)
-* [X] Kernel Panic
-* [ ] ELF Loader
+### Kernel (src/kernel/sk-core)
+* ✅ Logging (graphical & serial)
+* ✅ Kernel Panic
+* ❌ ELF Loader
+* ✅ BMO (Basic Memory Operations) (memcpy, memset...)
+* ✅ PMM (Physical Memory Manager)
+* ❌ VMM (Virtual Memory Manager)
 
-### Devices
-* [ ] PS2 Mouse
-* [-] PS2 Keyboard (only on x86_64)
-* [ ] USB Mouse
-* [ ] USB Keyboard
-* [ ] Disks (Ramdisk, VFS)
-* [-] Graphics (no proper API, no GPU acceleration)
-* [-] Serial (only on x86_64)
-* [ ] SoundBlaster 16
-* [ ] PC speaker
-* [ ] Intel HDA
-
-### Memory Management
-* [X] BMO (Basic Memory Operations) (memcpy, memset...)
-* [X] PMM (Physical Memory Manager)
-* [ ] VMM (Virtual Memory Manager)
+### Devices (src/kernel/sk-dev)
+* ❌ PS2 Mouse
+* ⚠️ PS2 Keyboard (only on x86_64)
+* ❌ USB Mouse
+* ❌ USB Keyboard
+* ❌ Disks (Ramdisk, VFS)
+* ⚠️ Graphics (no proper API, no GPU acceleration)
+* ⚠️ Serial (only on x86_64)
+* ❌ SoundBlaster 16
+* ❌ PC speaker
+* ❌ Intel HDA
 
 ## How to build SipaaKernel?
 ### Step 1 : Install CuteKit on your PC
@@ -63,10 +61,18 @@ and put that in:
 SipaaKernel needs the LLVM toolchain, NASM to be built. QEMU & Xorriso are required if you want to build the ISO & run SipaaKernel.
 All (or most) these packages should be on available on your distro's package repo.
 
-To install them on Arch Linux:
+#### On Arch Linux
 ```bash
 $ pacman -S llvm qemu-full clang lld
 ```
+
+#### On Windows (without WSL)
+* [LLVM Toolchain (official)](https://github.com/llvm/llvm-project/releases/tag/llvmorg-16.0.6)
+* [NASM (official)](https://nasm.us/)
+* [QEMU (official mirror for Win64)](https://qemu.weilnetz.de/w64/)
+* [Xorriso (unofficial, but no viruses)](https://github.com/PeyTy/xorriso-exe-for-windows)
+
+All the software binaries shown before should be in your PATH variable. To add/modify environment variables on Windows, open `C:\Windows\System32\systempropertiesadvanced.exe`, then click on the Environment Variables button.
 
 ### Step 3 : Build & Boot SipaaKernel
 Now, you just need to use `ck B` to build & run SipaaKernel in QEMU with KVM (if available)
@@ -74,8 +80,8 @@ You can also use `ck bi` to build SipaaKernel & it's ISO file without running it
 
 ## Q&A
 
-### Why chosing C?
-We choosed C to have an easy & elegant API for making the best OSes.
+### Why chosing CuteKit?
+We choosed CuteKit for having a good kernel directory structure
 
 ### Will it have a desktop environment & apps?
 Nope, but you can make an OS with the SipaaKernel APIs.

@@ -10,23 +10,67 @@ SipaaKernel is a monolithic kernel made in C
 
 It features an easy & elegant API.
 
-## How it looks
-At front-end, it just shows text, but at back-end, it does many things!
-<img src="meta/artwork/Screenshot.png"/>
+## Features & Todo
+### What does it mean?
+* [X] : Done
+* [-] : Buggy / Broken / Incomplete
+* [ ] : To do
 
-## Features
-* Boot :
-  * UEFI/BIOS support
-  * Powered by Limine
+### x86_64 architecture (src/kernel/sk-x86_64)
+* [X] IDT
+* [X] GDT
+* [X] PIC
+* [X] TSS
+* [ ] PCI
+* [X] IO port operations
 
-* Kernel :
-  * AArch64 architecture
-  * x86-64 architecture
-    * IDT / PIC / GDT / TSS (todo)
-    * Serial console
-  * Generic
-    * Video terminal
-    * Physical Memory Manager
+### AArch64
+To do.
+
+### Kernel
+* [X] Logging (graphical & serial)
+* [X] Kernel Panic
+* [ ] ELF Loader
+
+### Devices
+* [ ] PS2 Mouse
+* [-] PS2 Keyboard (only on x86_64)
+* [ ] USB Mouse
+* [ ] USB Keyboard
+* [ ] Disks (Ramdisk, VFS)
+* [-] Graphics (no proper API, no GPU acceleration)
+* [-] Serial (only on x86_64)
+* [ ] SoundBlaster 16
+* [ ] PC speaker
+* [ ] Intel HDA
+
+### Memory Management
+* [X] BMO (Basic Memory Operations) (memcpy, memset...)
+* [X] PMM (Physical Memory Manager)
+* [ ] VMM (Virtual Memory Manager)
+
+## How to build SipaaKernel?
+### Step 1 : Install CuteKit on your PC
+SipaaKernel uses [CuteKit](https://github.com/cute-engineering/cutekit) as build system/package manager. I (RaphMar2021) made a script to install CuteKit automatically.
+
+Use `./install-ck.sh install` to install CuteKit. 
+
+Note: it won't add automatically into the PATH. To add it, open `~/.bashrc` (or any other shell startup script)
+and put that in:
+`PATH=$PATH:~/.local/share/venvs/cutekit/bin`
+
+### Step 2 : Install the dependencies
+SipaaKernel needs the LLVM toolchain, NASM to be built. QEMU & Xorriso are required if you want to build the ISO & run SipaaKernel.
+All (or most) these packages should be on available on your distro's package repo.
+
+To install them on Arch Linux:
+```bash
+$ pacman -S llvm qemu-full clang lld
+```
+
+### Step 3 : Build & Boot SipaaKernel
+Now, you just need to use `ck B` to build & run SipaaKernel in QEMU with KVM (if available)
+You can also use `ck bi` to build SipaaKernel & it's ISO file without running it in QEMU.
 
 ## Q&A
 
@@ -37,7 +81,5 @@ We choosed C to have an easy & elegant API for making the best OSes.
 Nope, but you can make an OS with the SipaaKernel APIs.
 
 ## Credits
-* Limine Contributors : The Limine bootloader & his protocol. (boot/limine*, kernel/src/boot/limine.h)
-* The ZAP group : Font (ZAP Light 16, kernel/src/main.c: `uint8_t zap_light16[]`)
-* Lolguy91 : CPU utils & FPU (kernel/src/arch/x86_64/cpu.c & .h)
-* Kokolor : Terminal (kernel/src/lib/terminal.c/.h)
+* Cute Engineering : Cutekit (the build system used to compile SipaaKernel)
+* Limine Contributors : The Limine bootloader & his protocol. (boot/*, kernel/src/boot/limine.h)

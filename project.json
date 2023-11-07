@@ -1,0 +1,9 @@
+{
+    "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.project.v1",
+    "type": "project",
+    "id": "Sipaa-Projects/SipaaKernel",
+    "description": "The modern, multi-architecture, elegant, easy-to-understand kernel.",
+    "extern": {
+        
+    }
+}

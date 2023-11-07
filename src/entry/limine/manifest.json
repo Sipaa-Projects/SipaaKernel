@@ -1,0 +1,9 @@
+{
+    "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.component.v1",
+    "type": "lib",
+    "id": "entry-limine",
+    "description": "Limine-specific code",
+    "provides": [
+        "entry"
+    ]
+}

@@ -1,18 +1,12 @@
 {
     "files.associations": {
-        "console.h": "c",
-        "stb_image.h": "c",
-        "memory.h": "c",
-        "stddef.h": "c",
-        "limine.h": "c",
-        "stdint.h": "c",
-        "typeinfo": "cpp",
-        "stdarg.h": "c",
-        "device.h": "c"
+        "entry.h": "c",
+        "hal.h": "c",
+        "serial.h": "c",
+        "charconv": "c",
+        "backend-fb.h": "c"
     },
-    "C_Cpp.default.includePath": [
-        "kernel/inc"
-    ],
-    "C_Cpp.errorSquiggles": "enabled",
-    "files.encoding": "windows1252"
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": true,
+    "cmake.configureOnOpen": false
 }

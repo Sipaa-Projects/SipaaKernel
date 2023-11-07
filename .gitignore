@@ -1,7 +1,6 @@
-# Ignore specific directories
-kernel/obj-x86_64/
-kernel/bin-x86_64/
-kernel/obj-aarch64/
-kernel/bin-aarch64/
-kernel/obj-riscv64/
-kernel/bin-riscv64/
+.cutekit/
+__pycache__/
+.vscode/
+output/
+.DS_Store
+.python-version

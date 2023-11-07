@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.component.v1",
+    "type": "exe",
+    "id": "sk-core",
+    "description": "The SipaaKernel monolithic kernel.",
+    "requires": [
+        "entry",
+        "flanterm",
+        "sk-arch",
+        "sk-logger"
+    ]
+}

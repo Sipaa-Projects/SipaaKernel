@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - main  # or the branch you want to trigger the deployment on
-
+  workflow_dispatch:
+  
 jobs:
   deploy:
     runs-on: ubuntu-latest

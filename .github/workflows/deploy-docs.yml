@@ -20,7 +20,6 @@ jobs:
 
     - name: Build and Deploy
       run: |
-        # Replace 'docs' with the actual folder where your documentation is generated
         cp -r docs/* $GITHUB_WORKSPACE
 
         git checkout --orphan gh-pages

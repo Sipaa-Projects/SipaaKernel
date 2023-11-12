@@ -36,7 +36,7 @@ void hal_cpu_relax(void) {
 
 void hal_cpu_stop(void) {
     while (1) {
-        //hal_cpu_cli();
+        hal_cpu_cli();
         hal_cpu_halt();
         
     }

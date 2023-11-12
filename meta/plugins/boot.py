@@ -49,7 +49,11 @@ def buildIso(args: args.Args) -> None:
     bootDir = shell.mkdir(os.path.join(imageDir, "boot"))
     global arch
 
-    kernel = builder.build('sk-core', "kernel-" + str(arch))
+    arch2 = args.consumeOpt("arch")
+    if arch2 == False:
+        arch2 = arch
+    
+    kernel = builder.build('sk-core', "kernel-" + str(arch2))
 
     shell.cp(kernel.outfile(), os.path.join(bootDir, "kernel.elf"))
     shell.cp(os.path.join(const.META_DIR, "config", "limine.cfg"), bootDir)

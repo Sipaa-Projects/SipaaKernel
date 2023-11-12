@@ -1,5 +1,10 @@
 #include "bmo.h"
 
+/// @brief Copy a memory block from source to destination
+/// @param dest Destination
+/// @param src Source
+/// @param n Size
+/// @return Destination
 void *memcpy(void *dest, const void *src, size_t n) {
     uint8_t *pdest = (uint8_t *)dest;
     const uint8_t *psrc = (const uint8_t *)src;
@@ -11,6 +16,11 @@ void *memcpy(void *dest, const void *src, size_t n) {
     return dest;
 }
 
+/// @brief Fill a memory block with a 32bit-signed integer value.
+/// @param s The memory block to fill
+/// @param c The value to fill with.
+/// @param n The size of the memory block
+/// @return The memory block to fill
 void *memset(void *s, int c, size_t n) {
     uint8_t *p = (uint8_t *)s;
 
@@ -21,6 +31,11 @@ void *memset(void *s, int c, size_t n) {
     return s;
 }
 
+/// @brief Move a memory block from source to destination
+/// @param dest Destination
+/// @param src Source
+/// @param n Size
+/// @return Destination
 void *memmove(void *dest, const void *src, size_t n) {
     uint8_t *pdest = (uint8_t *)dest;
     const uint8_t *psrc = (const uint8_t *)src;
@@ -38,6 +53,11 @@ void *memmove(void *dest, const void *src, size_t n) {
     return dest;
 }
 
+/// @brief Compare two memory blocks
+/// @param s1 The first memory block
+/// @param s1 The second memory block
+/// @param n The size of these 2 memory blocks to compare
+/// @return 0 if there's no difference between the 2 memory blocks.
 int memcmp(const void *s1, const void *s2, size_t n) {
     const uint8_t *p1 = (const uint8_t *)s1;
     const uint8_t *p2 = (const uint8_t *)s2;

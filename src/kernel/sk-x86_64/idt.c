@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief x86-64 IDT implementation.
+ * 
+ * The Interrupt Descriptor Table (IDT) is a binary data structure specific to the IA-32 and x86-64 architectures. 
+ * It is the Protected Mode and Long Mode counterpart to the Real Mode Interrupt Vector Table (IVT) telling the CPU where the Interrupt Service Routines (ISR) are located (one per interrupt vector).
+ */
+
 // #include <framebuffer/font.h>
 #include "idt.h"
 #include "pic.h"
@@ -8,6 +16,9 @@
 struct idt_entry idt[256]; 
 struct idt_ptr idtp;
 
+/// @brief Internal architecture panic (TODO: replace it with kernel panic)
+/// @param regs Registers
+/// @param message The message to show
 __attribute__((no_caller_saved_registers)) void __internal_arch_panic(struct x86_64_registers *regs, char *message) {
     log(LT_ERROR, "%s\n", message);
     log(LT_ERROR, "CPU Registers: \n");
@@ -62,6 +73,10 @@ void idt_load() {
     __asm__ volatile("lidt %0" : : "m"(idtp)); 
 }
 
+/// @brief Set IDT entry
+/// @param num Vector
+/// @param handler Handler function
+/// @param ist IST
 void idt_set_entry(int num, void* handler, uint8_t ist) {
     struct idt_entry* entry = &idt[num];
 
@@ -74,6 +89,8 @@ void idt_set_entry(int num, void* handler, uint8_t ist) {
     entry->zero = 0;
 }
 
+/// @brief Init IDT
+/// @return 0 if success
 int idt_init() {
     log(LT_INFO, "Setting up IDT pointer...\n");
     idtp.limit = sizeof(idt) - 1;
@@ -99,9 +116,6 @@ int idt_init() {
     idt_set_entry(18, mch_handler, 0);
     idt_set_entry(19, simdfpo_handler, 0);
     idt_set_entry(20, virtexc_handler, 0);
-
-
-    // ... Set other exception entries
 
     // IRQ handlers
     log(LT_INFO, "Setting up IRQ exceptions entries...\n");

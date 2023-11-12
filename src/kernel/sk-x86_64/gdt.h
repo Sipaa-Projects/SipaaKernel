@@ -3,12 +3,16 @@
 
 #include <stdint.h>
 
+/// @brief A structure representing a GDT pointer for the CPU
 typedef struct
 {
+    /// @brief Size
     uint16_t size;
+    /// @brief Offset
     uint64_t offset;
 } __attribute__((packed)) gdt_pointer;
 
+/// @brief A structure representing a TSS entry for the CPU
 typedef struct {
     uint32_t reserved0;
     uint64_t rsp0;
@@ -27,6 +31,7 @@ typedef struct {
     uint16_t iomap_base;
 } __attribute__((packed)) tss_entry_t;
 
+/// @brief A structure representing an entry for the GDT
 typedef struct
 {
     uint16_t limit0;

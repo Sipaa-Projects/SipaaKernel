@@ -31,13 +31,20 @@ SipaaKernel can be built & runned on AArch64, but not anything specific to this 
 * ✅ Logging (graphical & serial)
 * ✅ Kernel Panic
 * ❌ ELF Loader
+* ❌ Kernel Extensions
 * ✅ BMO (Basic Memory Operations) (memcpy, memset...)
 * ✅ PMM (Physical Memory Manager)
 * ❌ VMM (Virtual Memory Manager)
+* ❌ initrd
+
+### Kernel (in User Mode)
+* ❌ Tasking
+* ❌ User Space
+* ❌ Syscalls
 
 ### Devices (src/kernel/sk-dev)
 * ❌ PS2 Mouse
-* ⚠️ PS2 Keyboard (only on x86_64)
+* ⚠️ PS2 Keyboard (no proper API, only on x86_64)
 * ❌ USB Mouse
 * ❌ USB Keyboard
 * ❌ Disks (Ramdisk, VFS)

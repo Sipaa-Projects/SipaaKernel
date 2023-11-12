@@ -2,6 +2,10 @@
 #include <sk-hal/hal.h>
 #include <sk-logger/logger.h>
 
+/// @brief Internal kernel panic function. Is isn't recommmended to call directly this function. Use the 'panic' macro instead
+/// @param file The file
+/// @param line The line
+/// @param message The message
 void __sk_core_internal_panic(char *file, char *line, char *message, ...)
 {
     log_nofileinfo(LT_ERROR, "Kernel Panic\n");

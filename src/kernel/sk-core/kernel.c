@@ -8,6 +8,7 @@
 #include <sk-hal/hal.h>
 #include <sk-logger/logger.h>
 
+/// @brief Unused for now.
 void unused() {
     
 }

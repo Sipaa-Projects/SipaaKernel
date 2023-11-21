@@ -12,6 +12,7 @@
 #include <sk-logger/logger.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <hal.h>
 
 struct idt_entry idt[256]; 
 struct idt_ptr idtp;
@@ -62,6 +63,16 @@ __attribute__((interrupt)) void irq1_handler(struct x86_64_registers *regs) {
     log(LT_INFO, "Keyboard IRQ has been raised!\n");
     pic_end_master();
 } 
+
+__attribute__((interrupt)) void irq8_handler(struct x86_64_registers *regs) {
+    (void)regs;
+    hal_time current_time;
+    hal_get_time(&current_time);
+
+    log(LT_INFO, "Current RTC date & time: %d/%d/%d %d:%d:%d\n", 
+            current_time.year, current_time.month, current_time.day_of_month, current_time.hours, current_time.minutes, current_time.seconds);
+    pic_end_master();
+}
 
 void idt_load() {
     remap_pic();
@@ -121,6 +132,7 @@ int idt_init() {
     log(LT_INFO, "Setting up IRQ exceptions entries...\n");
     idt_set_entry(0x20, irq0_handler, 0);
     idt_set_entry(0x21, irq1_handler, 0);
+    idt_set_entry(0x28, irq8_handler, 0);
 
     idt_load();
     asm("sti");

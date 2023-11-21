@@ -21,6 +21,8 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * This file has been modified to fit SipaaKernel needs.
  */
 
 #ifndef _FLANTERM_FR_H
@@ -143,6 +145,9 @@ static inline struct flanterm_context *flanterm_fb_simple_init(
     uint8_t green_mask_size, uint8_t green_mask_shift,
     uint8_t blue_mask_size, uint8_t blue_mask_shift
 #endif
+#ifndef FLANTERM_FB_DISABLE_CANVAS
+    ,uint32_t *canvas
+#endif
 ) {
     size_t font_scale_x = 1;
     size_t font_scale_y = 1;
@@ -165,7 +170,7 @@ static inline struct flanterm_context *flanterm_fb_simple_init(
         blue_mask_size, blue_mask_shift,
 #endif
 #ifndef FLANTERM_FB_DISABLE_CANVAS
-        NULL,
+        canvas,
 #endif
         NULL, NULL,
         NULL, NULL,

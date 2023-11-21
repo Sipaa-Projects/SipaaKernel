@@ -2,6 +2,8 @@
 #include <sk-logger/logger.h>
 #include <serial.h>
 
+int logger_enabled = 1; // 1 : true, 0 : false
+
 void (*logger_write)(enum LogType, int, char *, int); // (logtype, isLogTypeText, text, size)
 
 char *lineStarts[LT_LENGTH] = {
@@ -19,6 +21,16 @@ char *lineColors[LT_LENGTH] = {
     "\033[31m"
 };
 */
+
+void logger_setenabled(int enabled)
+{
+    logger_enabled = enabled;
+}
+
+int logger_isenabled()
+{
+    return logger_enabled;
+}
 
 int __internal_logger_strlen(char *str)
 {
@@ -74,6 +86,22 @@ void __internal_logger_print_i64(uint64_t v, int base, const char *digits) {
     logger_write(LT_LENGTH, 0, pointer, __internal_logger_strlen(pointer));
 }
 
+int __logger_internal_strlen(char *str)
+{
+    if (!str)
+        return 0;
+    
+    int length = 0;
+
+    while (*str != '\0')
+    {
+        length++;
+        str++;
+    }
+
+    return length;
+}
+
 void __logger_internal_vprintf(char *format, va_list args)
 {
         const char *hex_digits = "0123456789ABCDEF";
@@ -88,7 +116,7 @@ void __logger_internal_vprintf(char *format, va_list args)
                         case 's':
                         {
                                 char *str = va_arg(args, char *);
-                                logger_write(LT_LENGTH, 0, str, sizeof(str));
+                                logger_write(LT_LENGTH, 0, str, __logger_internal_strlen(str));
                                 break;
                         }
                         case 'c':
@@ -163,6 +191,8 @@ void __logger_internal_vprintf(char *format, va_list args)
 }
 
 __attribute__((no_caller_saved_registers)) void __internal_log(char *file, char *line, enum LogType type, char *message, ...) {
+    if (logger_enabled != 1)
+        return;
     logger_write(type, 1, lineStarts[type], __internal_logger_strlen(lineStarts[type]));
     logger_write(LT_LENGTH, 0, " ", 1);
     logger_write(LT_LENGTH, 0, file, __internal_logger_strlen(file));
@@ -176,6 +206,8 @@ __attribute__((no_caller_saved_registers)) void __internal_log(char *file, char 
 }
 
 void log_nofileinfo(enum LogType type, char *message, ...) {
+    if (logger_enabled != 1)
+        return;
     logger_write(type, 1, lineStarts[type], __internal_logger_strlen(lineStarts[type]));
     logger_write(LT_LENGTH, 0, " ", 1);
     va_list args;

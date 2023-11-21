@@ -11,5 +11,7 @@ __attribute__((no_caller_saved_registers)) void outsw(uint16_t port, const void 
 __attribute__((no_caller_saved_registers)) unsigned short inw(unsigned short port);
 __attribute__((no_caller_saved_registers)) void insw(uint16_t port, void *addr, int cnt);
 __attribute__((no_caller_saved_registers)) void io_wait();
+__attribute__((no_caller_saved_registers)) void outl(uint16_t port, uint32_t value);
+__attribute__((no_caller_saved_registers)) uint32_t inl(uint16_t port);
 
 #endif

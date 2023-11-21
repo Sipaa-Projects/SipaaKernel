@@ -55,6 +55,8 @@ def buildIso(args: args.Args) -> None:
     
     kernel = builder.build('sk-core', "kernel-" + str(arch2))
 
+
+    shell.cpTree(os.path.join(const.META_DIR, "res"), imageDir)
     shell.cp(kernel.outfile(), os.path.join(bootDir, "kernel.elf"))
     shell.cp(os.path.join(const.META_DIR, "config", "limine.cfg"), bootDir)
 

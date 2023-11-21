@@ -61,3 +61,13 @@ __attribute__((no_caller_saved_registers)) void io_wait()
                  :
                  : "a"(0));
 }
+
+__attribute__((no_caller_saved_registers)) void outl(uint16_t port, uint32_t value) {
+    asm volatile ("outl %0, %1" : : "a"(value), "Nd"(port));
+}
+
+__attribute__((no_caller_saved_registers)) uint32_t inl(uint16_t port) {
+    uint32_t value;
+    asm volatile ("inl %1, %0" : "=a"(value) : "Nd"(port));
+    return value;
+}

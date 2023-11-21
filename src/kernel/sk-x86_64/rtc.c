@@ -25,7 +25,7 @@ unsigned char bcd2bin(unsigned char in_bcd) {
     return (bcd) ? ((in_bcd >> 4) * 10) + (in_bcd & 0x0F) : in_bcd;
 }
 
-void hal_get_time(hal_time *target) {
+__attribute__((no_caller_saved_registers)) void hal_get_time(hal_time *target) {
     target->seconds = bcd2bin(read_register(RTC_SECONDS));
     target->minutes = bcd2bin(read_register(RTC_MINUTES));
     target->hours = bcd2bin(read_register(RTC_HOURS));

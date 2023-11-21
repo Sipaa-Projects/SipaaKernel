@@ -1,3 +1,8 @@
+#ifndef __HAL_H
+#define __HAL_H
+
+#include <stdint.h>
+
 extern unsigned long kernel_stack[];
 
 typedef struct {
@@ -32,6 +37,11 @@ void hal_cpu_stop(void);
 /// @brief Register an IDT handler (x86_64-specific)
 void hal_register_idt_handler(int num, void* handler, unsigned char ist);
 
+/// @brief Read PCI device.
+void hal_pci_read(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
+
 /// @brief Get the current time
 /// @param timeptr A pointer to a memory space of the size of the 'hal_time' struct.
-void hal_get_time(hal_time *timeptr);
+__attribute__((no_caller_saved_registers)) void hal_get_time(hal_time *timeptr);
+
+#endif

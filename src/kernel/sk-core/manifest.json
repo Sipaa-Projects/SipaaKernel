@@ -7,6 +7,8 @@
         "entry",
         "flanterm",
         "sk-arch",
-        "sk-logger"
+        "sk-logger",
+        "stb",
+        "slibc"
     ]
 }

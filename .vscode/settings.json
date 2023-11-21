@@ -4,7 +4,12 @@
         "hal.h": "c",
         "serial.h": "c",
         "charconv": "c",
-        "backend-fb.h": "c"
+        "backend-fb.h": "c",
+        "logger.h": "c",
+        "random": "c",
+        "stb_image.h": "c",
+        "*.tcc": "c",
+        "io.h": "c"
     },
     "python.analysis.typeCheckingMode": "basic",
     "python.analysis.autoImportCompletions": true,

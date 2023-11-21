@@ -1,7 +1,8 @@
 {
     "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.target.v1",
-    "id": "kernel-x86_64",
+    "id": "kernel-testlibc-x86_64",
     "type": "target",
+    "description": "Test the libc",
     "props": {
         "toolchain": "clang",
         "arch": "x86_64",
@@ -34,7 +35,8 @@
                 "-Isrc/entry",
                 "-Isrc/kernel/sk-hal",
                 "-Isrc/libs",
-                "-Isrc/libs/slibc"
+                "-Isrc/libs/slibc",
+                "-DCK_TEST_LIBC"
             ]
         },
         "cxx": {
@@ -58,7 +60,8 @@
                 "-Isrc/entry",
                 "-Isrc/kernel/sk-hal",
                 "-Isrc/libs",
-                "-Isrc/libs/slibc"
+                "-Isrc/libs/slibc",
+                "-DCK_TEST_LIBC"
             ]
         },
         "ld": {

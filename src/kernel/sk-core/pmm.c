@@ -132,7 +132,6 @@ void pmm_init() {
         
         if (mentry->type == LIMINE_MEMMAP_USABLE && mentry->length >= PMM_BLOCK_SIZE)
         {
-            log(LT_INFO, "found usable memory entry\n");
             uintptr_t addr = mentry->base;
             uint64_t length = mentry->length;
 

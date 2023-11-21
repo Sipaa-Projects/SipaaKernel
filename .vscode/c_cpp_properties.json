@@ -6,6 +6,7 @@
                 "${workspaceFolder}/src/kernel/**",
                 "${workspaceFolder}/src/kernel/sk-hal/**",
                 "${workspaceFolder}/src/libs/**",
+                "${workspaceFolder}/src/libs/slibc/**",
                 "${workspaceFolder}/src/entry/**"
             ],
             "defines": [

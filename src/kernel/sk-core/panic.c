@@ -16,5 +16,7 @@ void __sk_core_internal_panic(char *file, char *line, char *message, ...)
     va_end(args);
     log_nofileinfo(LT_ERROR, "We are sorry for the inconvenience.\n");
     log_nofileinfo(LT_ERROR, "System halted.\n");
-    hal_cpu_stop();
+    while (1)
+        ;;
+    //hal_cpu_stop();
 }

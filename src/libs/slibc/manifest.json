@@ -1,9 +1,0 @@
-{
-    "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.component.v1",
-    "id": "slibc",
-    "description": "Sipaa's C standard library.",
-    "type": "lib",
-    "provides": [
-        "slibc"
-    ]
-}

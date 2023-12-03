@@ -1,8 +1,10 @@
-.cutekit/
-__pycache__/
-.vscode/
-output/
-html/
 latex/
-.DS_Store
-.python-version
+html/
+.skb/
+output/
+obj-x86_64/
+obj-RiscV64/
+obj-AArch64/
+bin/
+obj/
+*.o

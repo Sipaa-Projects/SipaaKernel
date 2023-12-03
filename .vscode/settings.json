@@ -1,17 +1,19 @@
 {
+    "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
-        "entry.h": "c",
-        "hal.h": "c",
-        "serial.h": "c",
-        "charconv": "c",
-        "backend-fb.h": "c",
-        "logger.h": "c",
-        "random": "c",
-        "stb_image.h": "c",
-        "*.tcc": "c",
-        "io.h": "c"
-    },
-    "python.analysis.typeCheckingMode": "basic",
-    "python.analysis.autoImportCompletions": true,
-    "cmake.configureOnOpen": false
+        "lib.h": "c",
+        "string_view": "c",
+        "stdint.h": "c",
+        "graphics.h": "c",
+        "resources.h": "c",
+        "gdt.h": "c",
+        "idt.h": "c",
+        "liblogging.h": "c",
+        "stdarg.h": "c",
+        "video.h": "c",
+        "pic.h": "c",
+        "libconsole.h": "c",
+        "cstdio": "c",
+        "format": "c"
+    }
 }

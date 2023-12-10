@@ -2,7 +2,6 @@
 #define GDT_H
 
 #include <stdint.h>
-#include <video/video.h>
 #include <arch/io.h>
 
 typedef struct {

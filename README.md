@@ -55,35 +55,19 @@ SipaaKernel can be built & runned on AArch64, but not anything specific to this 
 * ❌ Intel HDA
 
 ## How to build SipaaKernel?
-### Step 1 : Install CuteKit on your PC
-SipaaKernel uses [CuteKit](https://github.com/cute-engineering/cutekit) as build system/package manager. I (RaphMar2021) made a script to install CuteKit automatically.
-
-Use `./install-ck.sh install` to install CuteKit. 
-
-Note: it won't add automatically into the PATH. To add it, open `~/.bashrc` (or any other shell startup script)
-and put that in:
-`PATH=$PATH:~/.local/share/venvs/cutekit/bin`
-
-### Step 2 : Install the dependencies
-SipaaKernel needs the LLVM toolchain, NASM to be built. QEMU & Xorriso are required if you want to build the ISO & run SipaaKernel.
-All (or most) these packages should be on available on your distro's package repo.
+### Step 1 : Install the dependencies
+SipaaKernel needs the GCC ELF toolchain, NASM to be built. If you are too lazy to build the toolchains, you can use the prebuilt one of Homebrew Formulae. QEMU & Xorriso are required if you want to build the ISO & run SipaaKernel.
+All (or most) these packages should be on available on your distro's package repo. SipaaKernel also contains an underlying tool to compile it called SK-Build. It needs the .NET 7 SDK to be built.
 
 #### On Arch Linux
 ```bash
-$ pacman -S llvm qemu-full clang lld
+$ pacman -S qemu-full nasm make dotnet-sdk-7.0 xorriso
+$ brew install x86_64-elf-gcc aarch64-elf-gcc
 ```
 
-#### On Windows (without WSL)
-* [LLVM Toolchain (official)](https://github.com/llvm/llvm-project/releases/tag/llvmorg-16.0.6)
-* [NASM (official)](https://nasm.us/)
-* [QEMU (official mirror for Win64)](https://qemu.weilnetz.de/w64/)
-* [Xorriso (unofficial, but no viruses)](https://github.com/PeyTy/xorriso-exe-for-windows)
-
-All the software binaries shown before should be in your PATH variable. To add/modify environment variables on Windows, open `C:\Windows\System32\systempropertiesadvanced.exe`, then click on the Environment Variables button.
-
-### Step 3 : Build & Boot SipaaKernel
-Now, you just need to use `ck B` to build & run SipaaKernel in QEMU with KVM (if available)
-You can also use `ck bi` to build SipaaKernel & it's ISO file without running it in QEMU.
+### Step 2 : Build & Boot SipaaKernel
+Now, you just need to use `make run` to build, make the ISO & run SipaaKernel in QEMU with KVM.
+You can also use `make iso` to build SipaaKernel & it's ISO file without running it in QEMU.
 
 ## Q&A
 

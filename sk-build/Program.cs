@@ -118,6 +118,10 @@ public class Program
                     Config();
                 else if (args[0] == "build")
                     Builder.Build(Architecture.x86_64);
+                else if (args[0] == "build-aarch64")
+                    Builder.Build(Architecture.AArch64);
+                else if (args[0] == "build-riscv64")
+                    Builder.Build(Architecture.RiscV64);
                 else if (args[0] == "clean")
                     Clean();
             }

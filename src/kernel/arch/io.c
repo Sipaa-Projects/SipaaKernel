@@ -1,3 +1,5 @@
+// SKB_X86_64_ONLY
+
 #include "io.h"
 
 void outb(unsigned short port, unsigned char value)

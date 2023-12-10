@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Terminal.Gui;
 
 namespace SipaaKernel.Builder;
@@ -13,7 +14,7 @@ public enum Architecture
 
 public class Builder
 {
-    const string LinuxUserBins = "/usr/bin";
+    //const string LinuxUserBins = "/usr/bin";
     static string objDirStart = "obj-";
     static string outputDir = Path.Combine(Environment.CurrentDirectory, "output");
     static string srcDir = Path.Combine(Environment.CurrentDirectory, "src");
@@ -50,7 +51,19 @@ public class Builder
         }
         return FilePaths;
     }
-
+    static List<string> GetObjectFilesRecursivelyInDirectory(string dir)
+    {
+        List<string> FilePaths = new();
+        var fileList = Directory.GetFiles(dir, "*.o", SearchOption.AllDirectories);
+        foreach (string f in fileList)
+        {
+            if (dir.Contains(' '))
+                FilePaths.Add($"\"{f}\"");
+            else
+                FilePaths.Add(f);
+        }
+        return FilePaths;
+    }
     static void PrepDirs(Architecture arch)
     {
         Console.WriteLine("[PREP] Creating object directory structure for " + arch);
@@ -81,10 +94,14 @@ public class Builder
 
         foreach (string s in GetSourceFilesRecursivelyInDirectory(Path.Combine(Environment.CurrentDirectory, "src")))
         {
-            string obj = s.Replace("src", "obj-" + arch);
+            string s2 = s;
+            if (s.Contains(' '))
+                s2 = $"\"{s2}\"";
+
+            string obj = s2.Replace("src", "obj-" + arch);
             bool canBeCompiled = true;
 
-            if (File.Exists(s.Replace(srcDir, tempSourceTree)))
+            if (File.Exists(s2.Replace(srcDir, tempSourceTree)))
             {
                 string savedText = File.ReadAllText(s.Replace(srcDir, tempSourceTree));
                 string currentText = File.ReadAllText(s);
@@ -98,6 +115,10 @@ public class Builder
             if (s.EndsWith(".c"))
             {
                 obj = obj.Replace(".c", ".o");
+
+                if (!canBeCompiled)
+                    if (!File.Exists(obj))
+                        canBeCompiled = true;
 
                 if (topCDef != "// SKB_ARCH_INDEPENDANT")
                 {
@@ -113,7 +134,7 @@ public class Builder
                 {
                     Console.WriteLine($"[CC] {s} => {obj}");
                     Process p = new();
-                    p.StartInfo = new(Path.Combine(LinuxUserBins, $"{arch.ToString().ToLower()}-elf-gcc"), string.Join(' ', ccargs) + $" -o {obj} -c {s}");
+                    p.StartInfo = new($"{arch.ToString().ToLower()}-elf-gcc", string.Join(' ', ccargs) + $" -o {obj} -c {s2}");
                     p.Start();
 
                     while (!p.HasExited)
@@ -144,7 +165,7 @@ public class Builder
 
                 if (canBeCompiled)
                 {
-                    var p = Process.Start(Path.Combine(LinuxUserBins, "nasm"), $"{s} -felf64 -o {obj}");
+                    var p = Process.Start("nasm", $"{s2} -felf64 -o {obj}");
                     while (!p.HasExited)
                         ;;
 
@@ -162,13 +183,10 @@ public class Builder
         return objs;
     }
 
-    public static string Link(Architecture arch, List<string> objs)
+    public static string Link(Architecture arch)
     {
         string linkScriptPath = Path.Combine(tempDir, "lnk-" + arch + ".ld");
         string outputKernelPath = "";
-
-        if (objs.Count == 0)
-            return outputKernelPath;
         
         outputKernelPath = $"kernel-{arch.ToString().ToLower()}.elf";
 
@@ -187,15 +205,25 @@ public class Builder
         List<string> ldArgs = new() {
             "-nostdlib",
             "-static",
-            $"-T {linkScriptPath}",
             "-z max-page-size=0x1000",
-            string.Join(' ', objs),
-            $" -o {Path.Combine(outputDir, outputKernelPath)}"
+            string.Join(' ', GetObjectFilesRecursivelyInDirectory(objDirStart + arch))
         };
+
+        if (outputDir.Contains(' '))
+            ldArgs.Add($" -o \"{Path.Combine(outputDir, outputKernelPath)}\"");
+        else
+            ldArgs.Add($" -o {Path.Combine(outputDir, outputKernelPath)}");
+
+        if (linkScriptPath.Contains(' '))
+            ldArgs.Add($"-T \"{linkScriptPath}\"");
+        else
+            ldArgs.Add($"-T {linkScriptPath}");
 
         Console.WriteLine("[LD] " + outputKernelPath);
 
-        var p = Process.Start(Path.Combine(LinuxUserBins, $"{arch.ToString().ToLower()}-elf-ld"), string.Join(' ', ldArgs));
+        //Console.WriteLine(string.Join(' ', ldArgs));
+
+        var p = Process.Start($"{arch.ToString().ToLower()}-elf-ld", string.Join(' ', ldArgs));
         while (!p.HasExited)
             ;;
         
@@ -207,7 +235,7 @@ public class Builder
 
     public static void Build(Architecture arch)
     {
-        List<string> x8664CCArgs = new() {
+        List<string> CCArgs = new() {
             "-ffreestanding",
             "-w",
             "-Dlimine",
@@ -224,26 +252,30 @@ public class Builder
             "-Isrc/kernel/sk-hal",
             "-Isrc/libs",
             "-Isrc/libs/slibc",
-            "-g",
-            "-m64",
-            "-mabi=sysv",
-            "-march=x86-64",
-            "-mno-80387",
-            "-mno-mmx",
-            "-mno-sse",
-            "-mno-sse2",
-            "-mno-red-zone",
-            "-mcmodel=kernel"
+            "-g"
         };
-        
 
+        if (arch == Architecture.x86_64)
+        {
+            CCArgs.Add("-m64");
+            CCArgs.Add("-mabi=sysv");
+            CCArgs.Add("-march=x86-64");
+            CCArgs.Add("-mno-80387");
+            CCArgs.Add("-mno-mmx");
+            CCArgs.Add("-mno-sse");
+            CCArgs.Add("-mno-sse2");
+            CCArgs.Add("-mno-red-zone");
+            CCArgs.Add("-mcmodel=kernel");
+        }
+        
         PrepDirs(arch);
 
         Console.WriteLine("[READY] Starting SipaaKernel compilation for " + arch);
 
-        AddConfigDefinesToArguments(x8664CCArgs);
-
-        Link(arch, BuildSourceCode(arch, x8664CCArgs));
+        AddConfigDefinesToArguments(CCArgs);
+        if (BuildSourceCode(arch, CCArgs) == null)
+            Environment.Exit(1);
+        Link(arch);
 
         Console.WriteLine("[PREP] Copying source tree to temp");
 

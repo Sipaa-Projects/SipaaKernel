@@ -1,12 +1,18 @@
+// SKB_X86_64_ONLY
+
 #include "idt.h"
-#include "video/video.h"
+#include <logger/logger.h>
 
 __attribute__((aligned(0x10))) static idt_entry idt[256];
 static idt_pointer idtr;
 
 void _panic(char *message, struct interrupt_frame *frame)
 {
-    printf("[kernel] pnc: %s\n", message);
+    log(LT_ERROR, "kernel", "pnc: %s\n", message);
+    log(LT_ERROR, "kernel", "rax: %llu, rbx: %llu, rcx: %llu, rdx: %llu\n", frame->rax, frame->rbx, frame->rcx, frame->rdx);
+    log(LT_ERROR, "kernel", "int: %llu\n", frame->int_num);
+    log(LT_ERROR, "kernel", "cpu halted. goodbye.\n");
+    //printf("[kernel] pnc: %s\n", message);
     while (1)
     {
         __asm__("hlt");

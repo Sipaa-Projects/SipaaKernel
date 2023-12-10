@@ -1,4 +1,7 @@
+// SKB_X86_64_ONLY
+
 #include "gdt.h"
+#include <logger/logger.h>
 
 gdt_entry gdt[0xff];
 gdt_pointer gdt_ptr;
@@ -35,6 +38,7 @@ static void init_tss(uint64_t rsp0)
 
 void init_gdt(uint64_t kernel_rsp)
 {
+    log(LT_INFO, "GDT", "Initializing...\n");
     gdt_ptr.size = sizeof(gdt) - 1;
     gdt_ptr.offset = (uint64_t)&gdt;
 

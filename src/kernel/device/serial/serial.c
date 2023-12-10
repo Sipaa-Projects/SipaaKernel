@@ -1,6 +1,6 @@
+// SKB_X86_64_ONLY
+
 #include "serial.h"
-#include <lib/libconsole/libconsole.h>
-#include <video/video.h>
 
 void init_serial(void)
 {

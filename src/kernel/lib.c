@@ -1,4 +1,6 @@
-#include "stdlib.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 
 // Thanks chatgpt for this file :sweat_smile:
 
@@ -17,6 +19,7 @@ char scancode_to_ascii(uint8_t scancode)
     return scancode_ascii[scancode];
 }
 
+#ifdef __x86_64__
 bool is_rdseed_available()
 {
     uint32_t ecx_flag = 0x0;
@@ -68,22 +71,9 @@ void syscall(int rax, void *rbx, void *rcx, void *rdx, void *rsi, void *rdi)
         : "%rbx", "%rcx", "%rdx", "%rsi", "%rdi"
     );
 }
+#endif
 
-void *memcpy(void* dest, void* src, size_t count){
-    long d0, d1, d2; 
-    asm volatile(
-            "rep ; movsq\n\t movq %4,%%rcx\n\t""rep ; movsb\n\t": "=&c" (d0),
-            "=&D" (d1),
-            "=&S" (d2): "0" (count >> 3), 
-            "g" (count & 7), 
-            "1" (dest),
-            "2" (src): "memory"
-    );  
-    return dest;
-}
-
-/**void *memcpy(void *dest, const void *src, size_t count)
-{
+void *memcpy(void* dest, void* src, size_t count) {
     char *dest_c = (char *)dest;
     const char *src_c = (const char *)src;
     for (size_t i = 0; i < count; i++)
@@ -91,7 +81,7 @@ void *memcpy(void* dest, void* src, size_t count){
         dest_c[i] = src_c[i];
     }
     return dest;
-}**/
+}
 
 void *memset(void *ptr, int value, size_t count)
 {
@@ -313,9 +303,11 @@ void ullitoa(unsigned long long int value, char *str, int base)
 
     strreverse(str, wstr - 1);
 }
-//
+
+#ifdef __x86_64__
 void delay(uint16_t ms)
 {
     for (long long int i = 0; i < 5000 * (uint16_t)ms / 2; i++)
         io_wait();
 }
+#endif

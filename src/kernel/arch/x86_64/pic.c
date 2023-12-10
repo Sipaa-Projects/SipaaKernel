@@ -1,3 +1,4 @@
+// SKB_X86_64_ONLY
 
 #include "pic.h"
 

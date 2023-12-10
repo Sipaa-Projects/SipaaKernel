@@ -38,7 +38,7 @@ static void init_tss(uint64_t rsp0)
 
 void init_gdt(uint64_t kernel_rsp)
 {
-    log(LT_INFO, "GDT", "Initializing...\n");
+    log(LT_INFO, "GDT", "Initializing...");
     gdt_ptr.size = sizeof(gdt) - 1;
     gdt_ptr.offset = (uint64_t)&gdt;
 

@@ -101,7 +101,7 @@ __attribute__((interrupt)) void virtualization_exception_handler(struct interrup
 __attribute__((interrupt)) void kb_handler(struct interrupt_frame *frame)
 {
         uint8_t scancode = inb(0x60);
-
+    
         serial_puts("IRQ1 raised");
 
         pic_end_master();

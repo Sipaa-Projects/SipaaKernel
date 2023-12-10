@@ -39,7 +39,7 @@ SipaaKernel can be built & runned on AArch64, but not anything specific to this 
 
 ### Kernel (in User Mode)
 * ❌ Tasking
-* ❌ User Space
+* ❌ Ring3
 * ❌ Syscalls
 
 ### Devices (src/kernel/sk-dev)

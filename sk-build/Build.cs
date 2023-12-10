@@ -41,7 +41,7 @@ public class Builder
     static List<string> GetSourceFilesRecursivelyInDirectory(string dir)
     {
         List<string> FilePaths = new();
-        string[] allowedExtensions = { ".c", ".cpp", ".asm", ".s" };
+        string[] allowedExtensions = { ".c", ".cpp", ".asm", ".s", ".rs" };
         var fileList = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories)
                              .Where(file => allowedExtensions.Contains(Path.GetExtension(file)))
                              .ToArray();
@@ -112,7 +112,7 @@ public class Builder
 
             string topCDef = File.ReadAllLines(s)[0];
 
-            if (s.EndsWith(".c"))
+            if (s.EndsWith(".c") || s.EndsWith(".cpp"))
             {
                 obj = obj.Replace(".c", ".o");
 
@@ -134,7 +134,7 @@ public class Builder
                 {
                     Console.WriteLine($"[CC] {s} => {obj}");
                     Process p = new();
-                    p.StartInfo = new($"{arch.ToString().ToLower()}-elf-gcc", string.Join(' ', ccargs) + $" -o {obj} -c {s2}");
+                    p.StartInfo = new($"{arch.ToString().ToLower()}-elf-g{(s.EndsWith(".cpp") ? "++" : "cc")}", string.Join(' ', ccargs) + $" -o {obj} -c {s2}");
                     p.Start();
 
                     while (!p.HasExited)
@@ -148,6 +148,14 @@ public class Builder
 
                     objs.Add(obj);
                 }
+            }
+            else if (s.EndsWith(".s"))
+            {
+                Console.WriteLine("[INFO] GNU ASM files '.s' compilation isn't supported right now.");
+            }
+            else if (s.EndsWith(".rs"))
+            {
+                Console.WriteLine("[INFO] Rust files '.rs' compilation isn't supported right now.");
             }
             else if (s.EndsWith(".asm") && arch == Architecture.x86_64)
             {
@@ -165,6 +173,7 @@ public class Builder
 
                 if (canBeCompiled)
                 {
+                    Console.WriteLine($"[ASM] {s} => {obj}");
                     var p = Process.Start("nasm", $"{s2} -felf64 -o {obj}");
                     while (!p.HasExited)
                         ;;

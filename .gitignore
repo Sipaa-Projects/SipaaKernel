@@ -3,6 +3,7 @@ html/
 .skb/
 output/
 obj-x86_64/
+obj-i686/
 obj-RiscV64/
 obj-AArch64/
 bin/

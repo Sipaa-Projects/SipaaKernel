@@ -66,6 +66,8 @@ public class Program
             Directory.Delete(Path.Combine(Environment.CurrentDirectory, "obj-AArch64"), true);
         if (Directory.Exists(Path.Combine(Environment.CurrentDirectory, "obj-RiscV64")))
             Directory.Delete(Path.Combine(Environment.CurrentDirectory, "obj-RiscV64"), true);
+        if (Directory.Exists(Path.Combine(Environment.CurrentDirectory, "obj-i686")))
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "obj-i686"), true);
         if (Directory.Exists(Path.Combine(Environment.CurrentDirectory, "output")))
             Directory.Delete(Path.Combine(Environment.CurrentDirectory, "output"), true);
     }
@@ -118,6 +120,8 @@ public class Program
                     Config();
                 else if (args[0] == "build")
                     Builder.Build(Architecture.x86_64);
+                else if (args[0] == "build-i686")
+                    Builder.Build(Architecture.i686);
                 else if (args[0] == "build-aarch64")
                     Builder.Build(Architecture.AArch64);
                 else if (args[0] == "build-riscv64")

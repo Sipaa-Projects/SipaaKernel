@@ -7,10 +7,10 @@ SK_BUILD_UNIX = sk-build/bin/Debug/net7.0/sk-build
 SK_BUILD_WIN32 = sk-build/bin/Debug/net7.0/sk-build.exe
 
 all:
-	@$(SK_BUILD_UNIX) build
+	@$(SK_BUILD_UNIX) build-i686
 
 wall:
-	@$(SK_BUILD_WIN32) build
+	@$(SK_BUILD_WIN32) build-i686
 
 config:
 	@$(SK_BUILD_UNIX) config
@@ -49,13 +49,9 @@ wiso: wall
 
 clean:
 	$(SK_BUILD_UNIX) clean
-	rm *.o
-	rm $(OUTPUT_ISO)
 
 wclean:
 	$(SK_BUILD_WIN32) clean
-	rm *.o
-	rm $(OUTPUT_ISO)
 
 run:
 	make iso

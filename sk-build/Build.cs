@@ -9,6 +9,7 @@ public enum Architecture
 {
     AArch64,
     x86_64,
+    i686,
     RiscV64
 }
 
@@ -110,7 +111,14 @@ public class Builder
                     canBeCompiled = false;
             }
 
-            string topCDef = File.ReadAllLines(s)[0];
+            string[] fileln = File.ReadAllLines(s);
+            string topCDef = "";
+
+            if (fileln.Length < 2)
+                Console.WriteLine("[Warning] The file's lines count is less than 2. Skipping the architecture check for this file.");
+            else
+                topCDef = fileln[0];
+
 
             if (s.EndsWith(".c") || s.EndsWith(".cpp"))
             {
@@ -127,6 +135,16 @@ public class Builder
                     if (topCDef == "// SKB_AARCH64_ONLY" && arch != Architecture.AArch64)
                         canBeCompiled = false;
                     if (topCDef == "// SKB_RISCV64_ONLY" && arch != Architecture.RiscV64)
+                        canBeCompiled = false;
+                    if (topCDef == "// SKB_i686_ONLY" && arch != Architecture.i686)
+                        canBeCompiled = false;
+                    if (topCDef == "// SKB_NO_X86_64" && arch == Architecture.x86_64)
+                        canBeCompiled = false;
+                    if (topCDef == "// SKB_NO_AARCH64" && arch == Architecture.AArch64)
+                        canBeCompiled = false;
+                    if (topCDef == "// SKB_NO_RISCV64" && arch == Architecture.RiscV64)
+                        canBeCompiled = false;
+                    if (topCDef == "// SKB_NO_i686" && arch == Architecture.i686)
                         canBeCompiled = false;
                 }
 
@@ -157,24 +175,31 @@ public class Builder
             {
                 Console.WriteLine("[INFO] Rust files '.rs' compilation isn't supported right now.");
             }
-            else if (s.EndsWith(".asm") && arch == Architecture.x86_64)
+            else if (s.EndsWith(".asm"))
             {
                 obj = obj.Replace(".asm", "-asm.o");
                 
+                if (arch == Architecture.RiscV64 || arch == Architecture.AArch64)
+                    canBeCompiled = false;
+
                 if (topCDef != "; SKB_ARCH_INDEPENDANT")
                 {
                     if (topCDef == "; SKB_X86_64_ONLY" && arch != Architecture.x86_64)
                         canBeCompiled = false;
-                    if (topCDef == "; SKB_AARCH64_ONLY" && arch != Architecture.AArch64)
-                        canBeCompiled = false;
-                    if (topCDef == "; SKB_RISCV64_ONLY" && arch != Architecture.RiscV64)
+                    if (topCDef == "; SKB_i686_ONLY" && arch != Architecture.i686)
                         canBeCompiled = false;
                 }
 
                 if (canBeCompiled)
                 {
+                    string elftype = "";
+                    if (arch == Architecture.x86_64)
+                        elftype = "elf64";
+                    else if (arch == Architecture.i686)
+                        elftype = "elf32";
+
                     Console.WriteLine($"[ASM] {s} => {obj}");
-                    var p = Process.Start("nasm", $"{s2} -felf64 -o {obj}");
+                    var p = Process.Start("nasm", $"{s2} -f{elftype} -o {obj}");
                     while (!p.HasExited)
                         ;;
 
@@ -205,10 +230,16 @@ public class Builder
             HttpClient hc = new();
             FileStream s = File.Create(linkScriptPath);
             string linkScriptUrl = $"https://raw.githubusercontent.com/limine-bootloader/limine-c-template-portable/trunk/kernel/linker-{arch.ToString().ToLower()}.ld";
+            if (arch == Architecture.i686)
+                linkScriptUrl = "https://raw.githubusercontent.com/Sipaa-Projects/SipaaKernel-old/main/kernel/link.ld"; // Use old SipaaKernel's link file as Limine barebones doesn't provide one for i686.
             Console.WriteLine($"[LD] Downloading '{linkScriptUrl}', necessary to link the kernel.");
             var downloadedLinkScript = hc.GetStreamAsync(linkScriptUrl);
             downloadedLinkScript.Result.CopyTo(s);
             s.Close();
+
+            var text = File.ReadAllText(linkScriptPath);
+            text = text.Replace("_start", "prestart");
+            File.WriteAllText(linkScriptPath, text);
         }
 
         List<string> ldArgs = new() {
@@ -245,27 +276,27 @@ public class Builder
     public static void Build(Architecture arch)
     {
         List<string> CCArgs = new() {
-            "-ffreestanding",
-            "-w",
-            "-Dlimine",
-            "-std=gnu++11",
-            "-ffreestanding",
-            "-fno-stack-protector",
-            "-fpermissive",
-            "-fno-stack-check",
-            "-fno-lto",
-            "-fno-PIE",
-            "-fno-PIC",
             "-Isrc/kernel/",
             "-Isrc/entry",
             "-Isrc/kernel/sk-hal",
             "-Isrc/libs",
             "-Isrc/libs/slibc",
-            "-g"
         };
 
         if (arch == Architecture.x86_64)
         {
+            CCArgs.Add("-ffreestanding");
+            CCArgs.Add("-w");
+            CCArgs.Add("-Dlimine");
+            CCArgs.Add("-std=gnu++11");
+            CCArgs.Add("-ffreestanding");
+            CCArgs.Add("-fno-stack-protector");
+            CCArgs.Add("-fpermissive");
+            CCArgs.Add("-fno-stack-check");
+            CCArgs.Add("-fno-lto");
+            CCArgs.Add("-fno-PIE");
+            CCArgs.Add("-fno-PIC");
+            CCArgs.Add("-g");
             CCArgs.Add("-m64");
             CCArgs.Add("-mabi=sysv");
             CCArgs.Add("-march=x86-64");
@@ -276,7 +307,32 @@ public class Builder
             CCArgs.Add("-mno-red-zone");
             CCArgs.Add("-mcmodel=kernel");
         }
-        
+        else if (arch == Architecture.AArch64)
+        {
+            CCArgs.Add("-ffreestanding");
+            CCArgs.Add("-w");
+            CCArgs.Add("-Dlimine");
+            CCArgs.Add("-std=gnu++11");
+            CCArgs.Add("-ffreestanding");
+            CCArgs.Add("-fno-stack-protector");
+            CCArgs.Add("-fpermissive");
+            CCArgs.Add("-fno-stack-check");
+            CCArgs.Add("-fno-lto");
+            CCArgs.Add("-fno-PIE");
+            CCArgs.Add("-fno-PIC");
+            CCArgs.Add("-g");
+        }
+        else if (arch == Architecture.i686)
+        {
+            CCArgs.Add("-ffreestanding");
+            CCArgs.Add("-fno-stack-protector");
+            CCArgs.Add("-fpermissive");
+            CCArgs.Add("-fno-pic");
+            CCArgs.Add("-w");
+            CCArgs.Add("-O1");
+            CCArgs.Add("-m32");
+            CCArgs.Add("-g");
+        }
         PrepDirs(arch);
 
         Console.WriteLine("[READY] Starting SipaaKernel compilation for " + arch);
@@ -286,7 +342,7 @@ public class Builder
             Environment.Exit(1);
         Link(arch);
 
-        Console.WriteLine("[PREP] Copying source tree to temp");
+        Console.WriteLine("[END] Copying source tree to temp");
 
         foreach (string d in Directory.GetDirectories(srcDir, "*", SearchOption.AllDirectories))
         {

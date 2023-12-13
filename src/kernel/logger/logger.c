@@ -70,6 +70,7 @@ void __internal_logger_print_i(int v, int base, const char *digits) {
     logger_write(LT_LENGTH, 0, ptr, __internal_logger_strlen(ptr));
 }
 
+#ifndef __i686__
 void __internal_logger_print_i64(uint64_t v, int base, const char *digits) {
     char buf[65];
     char *pointer = & buf[sizeof(buf) - 1];
@@ -89,6 +90,7 @@ void __internal_logger_print_i64(uint64_t v, int base, const char *digits) {
 
     logger_write(LT_LENGTH, 0, pointer, __internal_logger_strlen(pointer));
 }
+#endif
 
 int __logger_internal_strlen(char *str)
 {
@@ -147,6 +149,7 @@ void __logger_internal_vprintf(char *format, va_list args)
                                 __internal_logger_print_i(x, 16, hex_digits);
                                 break;
                         }
+                        #ifndef __i686__
                         case 'p':
                         {
                                 void *p = va_arg(args, void *);
@@ -180,6 +183,7 @@ void __logger_internal_vprintf(char *format, va_list args)
                                 }
                                 break;
                         }
+                        #endif
                         default:
                                 logger_write(LT_LENGTH, 0, "(F)", sizeof("(F)"));
                                 logger_write(LT_LENGTH, 0, format, 1);
@@ -194,7 +198,7 @@ void __logger_internal_vprintf(char *format, va_list args)
         }
 }
 
-__attribute__((no_caller_saved_registers)) void __internal_log(char *file, char *line, enum LogType type, char *message, ...) {
+void __internal_log(char *file, char *line, enum LogType type, char *message, ...) {
     if (logger_enabled != 1)
         return;
     logger_write(type, 1, lineStarts[type], __internal_logger_strlen(lineStarts[type]));

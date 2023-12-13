@@ -17,6 +17,10 @@
         "format": "c",
         "serial.h": "c",
         "backend-fb.h": "c",
-        "logger.h": "c"
+        "logger.h": "c",
+        "limine.h": "c",
+        "cmath": "c",
+        "multiboot.h": "c",
+        "entry.h": "c"
     }
 }

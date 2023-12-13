@@ -1,16 +1,16 @@
-KERNEL_ELF = output/kernel-aarch64.elf
-KERNEL_ELF_WIN = output\kernel-aarch64.elf
-OUTPUT_ISO = output/sk-aarch64.iso
-TEMP_ISO = .skb/iso-aarch64
-TEMP_ISO_WIN = .skb\iso-aarch64
+KERNEL_ELF = output/kernel-i686.elf
+KERNEL_ELF_WIN = output\kernel-i686.elf
+OUTPUT_ISO = output/sk-i686.iso
+TEMP_ISO = .skb/iso-i686
+TEMP_ISO_WIN = .skb\iso-i686
 SK_BUILD_UNIX = sk-build/bin/Debug/net7.0/sk-build
 SK_BUILD_WIN32 = sk-build/bin/Debug/net7.0/sk-build.exe
 
 all:
-	@$(SK_BUILD_UNIX) build-aarch64
+	@$(SK_BUILD_UNIX) build-i686
 
 wall:
-	@$(SK_BUILD_WIN32) build-aarch64
+	@$(SK_BUILD_WIN32) build-i686
 
 config:
 	@$(SK_BUILD_UNIX) config
@@ -21,7 +21,8 @@ wconfig:
 iso: all
 	@rm -rf $(TEMP_ISO)
 	@mkdir -p $(TEMP_ISO)
-	@cp meta/limine-cfg/limine.cfg meta/limine-cfg/wallp.jpg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin $(TEMP_ISO)/
+	@cp meta/limine-cfg/wallp.jpg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin $(TEMP_ISO)/
+	@cp meta/limine-cfg/limine-i686.cfg $(TEMP_ISO)/limine.cfg
 	@cp $(KERNEL_ELF) $(TEMP_ISO)/kernel.elf
 	@xorriso -as mkisofs -b limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
@@ -34,7 +35,7 @@ wiso: wall
 	del $(TEMP_ISO_WIN) /q
 	rmdir $(TEMP_ISO_WIN)
 	mkdir $(TEMP_ISO_WIN)
-	copy meta\limine-cfg\limine.cfg $(TEMP_ISO_WIN)
+	copy meta\limine-cfg\limine-i686.cfg $(TEMP_ISO_WIN)\limine.cfg
 	copy meta\limine-cfg\wallp.jpg $(TEMP_ISO_WIN)
 	copy meta\limine\limine-bios.sys $(TEMP_ISO_WIN)
 	copy meta\limine\limine-bios-cd.bin $(TEMP_ISO_WIN)
@@ -54,13 +55,14 @@ wclean:
 	$(SK_BUILD_WIN32) clean
 
 run: iso
-	qemu-system-aarch64 -m 4g -serial stdio -cdrom $(OUTPUT_ISO) -device ramfb -cpu cortex-a72 -bios ./meta/efi/QEMU-EFI-aarch64.fd -machine virt
+	qemu-system-x86_64 -m 4g -enable-kvm -serial stdio -cdrom $(OUTPUT_ISO)
 
 debug: iso
-	qemu-system-aarch64 -m 4g -serial stdio -cdrom $(OUTPUT_ISO) -device ramfb -cpu cortex-a72 -bios ./meta/efi/QEMU-EFI-aarch64.fd -machine virt -s -S
+	qemu-system-x86_64 -m 4g -enable-kvm -serial stdio -cdrom $(OUTPUT_ISO) -s -S
 
 wrun: wiso
-	qemu-system-aarch64 -m 4g -serial stdio -cdrom $(OUTPUT_ISO) -device ramfb -cpu cortex-a72 -bios ./meta/efi/QEMU-EFI-aarch64.fd -machine virt
+	qemu-system-x86_64 -m 4g -accel whpx -serial stdio -cdrom $(OUTPUT_ISO)
 
 wdebug: wiso
-	qemu-system-aarch64 -m 4g -serial stdio -cdrom $(OUTPUT_ISO) -device ramfb -cpu cortex-a72 -bios ./meta/efi/QEMU-EFI-aarch64.fd -machine virt -s -S
+	make wiso
+	qemu-system-x86_64 -m 4g -accel whpx -serial stdio -cdrom $(OUTPUT_ISO) -s -S

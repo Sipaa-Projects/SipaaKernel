@@ -16,13 +16,21 @@ It features an easy & elegant API.
 * ⚠️ : Buggy / Broken / Incomplete
 * ❌ : To do
 
-### x86_64 architecture (src/kernel/sk-x86_64)
+### x86_64 architecture (src/kernel/arch/x86_64)
 * ✅ IDT
 * ✅ GDT
 * ✅ PIC
 * ✅ TSS
 * ❌ PCI
 * ✅ IO port operations
+
+### i686 architecture (src/kernel/arch/i686)
+* ❌ IDT
+* ❌ GDT
+* ❌ PIC
+* ❌ TSS
+* ❌ PCI
+* ❌ IO port operations
 
 ### AArch64 (src/kernel/sk-aarch64)
 SipaaKernel can be built & runned on AArch64, but not anything specific to this architecture is implemented.
@@ -32,8 +40,8 @@ SipaaKernel can be built & runned on AArch64, but not anything specific to this 
 * ✅ Kernel Panic
 * ❌ ELF Loader
 * ❌ Kernel Extensions
-* ✅ BMO (Basic Memory Operations) (memcpy, memset...)
-* ✅ PMM (Physical Memory Manager)
+* ❌ BMO (Basic Memory Operations) (memcpy, memset...)
+* ❌ PMM (Physical Memory Manager)
 * ❌ VMM (Virtual Memory Manager)
 * ❌ initrd
 

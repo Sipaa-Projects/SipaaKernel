@@ -1,5 +1,4 @@
-// SKB_X86_64_ONLY
-
+#if defined(__x86_64__) | defined(__i686__)
 #include "io.h"
 
 void outb(unsigned short port, unsigned char value)
@@ -63,3 +62,4 @@ void io_wait()
                  :
                  : "a"(0));
 }
+#endif

@@ -12,7 +12,7 @@ enum LogType {
 
 extern void (*logger_write)(enum LogType, int, char *, int);
 
-__attribute__((no_caller_saved_registers)) void __internal_log(char *file, char *line, enum LogType type, char *message, ...);
+void __internal_log(char *file, char *line, enum LogType type, char *message, ...);
 void log_nofileinfo(enum LogType type, char *message, ...);
 
 void logger_setenabled(int enabled);

@@ -285,6 +285,7 @@ void utoa(unsigned int value, char *str, int base)
     strreverse(str, wstr - 1);
 }
 
+#ifdef __x86_64__
 void ullitoa(unsigned long long int value, char *str, int base)
 {
     static char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -304,7 +305,6 @@ void ullitoa(unsigned long long int value, char *str, int base)
     strreverse(str, wstr - 1);
 }
 
-#ifdef __x86_64__
 void delay(uint16_t ms)
 {
     for (long long int i = 0; i < 5000 * (uint16_t)ms / 2; i++)

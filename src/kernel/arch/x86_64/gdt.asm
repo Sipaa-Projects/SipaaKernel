@@ -1,3 +1,5 @@
+; SKB_X86_64_ONLY
+
 [bits 64]
 
 global load_gdt, load_tss

@@ -1,4 +1,4 @@
-// SKB_X86_64_ONLY
+#if defined(__x86_64__) | defined(__i686__)
 
 #include "serial.h"
 
@@ -70,11 +70,13 @@ void serial_putsf(const char *format, ...)
             case 'l':
                 switch (*++p)
                 {
+                #if defined(__x86_64__) 
                 case 'x':
                     ullitoa(va_arg(args, unsigned long long int), buffer, 16);
                     for (char *p = buffer; *p != '\0'; p++)
                         serial_putc(*p);
                     break;
+                #endif
                 }
                 break;
             case 'd':
@@ -113,3 +115,5 @@ void serial_puts(const char *str)
         serial_putc(str[i]);
     }
 }
+
+#endif

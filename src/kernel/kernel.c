@@ -1,16 +1,19 @@
 #include <arch/x86_64/gdt.h>
 #include <arch/x86_64/idt.h>
-#include <limine/limine.h>
+#include <entry/skgbi.h>
 #include <stdint.h>
 #include <logger-impl.h>
 #include <logger/logger.h>
+#include <prestart/sk_prestart_return.h>
 
+#ifndef __i686__
 uint64_t kernel_stack[8192];
+#endif
 
-void _start(void)
+int _start(sk_general_boot_info skgbi)
 {
     //init_video(framebuffer_request.response->framebuffers[0]);
-    logger_sk_impl_init();
+    logger_sk_impl_init(skgbi);
     flanterm_write(logger_ftctx, "Welcome to SipaaKernel!\n\n", 24);
 
     #ifdef __x86_64__
@@ -22,7 +25,6 @@ void _start(void)
     init_gdt(kernel_stack);
     init_idt();
     #endif
-    
-    while (1) { }
+
+    return SK_RETURN_LOOP;
 }
-//h

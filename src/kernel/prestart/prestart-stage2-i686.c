@@ -1,6 +1,6 @@
 // SKB_i686_ONLY
 
-#include <entry/multiboot.h>
+#include <entry/multiboot2.h>
 #include <entry/entry.h>
 #include <logger/logger.h>
 #include <stdnoreturn.h>
@@ -8,9 +8,9 @@
 
 extern int _start(sk_general_boot_info skgbi);
 
-noreturn void prestart_stage2(struct multiboot_info *info)
+noreturn void prestart_stage2(uint32_t mboot2_magic, struct multiboot_info* info_addr)
 {
-    sk_general_boot_info skgbi = get_skgbi_from_multiboot(info);
+    sk_general_boot_info skgbi = get_skgbi_from_multiboot(info_addr);
 
     int kr = _start(skgbi);
 

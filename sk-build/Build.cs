@@ -231,7 +231,7 @@ public class Builder
             FileStream s = File.Create(linkScriptPath);
             string linkScriptUrl = $"https://raw.githubusercontent.com/limine-bootloader/limine-c-template-portable/trunk/kernel/linker-{arch.ToString().ToLower()}.ld";
             if (arch == Architecture.i686)
-                linkScriptUrl = "https://raw.githubusercontent.com/Sipaa-Projects/SipaaKernel-old/main/kernel/link.ld"; // Use old SipaaKernel's link file as Limine barebones doesn't provide one for i686.
+                linkScriptUrl = "https://raw.githubusercontent.com/limine-bootloader/limine/v6.x-branch/test/multiboot2.ld"; // Use old SipaaKernel's link file as Limine barebones doesn't provide one for i686.
             Console.WriteLine($"[LD] Downloading '{linkScriptUrl}', necessary to link the kernel.");
             var downloadedLinkScript = hc.GetStreamAsync(linkScriptUrl);
             downloadedLinkScript.Result.CopyTo(s);

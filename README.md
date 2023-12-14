@@ -70,7 +70,7 @@ All (or most) these packages should be on available on your distro's package rep
 #### On Arch Linux
 ```bash
 $ pacman -S qemu-full nasm make dotnet-sdk-7.0 xorriso
-$ brew install x86_64-elf-gcc aarch64-elf-gcc
+$ brew install x86_64-elf-gcc aarch64-elf-gcc i686-elf-gcc
 ```
 
 ### Step 2 : Build & Boot SipaaKernel

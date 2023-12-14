@@ -21,6 +21,8 @@
         "limine.h": "c",
         "cmath": "c",
         "multiboot.h": "c",
-        "entry.h": "c"
+        "entry.h": "c",
+        "stdnoreturn.h": "c",
+        "sk_prestart_return.h": "c"
     }
 }

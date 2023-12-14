@@ -7,10 +7,10 @@ SK_BUILD_UNIX = sk-build/bin/Debug/net7.0/sk-build
 SK_BUILD_WIN32 = sk-build/bin/Debug/net7.0/sk-build.exe
 
 all:
-	@$(SK_BUILD_UNIX) build-i686
+	@$(SK_BUILD_UNIX) build
 
 wall:
-	@$(SK_BUILD_WIN32) build-i686
+	@$(SK_BUILD_WIN32) build
 
 config:
 	@$(SK_BUILD_UNIX) config

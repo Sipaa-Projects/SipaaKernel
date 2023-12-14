@@ -1,3 +1,5 @@
+; SKB_i686_ONLY
+
 extern prestart_stage2
 
 global prestart

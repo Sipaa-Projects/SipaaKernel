@@ -4,12 +4,24 @@
 #include <entry/entry.h>
 #include <logger/logger.h>
 #include <stdnoreturn.h>
+#include <device/serial/serial.h>
 #include "sk_prestart_return.h"
 
 extern int _start(sk_general_boot_info skgbi);
 
-noreturn void prestart_stage2(uint32_t mboot2_magic, struct multiboot_info* info_addr)
+noreturn void prestart_stage2(uint32_t magic, struct multiboot_info* info_addr)
 {
+    if (magic != MULTIBOOT2_BOOTLOADER_MAGIC)
+    {
+        init_serial();
+        serial_puts("[FATAL] prestart: multiboot2 bootloader magic is invalid!\n");
+        serial_puts("[FATAL] Please contact the bootloader's developer.\n");
+        while (1)
+        {
+            asm("hlt");
+        }
+    }
+
     sk_general_boot_info skgbi = get_skgbi_from_multiboot(info_addr);
 
     int kr = _start(skgbi);

@@ -1,5 +1,5 @@
 /*
- * SKGBI - SipaaKernel General Boot Informations (Header version 1.0)
+ * SKGBI - SipaaKernel General Boot Informations (Header version 1.1)
  *
  * MIT License
  *
@@ -29,6 +29,16 @@
 
 #include <stdint.h>
 
+#define SKGBI_MEMMAP_USABLE                 0
+#define SKGBI_MEMMAP_RESERVED               1
+#define SKGBI_MEMMAP_ACPI_RECLAIMABLE       2
+#define SKGBI_MEMMAP_ACPI_NVS               3
+#define SKGBI_MEMMAP_BAD_MEMORY             4
+#define SKGBI_MEMMAP_BOOTLOADER_RECLAIMABLE 5
+#define SKGBI_MEMMAP_KERNEL_AND_MODULES     6
+#define SKGBI_MEMMAP_FRAMEBUFFER            7
+#define SKGBI_MEMMAP_MAX_ENTRIES            40
+
 typedef struct {
     uint64_t base;
     uint64_t length;
@@ -36,7 +46,7 @@ typedef struct {
 } sk_memory_mapentry;
 
 typedef struct {
-    sk_memory_mapentry** entries;
+    sk_memory_mapentry entries[SKGBI_MEMMAP_MAX_ENTRIES];
     uint32_t length;
 } sk_memory_info;
 

@@ -13,6 +13,5 @@ void init_serial(void);
 bool serial_is_ready(void);
 void serial_putc(char c);
 void serial_puts(const char *str);
-void serial_putsf(const char *format, ...);
 
 #endif

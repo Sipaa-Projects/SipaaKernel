@@ -6,11 +6,16 @@
 static volatile struct limine_framebuffer_request framebuffer_request = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
     .revision = 0};
+    
+static volatile struct limine_memmap_request memmap_request = {
+    .id = LIMINE_MEMMAP_REQUEST,
+    .revision = 0};
 
 sk_general_boot_info get_skgbi_from_multiboot(struct multiboot_info* info_addr)
 {
     sk_general_boot_info info2 = { };
     struct multiboot_tag_framebuffer *fb = NULL;
+    struct multiboot_tag_mmap *mmap = NULL;
 
     // Get tags, so we can fill the SKGBI infos
     size_t add_size = 0;
@@ -26,6 +31,10 @@ sk_general_boot_info get_skgbi_from_multiboot(struct multiboot_info* info_addr)
         switch (tag->type) {
             case MULTIBOOT_TAG_TYPE_FRAMEBUFFER: {
                 fb = (struct multiboot_tag_framebuffer *)tag;
+                break;
+            }
+            case MULTIBOOT_TAG_TYPE_MMAP: {
+                fb = (struct multiboot_tag_mmap *)tag;
                 break;
             }
         }
@@ -75,6 +84,21 @@ sk_general_boot_info get_skgbi_from_limine()
     info.fb0.blue_mask_size = fbptr->blue_mask_size;
     info.fb0.green_mask_shift = fbptr->green_mask_shift;
     info.fb0.green_mask_size = fbptr->green_mask_size;
+
+    // Memory map
+    info.memory_map.length = 0;
+    for (uint64_t entry = 0; entry < memmap_request.response->entry_count; entry++)
+    {
+        struct limine_memmap_entry *mentry = memmap_request.response->entries[entry];
+
+        info.memory_map.entries[entry].base = mentry->base;
+        info.memory_map.entries[entry].length = mentry->length;
+
+        // SKGBI uses Limine memmap types.
+        info.memory_map.entries[entry].type = mentry->type;
+
+        info.memory_map.length++;
+    }
 
     return info;
 }

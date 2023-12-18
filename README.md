@@ -10,6 +10,9 @@ SipaaKernel is a monolithic kernel made in C
 
 It features an easy & elegant API.
 
+> [!WARNING]
+> SipaaKernel is only in his first developement stages, and isn't ready for production use.
+
 ## Features & Todo
 ### What does it mean?
 * ✅ : Done

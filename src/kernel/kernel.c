@@ -1,5 +1,6 @@
 #include <arch/x86_64/gdt.h>
 #include <arch/x86_64/idt.h>
+#include <memory/pmm.h>
 #include <entry/skgbi.h>
 #include <stdint.h>
 #include <logger-impl.h>
@@ -15,6 +16,8 @@ int _start(sk_general_boot_info skgbi)
     //init_video(framebuffer_request.response->framebuffers[0]);
     logger_sk_impl_init(skgbi);
     flanterm_write(logger_ftctx, "Welcome to SipaaKernel!\n\n", 24);
+
+    pmm_init(skgbi);
 
     #ifdef __x86_64__
     #ifdef SKC_ENABLEPCIC

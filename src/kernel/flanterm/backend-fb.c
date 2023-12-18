@@ -24,7 +24,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  * 
- * This file has been modified to fit with SK-Build.
+ * This file has been modified to fit with the SK-Build build system.
  */
 
 #include <stdint.h>

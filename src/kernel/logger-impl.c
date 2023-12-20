@@ -40,8 +40,7 @@ void logger_write_sk_impl(enum LogType lt, int isLtText, char *text, int size)
         #if defined(__x86_64__) | defined(__i686__)
         serial_putc(text[i]);
         #endif
-        if (logger_ftctx)
-            flanterm_write(logger_ftctx, &text[i], 1);
+        flanterm_write(logger_ftctx, &text[i], 1);
     }
 
     if (isLtText == 1)

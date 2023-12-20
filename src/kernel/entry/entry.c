@@ -34,7 +34,7 @@ sk_general_boot_info get_skgbi_from_multiboot(struct multiboot_info* info_addr)
                 break;
             }
             case MULTIBOOT_TAG_TYPE_MMAP: {
-                fb = (struct multiboot_tag_mmap *)tag;
+                mmap = (struct multiboot_tag_mmap *)tag;
                 break;
             }
         }

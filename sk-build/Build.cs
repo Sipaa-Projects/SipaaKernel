@@ -22,6 +22,33 @@ public class Builder
     static string tempDir = Path.Combine(Environment.CurrentDirectory, ".skb");
     static string tempSourceTree = Path.Combine(tempDir, "srctree");
 
+    static bool FileLineCheck(string topCDef, string commentPrefix, Architecture arch)
+    {
+        bool canBeCompiled = true;
+
+        if (topCDef != $"{commentPrefix} SKB_ARCH_INDEPENDANT")
+        {
+            if (topCDef == $"{commentPrefix} SKB_X86_64_ONLY" && arch != Architecture.x86_64)
+                canBeCompiled = false;
+            if (topCDef == $"{commentPrefix} SKB_AARCH64_ONLY" && arch != Architecture.AArch64)
+                canBeCompiled = false;
+            if (topCDef == $"{commentPrefix} SKB_RISCV64_ONLY" && arch != Architecture.RiscV64)
+                canBeCompiled = false;
+            if (topCDef == $"{commentPrefix} SKB_i686_ONLY" && arch != Architecture.i686)
+                canBeCompiled = false;
+            if (topCDef == $"{commentPrefix} SKB_NO_X86_64" && arch == Architecture.x86_64)
+                canBeCompiled = false;
+            if (topCDef == $"{commentPrefix} SKB_NO_AARCH64" && arch == Architecture.AArch64)
+                canBeCompiled = false;
+            if (topCDef == $"{commentPrefix} SKB_NO_RISCV64" && arch == Architecture.RiscV64)
+                canBeCompiled = false;
+            if (topCDef == $"{commentPrefix} SKB_NO_i686" && arch == Architecture.i686)
+                canBeCompiled = false;
+        }
+
+        return canBeCompiled;
+    }
+
     static void AddConfigDefinesToArguments(List<string> args)
     {
         string defineStart = "-D";
@@ -78,8 +105,8 @@ public class Builder
         if (!Directory.Exists(tempDir))
             Directory.CreateDirectory(tempDir);
 
-        if (!Directory.Exists(tempSourceTree))
-            Directory.CreateDirectory(tempSourceTree);
+        if (!Directory.Exists(tempSourceTree + $"-{arch}"))
+            Directory.CreateDirectory(tempSourceTree + $"-{arch}");
 
         foreach (string d in Directory.GetDirectories(srcDir, "*", SearchOption.AllDirectories))
         {
@@ -128,25 +155,7 @@ public class Builder
                     if (!File.Exists(obj))
                         canBeCompiled = true;
 
-                if (topCDef != "// SKB_ARCH_INDEPENDANT")
-                {
-                    if (topCDef == "// SKB_X86_64_ONLY" && arch != Architecture.x86_64)
-                        canBeCompiled = false;
-                    if (topCDef == "// SKB_AARCH64_ONLY" && arch != Architecture.AArch64)
-                        canBeCompiled = false;
-                    if (topCDef == "// SKB_RISCV64_ONLY" && arch != Architecture.RiscV64)
-                        canBeCompiled = false;
-                    if (topCDef == "// SKB_i686_ONLY" && arch != Architecture.i686)
-                        canBeCompiled = false;
-                    if (topCDef == "// SKB_NO_X86_64" && arch == Architecture.x86_64)
-                        canBeCompiled = false;
-                    if (topCDef == "// SKB_NO_AARCH64" && arch == Architecture.AArch64)
-                        canBeCompiled = false;
-                    if (topCDef == "// SKB_NO_RISCV64" && arch == Architecture.RiscV64)
-                        canBeCompiled = false;
-                    if (topCDef == "// SKB_NO_i686" && arch == Architecture.i686)
-                        canBeCompiled = false;
-                }
+                canBeCompiled = FileLineCheck(topCDef, "//", arch);
 
                 if (canBeCompiled)
                 {
@@ -182,13 +191,7 @@ public class Builder
                 if (arch == Architecture.RiscV64 || arch == Architecture.AArch64)
                     canBeCompiled = false;
 
-                if (topCDef != "; SKB_ARCH_INDEPENDANT")
-                {
-                    if (topCDef == "; SKB_X86_64_ONLY" && arch != Architecture.x86_64)
-                        canBeCompiled = false;
-                    if (topCDef == "; SKB_i686_ONLY" && arch != Architecture.i686)
-                        canBeCompiled = false;
-                }
+                canBeCompiled = FileLineCheck(topCDef, ";", arch);
 
                 if (canBeCompiled)
                 {
@@ -346,14 +349,14 @@ public class Builder
 
         foreach (string d in Directory.GetDirectories(srcDir, "*", SearchOption.AllDirectories))
         {
-            string copy = d.Replace(srcDir, tempSourceTree);
+            string copy = d.Replace(srcDir, tempSourceTree + $"-{arch}");
             if (!Directory.Exists(copy))
                 Directory.CreateDirectory(copy);
         }
 
         foreach (string s in GetSourceFilesRecursivelyInDirectory(Path.Combine(Environment.CurrentDirectory, "src")))
         {
-            File.Copy(s, s.Replace(srcDir, tempSourceTree), true);
+            File.Copy(s, s.Replace(srcDir, tempSourceTree + $"-{arch}"), true);
         }
     }
 }

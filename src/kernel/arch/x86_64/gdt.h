@@ -36,7 +36,7 @@ typedef struct {
     uint64_t offset;
 } __attribute__((packed)) gdt_pointer;
 
-void init_gdt(uint64_t kernel_rsp);
+void init_gdt(uint64_t kernel_rsp[]);
 void set_kernel_stack(void* stack);
 
 #endif

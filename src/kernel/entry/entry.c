@@ -47,7 +47,7 @@ sk_general_boot_info get_skgbi_from_multiboot(struct multiboot_info* info_addr)
     }
 
     // Framebuffer
-    info2.fb0.address = fb->common.framebuffer_addr;
+    info2.fb0.address = (void *)fb->common.framebuffer_addr;
     info2.fb0.bpp = fb->common.framebuffer_bpp;
     info2.fb0.width = fb->common.framebuffer_width;
     info2.fb0.height = fb->common.framebuffer_height;

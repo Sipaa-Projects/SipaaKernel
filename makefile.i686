@@ -7,16 +7,16 @@ SK_BUILD_UNIX = sk-build/bin/Debug/net7.0/sk-build
 SK_BUILD_WIN32 = sk-build/bin/Debug/net7.0/sk-build.exe
 
 all:
-	@$(SK_BUILD_UNIX) build-i686
+	@$(SK_BUILD_UNIX) build -a i686
 
 wall:
-	@$(SK_BUILD_WIN32) build-i686
+	@$(SK_BUILD_WIN32) build -t Llvm -a i686
 
 config:
-	@$(SK_BUILD_UNIX) config
+	@$(SK_BUILD_UNIX) configure
 
 wconfig:
-	@$(SK_BUILD_WIN32) config
+	@$(SK_BUILD_WIN32) configure
 
 iso: all
 	@rm -rf $(TEMP_ISO)

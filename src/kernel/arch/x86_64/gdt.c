@@ -2,6 +2,7 @@
 
 #include "gdt.h"
 #include <logger/logger.h>
+#include <memory/bmo.h>
 
 gdt_entry gdt[0xff];
 gdt_pointer gdt_ptr;
@@ -36,7 +37,7 @@ static void init_tss(uint64_t rsp0)
     tss_entry.rsp0 = rsp0;
 }
 
-void init_gdt(uint64_t kernel_rsp)
+void init_gdt(uint64_t kernel_rsp[])
 {
     gdt_ptr.size = sizeof(gdt) - 1;
     gdt_ptr.offset = (uint64_t)&gdt;
@@ -61,7 +62,7 @@ void init_gdt(uint64_t kernel_rsp)
 
     set_tss_gate(6, (uint64_t)&tss_entry, sizeof(tss_entry_t));
 
-    init_tss(kernel_rsp);
+    init_tss((uint64_t)kernel_rsp);
     load_gdt(&gdt_ptr);
     load_tss();
 }

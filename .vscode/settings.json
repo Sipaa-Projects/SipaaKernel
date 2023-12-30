@@ -23,6 +23,7 @@
         "multiboot.h": "c",
         "entry.h": "c",
         "stdnoreturn.h": "c",
-        "sk_prestart_return.h": "c"
+        "sk_prestart_return.h": "c",
+        "skgbi.h": "c"
     }
 }

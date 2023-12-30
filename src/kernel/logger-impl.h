@@ -6,6 +6,6 @@
 
 extern struct flanterm_context *logger_ftctx;
 
-void logger_sk_impl_init(sk_general_boot_info skgbi);
+void logger_sk_impl_init();
 
 #endif

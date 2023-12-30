@@ -2,9 +2,6 @@
 #include <stdbool.h>
 #include "pic.h"
 
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x)
-#define panic(message, frame) _panic(__FILE__ ":" TOSTRING(__LINE__) ": " message, frame)
 #define MAX_CALLBACKS 10
 
 struct interrupt_frame {
@@ -78,3 +75,8 @@ typedef struct
 } __attribute__((packed)) idt_pointer;
 
 void init_idt();
+void _panic(char *message, struct interrupt_frame *frame);
+
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define panic(message, frame) _panic(__FILE__ ":" TOSTRING(__LINE__) ": " message, frame)

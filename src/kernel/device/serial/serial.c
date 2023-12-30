@@ -1,6 +1,7 @@
 #if defined(__x86_64__) | defined(__i686__)
 
 #include "serial.h"
+#include <arch/io.h>
 
 void init_serial(void)
 {

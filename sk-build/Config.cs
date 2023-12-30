@@ -30,7 +30,7 @@ public class SKConfig
         {
             if (Current != null) 
             {
-                string json = JsonConvert.SerializeObject(Current);
+                string json = JsonConvert.SerializeObject(Current, Formatting.Indented);
                 File.WriteAllText(to, json);
             }
             return true;
@@ -60,4 +60,6 @@ public class SKConfig
     }
 
     public bool EnablePCIC { get; set; } = false;
+    public bool LogsConIO { get; set; } = false;
+    public string AdditionalCompileOptions { get; set; } = "";
 }

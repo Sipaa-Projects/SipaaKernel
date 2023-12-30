@@ -1,0 +1,9 @@
+{
+    "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.component.v1",
+    "id": "flanterm",
+    "description": "A library to display a terminal, with support for custom backends.",
+    "type": "lib",
+    "provides": [
+        "flanterm"
+    ]
+}

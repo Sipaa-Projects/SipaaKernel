@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['d_1253',['d',['../structlimine__uuid.html#a9f8bb895f736fac86b0091b25ee29c5e',1,'limine_uuid']]],
+  ['dec_5fprivate_1254',['dec_private',['../structflanterm__context.html#a07085849ee2c169190eb06790b4fc370',1,'flanterm_context']]],
+  ['default_5fbg_1255',['default_bg',['../structflanterm__fb__context.html#a1e9fcddefbcbee8b44b62e74f0c0521a',1,'flanterm_fb_context']]],
+  ['default_5fbg_5fbright_1256',['default_bg_bright',['../structflanterm__fb__context.html#a17082e40361d2d870b52626a594eddef',1,'flanterm_fb_context']]],
+  ['default_5ffg_1257',['default_fg',['../structflanterm__fb__context.html#ae77c50ad3670f02d9ad9744a3cdc4e34',1,'flanterm_fb_context']]],
+  ['default_5ffg_5fbright_1258',['default_fg_bright',['../structflanterm__fb__context.html#a87d5ed818f95c4e44c91ecf5f569d292',1,'flanterm_fb_context']]],
+  ['deinit_1259',['deinit',['../structflanterm__context.html#ad9a720c492f5ea0a8e05d44e0f85af6a',1,'flanterm_context']]],
+  ['depth_1260',['depth',['../structmultiboot__header.html#aba85b53dc3af1bf99c71292a776e9dff',1,'multiboot_header::depth()'],['../structmultiboot__header__tag__framebuffer.html#a0d19797e8a049353c2ba98e04df089bc',1,'multiboot_header_tag_framebuffer::depth()']]],
+  ['desc_5fsize_1261',['desc_size',['../structlimine__efi__memmap__response.html#a4b89d9e20562d1397680361db2ce0d43',1,'limine_efi_memmap_response']]],
+  ['desc_5fversion_1262',['desc_version',['../structlimine__efi__memmap__response.html#a3d02ffb03acc9efbf922475f61dff068',1,'limine_efi_memmap_response']]],
+  ['descr_5fsize_1263',['descr_size',['../structmultiboot__tag__efi__mmap.html#ae8b6f5a34f5da7fe1e6c95fd29db7bf2',1,'multiboot_tag_efi_mmap']]],
+  ['descr_5fvers_1264',['descr_vers',['../structmultiboot__tag__efi__mmap.html#a97de90a9746c8897c27dc6776a99700b',1,'multiboot_tag_efi_mmap']]],
+  ['device_1265',['device',['../limine_8c.html#adebfd89521a53b9fcde42f96f20264c3',1,'limine.c']]],
+  ['dhcpack_1266',['dhcpack',['../structmultiboot__tag__network.html#aade2dff510f8e32b462ec1037437d28c',1,'multiboot_tag_network']]],
+  ['discard_5fnext_1267',['discard_next',['../structflanterm__context.html#a790ce9482923c5be1e825106daa1eee4',1,'flanterm_context']]],
+  ['double_5fbuffer_5fflush_1268',['double_buffer_flush',['../structflanterm__context.html#a5b3493acd02dc749a4aaed21d385c01c',1,'flanterm_context']]],
+  ['drives_5faddr_1269',['drives_addr',['../structmultiboot__info.html#a34d90ffaaf58124095cb17de9c3b1515',1,'multiboot_info']]],
+  ['drives_5flength_1270',['drives_length',['../structmultiboot__info.html#abe859eaa7e97309f072b3bc1caf5742e',1,'multiboot_info']]],
+  ['dseg_1271',['dseg',['../structmultiboot__apm__info.html#a98cd7da8760cf5d49ba55e1f9e76c6d4',1,'multiboot_apm_info::dseg()'],['../structmultiboot__tag__apm.html#a0f8ff7cd97ae788d8afcd7dee881367a',1,'multiboot_tag_apm::dseg()']]],
+  ['dseg_5flen_1272',['dseg_len',['../structmultiboot__apm__info.html#afee11d31183fe424af90546b10c9fac2',1,'multiboot_apm_info::dseg_len()'],['../structmultiboot__tag__apm.html#a8d82e38b5d8b110027acc7c21b4a853d',1,'multiboot_tag_apm::dseg_len()']]]
+];

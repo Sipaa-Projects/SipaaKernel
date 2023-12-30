@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['b_1196',['b',['../structlimine__uuid.html#a3e2198ef1488deb36a087a866a45280b',1,'limine_uuid']]],
+  ['base_1197',['base',['../structlimine__memmap__entry.html#a27ffe8338bdc73b6ae4f491914117af7',1,'limine_memmap_entry::base()'],['../struct____attribute____.html#a20dc010a1d15f21b6176f3b72d94e111',1,'__attribute__::base()'],['../structsk__memory__mapentry.html#a79a679270b4f3cfcf55a3a89afbb0c11',1,'sk_memory_mapentry::base()']]],
+  ['base0_1198',['base0',['../struct____attribute____.html#a537cefe5cd033fe9da178bbc9b92b182',1,'__attribute__']]],
+  ['base1_1199',['base1',['../struct____attribute____.html#a1e6bde534700db3cd90d22137ba7921f',1,'__attribute__']]],
+  ['base2_1200',['base2',['../struct____attribute____.html#a2255ac82b66019ca6738d2896a518f6b',1,'__attribute__']]],
+  ['base_5fhigh_1201',['base_high',['../struct____attribute____.html#a33c403bdf56614fbfeea2ec0a4715920',1,'__attribute__']]],
+  ['base_5flow_1202',['base_low',['../struct____attribute____.html#a8b32bc7636b20694d1c3be42c18b4ba5',1,'__attribute__']]],
+  ['base_5fmid_1203',['base_mid',['../struct____attribute____.html#aff0ee888621c09f29cd7c9b54d993e96',1,'__attribute__']]],
+  ['bg_1204',['bg',['../structflanterm__fb__char.html#a0c4e566e42384241170ac5579efeeec7',1,'flanterm_fb_char']]],
+  ['bg_5fbold_1205',['bg_bold',['../structflanterm__context.html#a1da0234fc28ed128ce85f2bc66ae1440',1,'flanterm_context']]],
+  ['bigendian_1206',['bigendian',['../limine_8c.html#a37df7c886e850a5fd7e186e8113ba410',1,'limine.c']]],
+  ['biosdev_1207',['biosdev',['../structmultiboot__tag__bootdev.html#a2bcf5d32579dc281148607d937ca099b',1,'multiboot_tag_bootdev']]],
+  ['block_5fsize_1208',['block_size',['../limine_8c.html#ad7524613c3881d09bda0d270ede83779',1,'limine.c']]],
+  ['blue_1209',['blue',['../structmultiboot__color.html#a6f8d17b0f35ff4cbf9c51dcbc3ea7d01',1,'multiboot_color']]],
+  ['blue_5fmask_5fshift_1210',['blue_mask_shift',['../structlimine__video__mode.html#a1b252ef08f00b0029f11526f3589d405',1,'limine_video_mode::blue_mask_shift()'],['../structlimine__framebuffer.html#aa1fb35dd595815689bac0ea43ef15998',1,'limine_framebuffer::blue_mask_shift()'],['../structsk__framebuffer.html#ae3b9c6965b8b1ee2be18a275783e31f8',1,'sk_framebuffer::blue_mask_shift()']]],
+  ['blue_5fmask_5fsize_1211',['blue_mask_size',['../structlimine__video__mode.html#a1f535c15dd6dfd6eaf57c863c54770bc',1,'limine_video_mode::blue_mask_size()'],['../structsk__framebuffer.html#a4a89554b35282069289270f1cc83f836',1,'sk_framebuffer::blue_mask_size()'],['../structlimine__framebuffer.html#a64962e7919b48842f912724327309fc1',1,'limine_framebuffer::blue_mask_size()']]],
+  ['bold_1212',['bold',['../structflanterm__context.html#ae30f962c738df29a0de6ccd429dd51f8',1,'flanterm_context']]],
+  ['boot_5fdevice_1213',['boot_device',['../structmultiboot__info.html#ac7dd626a05c9ba62d55ea8a7a254de80',1,'multiboot_info']]],
+  ['boot_5floader_5fname_1214',['boot_loader_name',['../structmultiboot__info.html#a4442438f7c2da9c0cf87a94ffd1acc04',1,'multiboot_info']]],
+  ['boot_5ftime_1215',['boot_time',['../structlimine__boot__time__response.html#afd90e4d04eb15b0bdaecc48017e2096b',1,'limine_boot_time_response']]],
+  ['bpp_1216',['bpp',['../structlimine__video__mode.html#aacc8a3b0ec70b824036cb796d9c0709d',1,'limine_video_mode::bpp()'],['../structlimine__framebuffer.html#aa32c271905e117417a6ab1107190d4ae',1,'limine_framebuffer::bpp()'],['../structsk__framebuffer.html#acf829789a3a1ea816826ed1f0d55646f',1,'sk_framebuffer::bpp()'],['../structflanterm__fb__context.html#a70be52d0df0e1a0609434cb85be8881b',1,'flanterm_fb_context::bpp()']]],
+  ['bss_5fend_5faddr_1217',['bss_end_addr',['../structmultiboot__header.html#ab4f2496ec9b0d1a95985929d281dfa19',1,'multiboot_header::bss_end_addr()'],['../structmultiboot__header__tag__address.html#ac3de23d94c391584665ba64757451a37',1,'multiboot_header_tag_address::bss_end_addr()']]],
+  ['builtin_5ffont_1218',['builtin_font',['../backend-fb_8c.html#a8ea440f33b82bd931cdadedf1c7ff21a',1,'backend-fb.c']]],
+  ['bump_5falloc_5fpool_1219',['bump_alloc_pool',['../backend-fb_8c.html#ad5451a62ed686566ed4a22a0c61fbb6b',1,'backend-fb.c']]],
+  ['bump_5falloc_5fptr_1220',['bump_alloc_ptr',['../backend-fb_8c.html#ab93ad5b7c4437888c70bf3c27cf5981c',1,'backend-fb.c']]]
+];

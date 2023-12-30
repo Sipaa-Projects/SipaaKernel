@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['serial_5fport_1740',['SERIAL_PORT',['../serial_8h.html#ac08f8f916661bb5fc606373bea93d274',1,'serial.h']]],
+  ['sk_5freturn_5fcli_5fhlt_1741',['SK_RETURN_CLI_HLT',['../sk__prestart__return_8h.html#a81ff08848597987b8b99a42681a13dee',1,'sk_prestart_return.h']]],
+  ['sk_5freturn_5fhlt_1742',['SK_RETURN_HLT',['../sk__prestart__return_8h.html#ab4eaef3c2d9a7de51c48356bae28186a',1,'sk_prestart_return.h']]],
+  ['sk_5freturn_5floop_1743',['SK_RETURN_LOOP',['../sk__prestart__return_8h.html#aade584dd3168b5ee1eb42c8ecdef61c8',1,'sk_prestart_return.h']]],
+  ['skgbi_5fmemmap_5facpi_5fnvs_1744',['SKGBI_MEMMAP_ACPI_NVS',['../skgbi_8h.html#ae70aefe87b04aa9b60042e24fbab3908',1,'skgbi.h']]],
+  ['skgbi_5fmemmap_5facpi_5freclaimable_1745',['SKGBI_MEMMAP_ACPI_RECLAIMABLE',['../skgbi_8h.html#acf086ee9b223b2748063aed4c164a044',1,'skgbi.h']]],
+  ['skgbi_5fmemmap_5fbad_5fmemory_1746',['SKGBI_MEMMAP_BAD_MEMORY',['../skgbi_8h.html#a7fc47e8c09e3aa1dfde73628604cae04',1,'skgbi.h']]],
+  ['skgbi_5fmemmap_5fbootloader_5freclaimable_1747',['SKGBI_MEMMAP_BOOTLOADER_RECLAIMABLE',['../skgbi_8h.html#a6679918db5d1789950d6cc0ba93888f1',1,'skgbi.h']]],
+  ['skgbi_5fmemmap_5fframebuffer_1748',['SKGBI_MEMMAP_FRAMEBUFFER',['../skgbi_8h.html#a7cbaa78cdd75757c73bc7dac573ec1fb',1,'skgbi.h']]],
+  ['skgbi_5fmemmap_5fkernel_5fand_5fmodules_1749',['SKGBI_MEMMAP_KERNEL_AND_MODULES',['../skgbi_8h.html#a0a8703582ba1426ce917478004103e56',1,'skgbi.h']]],
+  ['skgbi_5fmemmap_5fmax_5fentries_1750',['SKGBI_MEMMAP_MAX_ENTRIES',['../skgbi_8h.html#a044046e195f9ff6d583edbcd60f0d740',1,'skgbi.h']]],
+  ['skgbi_5fmemmap_5freserved_1751',['SKGBI_MEMMAP_RESERVED',['../skgbi_8h.html#a26e1e9c0f7f6ae37e1a6df93c0a591bc',1,'skgbi.h']]],
+  ['skgbi_5fmemmap_5fusable_1752',['SKGBI_MEMMAP_USABLE',['../skgbi_8h.html#a043eac8367b95d2701dc8121e5a048ba',1,'skgbi.h']]],
+  ['stringify_1753',['STRINGIFY',['../idt_8h.html#a6df1d22fb5f09eccc23b9f399670cfd7',1,'idt.h']]],
+  ['stringize_1754',['STRINGIZE',['../logger_8h.html#a3428692efe6051ef30016ffde1a9f7bb',1,'logger.h']]],
+  ['stringize2_1755',['STRINGIZE2',['../logger_8h.html#a07adf97daf307190d143f32b213f2dad',1,'logger.h']]]
+];

@@ -75,6 +75,8 @@ All (or most) these packages should be on available on your distro's package rep
 $ pacman -S qemu-full nasm make dotnet-sdk-7.0 xorriso
 $ brew install x86_64-elf-gcc aarch64-elf-gcc i686-elf-gcc
 ```
+### Step 1.5 : Build the builder
+Simple as `$ dotnet build sk-build` (you must be in the repo's root directory)
 
 ### Step 2 : Build & Boot SipaaKernel
 Now, you just need to use `make run` to build, make the ISO & run SipaaKernel in QEMU with KVM.

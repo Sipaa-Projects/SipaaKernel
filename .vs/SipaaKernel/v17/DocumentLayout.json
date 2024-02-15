@@ -1,0 +1,126 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\impl\\slibc-impl.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|solutionrelative:src\\kernel\\impl\\slibc-impl.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\fs\\devfs\\devfs.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|solutionrelative:src\\kernel\\fs\\devfs\\devfs.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\memory\\pmm.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|solutionrelative:src\\kernel\\memory\\pmm.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\init\\emergshell.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|solutionrelative:src\\kernel\\init\\emergshell.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\init\\kernel.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|solutionrelative:src\\kernel\\init\\kernel.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\memory\\bmo.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6FE99598-693F-4BF7-B986-FDEFAC5C72B9}|src\\SipaaKernel.vcxproj|solutionrelative:src\\kernel\\memory\\bmo.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "slibc-impl.c",
+              "DocumentMoniker": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\impl\\slibc-impl.c",
+              "RelativeDocumentMoniker": "src\\kernel\\impl\\slibc-impl.c",
+              "ToolTip": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\impl\\slibc-impl.c",
+              "RelativeToolTip": "src\\kernel\\impl\\slibc-impl.c",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-02-13T22:40:02.269Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "devfs.c",
+              "DocumentMoniker": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\fs\\devfs\\devfs.c",
+              "RelativeDocumentMoniker": "src\\kernel\\fs\\devfs\\devfs.c",
+              "ToolTip": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\fs\\devfs\\devfs.c",
+              "RelativeToolTip": "src\\kernel\\fs\\devfs\\devfs.c",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-02-13T22:39:14.367Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "emergshell.c",
+              "DocumentMoniker": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\init\\emergshell.c",
+              "RelativeDocumentMoniker": "src\\kernel\\init\\emergshell.c",
+              "ToolTip": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\init\\emergshell.c",
+              "RelativeToolTip": "src\\kernel\\init\\emergshell.c",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-02-13T22:29:15.831Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "kernel.c",
+              "DocumentMoniker": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\init\\kernel.c",
+              "RelativeDocumentMoniker": "src\\kernel\\init\\kernel.c",
+              "ToolTip": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\init\\kernel.c",
+              "RelativeToolTip": "src\\kernel\\init\\kernel.c",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAAC0AAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-02-13T22:19:44.734Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "pmm.c",
+              "DocumentMoniker": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\memory\\pmm.c",
+              "RelativeDocumentMoniker": "src\\kernel\\memory\\pmm.c",
+              "ToolTip": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\memory\\pmm.c*",
+              "RelativeToolTip": "src\\kernel\\memory\\pmm.c*",
+              "ViewState": "AQIAAGMAAAAAAAAAAAAAAHsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-02-13T22:18:34.07Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "bmo.c",
+              "DocumentMoniker": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\memory\\bmo.c",
+              "RelativeDocumentMoniker": "src\\kernel\\memory\\bmo.c",
+              "ToolTip": "C:\\Users\\rapha.DESKTOP-UOE3KPU\\Documents\\HomeLinux\\SipaaKernel\\src\\kernel\\memory\\bmo.c",
+              "RelativeToolTip": "src\\kernel\\memory\\bmo.c",
+              "ViewState": "AQIAAB8AAAAAAAAAAAAAADgAAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-02-13T22:17:57.998Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

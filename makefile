@@ -56,14 +56,16 @@ wclean:
 
 run:
 	make iso
-	qemu-system-x86_64 -m 4g -enable-kvm -serial stdio -cdrom $(OUTPUT_ISO)
+	qemu-system-x86_64 -m 4g -enable-kvm -serial stdio -cdrom $(OUTPUT_ISO) -vga vmware
 
 debug:
 	make iso
 	qemu-system-x86_64 -m 4g -enable-kvm -serial stdio -cdrom $(OUTPUT_ISO) -s -S
 
 wrun:
+	make wiso
 	qemu-system-x86_64 -m 4g -accel whpx -serial stdio -cdrom $(OUTPUT_ISO)
 
 wdebug:
+	make wiso
 	qemu-system-x86_64 -m 4g -accel whpx -serial stdio -cdrom $(OUTPUT_ISO) -s -S

@@ -159,6 +159,18 @@ public class Program
     }
     static int Clean(CleanOptions opts)
     {
+        if (Directory.Exists(Path.Combine(Environment.CurrentDirectory, ".skb")))
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, ".skb"), true);
+        if (Directory.Exists(Path.Combine(Environment.CurrentDirectory, "obj-x86_64")))
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "obj-x86_64"), true);
+        if (Directory.Exists(Path.Combine(Environment.CurrentDirectory, "obj-AArch64")))
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "obj-AArch64"), true);
+        if (Directory.Exists(Path.Combine(Environment.CurrentDirectory, "obj-RiscV64")))
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "obj-RiscV64"), true);
+        if (Directory.Exists(Path.Combine(Environment.CurrentDirectory, "obj-i686")))
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "obj-i686"), true);
+        if (Directory.Exists(Path.Combine(Environment.CurrentDirectory, "output")))
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "output"), true);
         return 0;
     }
     static int Main(string[] args)

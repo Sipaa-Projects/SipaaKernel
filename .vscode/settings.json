@@ -24,6 +24,17 @@
         "entry.h": "c",
         "stdnoreturn.h": "c",
         "sk_prestart_return.h": "c",
-        "skgbi.h": "c"
+        "skgbi.h": "c",
+        "io.h": "c",
+        "stdio.h": "c",
+        "slibc-internals.h": "c",
+        "logger-impl.h": "c",
+        "string.h": "c",
+        "devfs.h": "c",
+        "conio.h": "c",
+        "pmm.h": "c",
+        "system-interface.h": "c",
+        "chrono": "c",
+        "typeinfo": "c"
     }
 }

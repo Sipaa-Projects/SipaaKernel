@@ -87,12 +87,8 @@ public class Builder
 
         if (t == Toolchain.Llvm)
             CCArgs.Add($"-target {opt.Architecture.ToLower()}-none-elf");
-        CCArgs.Add("-Isrc/kernel/");
-        CCArgs.Add("-Isrc/entry");
-        CCArgs.Add("-Isrc/kernel/sk-hal");
-        CCArgs.Add("-ffreestanding");
-        CCArgs.Add("-Isrc/libs");
-        CCArgs.Add("-Isrc/libs/slibc");
+        CCArgs.Add("-Isrc/include/");
+        CCArgs.Add("-Isrc/usrinclude/");
         CCArgs.Add("-ffreestanding");
         CCArgs.Add("-fno-stack-protector");
         CCArgs.Add("-fpermissive");
@@ -143,16 +139,16 @@ public class Builder
 
             string[] content = File.ReadAllLines(s);
 
-            if (s.EndsWith(".c"))
+            if (s.EndsWith(".c") || s.EndsWith(".cpp"))
             {
-                outp = s.Replace(".c", ".o").Replace(Constants.SourceDirectory, Constants.ObjectDirectoryStart + a);
+                outp = s.Replace(s.EndsWith("pp") ? ".cpp" : ".c", ".o").Replace(Constants.SourceDirectory, Constants.ObjectDirectoryStart + a);
 
-                if (cc)
+                if (cc && content.Length > 0)
                     cc = FileLineCheck(content[0], "// ", a);
 
                 if (cc)
                 {
-                    Console.WriteLine($"[CC] {s} => {outp}");
+                    Console.WriteLine($"[CC/CXX] {s} => {outp}");
                     
                     Process pr = new();
                     if (t == Toolchain.Gnu)
@@ -228,7 +224,6 @@ public class Builder
             s.Close();
 
             var text = File.ReadAllText(linkScriptPath);
-            text = text.Replace("_start", "prestart");
             File.WriteAllText(linkScriptPath, text);
         }
 
@@ -274,8 +269,11 @@ public class Builder
         while (!p.HasExited)
             ;;
         
-        if (p.ExitCode != 0)
+        if (p.ExitCode != 0) 
+        {
             Console.WriteLine("[FAIL] Compilation failed. Please check the error(s) shown above.");
+            return 1;
+        }
 
         ///// Finish by copying the source code to the temp folder
         Console.WriteLine("[POST] Copying source tree to temp");

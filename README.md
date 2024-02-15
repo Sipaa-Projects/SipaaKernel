@@ -24,7 +24,7 @@ It features an easy & elegant API.
 * ✅ GDT
 * ✅ PIC
 * ✅ TSS
-* ❌ PCI
+* ⚠️ PCI
 * ✅ IO port operations
 
 ### i686 architecture (src/kernel/arch/i686)
@@ -33,18 +33,18 @@ It features an easy & elegant API.
 * ❌ PIC
 * ❌ TSS
 * ❌ PCI
-* ❌ IO port operations
+* ✅ IO port operations
 
-### AArch64 (src/kernel/sk-aarch64)
+### AArch64
 SipaaKernel can be built & runned on AArch64, but not anything specific to this architecture is implemented.
 
-### Kernel (src/kernel/sk-core)
+### Kernel (src/kernel)
 * ✅ Logging (graphical & serial)
 * ✅ Kernel Panic
 * ❌ ELF Loader
-* ❌ Kernel Extensions
-* ❌ BMO (Basic Memory Operations) (memcpy, memset...)
-* ❌ PMM (Physical Memory Manager)
+* ❌ Kernel Extensions (requires ELF loader)
+* ✅ BMO (Basic Memory Operations) (memcpy, memset...)
+* ✅ PMM (Physical Memory Manager)
 * ❌ VMM (Virtual Memory Manager)
 * ❌ initrd
 
@@ -65,6 +65,17 @@ SipaaKernel can be built & runned on AArch64, but not anything specific to this 
 * ❌ PC speaker
 * ❌ Intel HDA
 
+### Required Ports
+* ❌ GNU glibc
+* ❌ GNU coreutils/diffutils/findutils
+* ❌ GNU nano
+* ❌ GNU gcc/binutils toolchain (will be named <arch>-pc-sipaa-gnu)
+* ❌ DRM/Mesa
+* ❌ X11 (requires DRM/Mesa)
+
+## Optional ports
+* ❌ DOOM
+
 ## How to build SipaaKernel?
 ### Step 1 : Install the dependencies
 SipaaKernel needs the GCC ELF toolchain, NASM to be built. If you are too lazy to build the toolchains, you can use the prebuilt one of Homebrew Formulae. QEMU & Xorriso are required if you want to build the ISO & run SipaaKernel.
@@ -84,12 +95,8 @@ You can also use `make iso` to build SipaaKernel & it's ISO file without running
 
 ## Q&A
 
-### Why chosing CuteKit?
-We choosed CuteKit for having a good kernel directory structure
-
 ### Will it have a desktop environment & apps?
 Nope, but you can make an OS with the SipaaKernel APIs.
 
 ## Credits
-* Cute Engineering : Cutekit (the build system used to compile SipaaKernel)
-* Limine Contributors : The Limine bootloader & his protocol. (boot/*, kernel/src/boot/limine.h)
+* Limine Contributors : The Limine bootloader & his protocol. (meta/limine-*, src/kernel/entry/limine.h)

@@ -16,6 +16,8 @@
             "LDScript": "meta/ld/i686.ld",
             "CCFlags": [
                 "-Isrc/include",
+                "-Isrc/trdparty",
+                "-Isrc/usrinclude",
                 "-fpermissive",
                 "-ffreestanding",
                 "-fno-stack-protector",
@@ -29,6 +31,8 @@
             ],
             "CXXFlags": [
                 "-Isrc/include",
+                "-Isrc/trdparty",
+                "-Isrc/usrinclude",
                 "-fpermissive",
                 "-ffreestanding",
                 "-fno-stack-protector",

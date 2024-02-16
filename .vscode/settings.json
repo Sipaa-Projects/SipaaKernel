@@ -35,6 +35,8 @@
         "pmm.h": "c",
         "system-interface.h": "c",
         "chrono": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "cstdint": "c",
+        "multiboot2.h": "c"
     }
 }

@@ -1,7 +1,7 @@
-[submodule "meta/limine"]
-	path = meta/limine
-	url = https://github.com/limine-bootloader/limine.git
-	branch = binary
 [submodule "src/trdparty/flanterm"]
 	path = src/trdparty/flanterm
 	url = https://github.com/mintsuki/flanterm.git
+[submodule "meta/limine"]
+	path = meta/limine
+	url = https://github.com/limine-bootloader/limine
+	branch = binary

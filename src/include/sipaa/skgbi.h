@@ -29,15 +29,24 @@
 
 #include <stdint.h>
 
+#define MEMMAP_USABLE                 0
+#define MEMMAP_RESERVED               1
+#define MEMMAP_ACPI_RECLAIMABLE       2
+#define MEMMAP_ACPI_NVS               3
+#define MEMMAP_BAD_MEMORY             4
+#define MEMMAP_BOOTLOADER_RECLAIMABLE 5
+#define MEMMAP_KERNEL_AND_MODULES     6
+#define MEMMAP_FRAMEBUFFER            7
+
 typedef struct {
     uint64_t base;
     uint64_t length;
-    uint64_t type;
+    uint32_t type;
 } sk_memory_mapentry;
 
 typedef struct {
-    sk_memory_mapentry** entries;
     uint32_t length;
+    sk_memory_mapentry entries[128];
 } sk_memory_info;
 
 typedef struct {

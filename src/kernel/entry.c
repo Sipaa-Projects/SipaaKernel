@@ -12,6 +12,7 @@ sk_general_boot_info get_skgbi_from_multiboot(struct multiboot_info* info_addr)
 {
     sk_general_boot_info info2 = { };
     struct multiboot_tag_framebuffer *fb = NULL;
+    struct multiboot_tag_mmap *mmap = NULL;
 
     // Get tags, so we can fill the SKGBI infos
     size_t add_size = 0;
@@ -27,6 +28,10 @@ sk_general_boot_info get_skgbi_from_multiboot(struct multiboot_info* info_addr)
         switch (tag->type) {
             case MULTIBOOT_TAG_TYPE_FRAMEBUFFER: {
                 fb = (struct multiboot_tag_framebuffer *)tag;
+                break;
+            }
+            case MULTIBOOT_TAG_TYPE_MMAP: {
+                mmap = (struct multiboot_tag_mmap *)tag;
                 break;
             }
         }
@@ -52,6 +57,18 @@ sk_general_boot_info get_skgbi_from_multiboot(struct multiboot_info* info_addr)
     info2.fb0.blue_mask_size = fb->framebuffer_blue_mask_size;
     info2.fb0.green_mask_shift = fb->framebuffer_green_mask_size;
     info2.fb0.green_mask_size = fb->framebuffer_green_field_position;
+
+    // Memory map
+    size_t entry_count = mmap->size / sizeof(struct multiboot_mmap_entry);
+
+    struct multiboot_mmap_entry *m = (struct multiboot_mmap_entry *)(mmap->entries);
+
+    for (size_t i = 0; i < entry_count; i++) {
+        info2.memory_map.entries[i].base = m[i].addr;
+        info2.memory_map.entries[i].length = m[i].len;
+        info2.memory_map.entries[i].type = m[i].type - 1; // The Limine Boot Protocol (and so SKGBI) and Multiboot2 memory map types are in the same order, only Multiboot2 starts it's definitions with 1, so just use the type and substract 1. 
+        info2.memory_map.length++;
+    }
 
     return info2;
 }

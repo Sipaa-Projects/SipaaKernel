@@ -20,7 +20,7 @@ wconfig:
 iso: all
 	@rm -rf $(TEMP_ISO)
 	@mkdir -p $(TEMP_ISO)
-	@cp meta/limine-cfg/limine-i686.cfg meta/limine-cfg/wallp.jpg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin $(TEMP_ISO)/
+	@cp meta/limine-cfg/limine-i686.cfg meta/res/wallp.jpg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin $(TEMP_ISO)/
 	@mv $(TEMP_ISO)/limine-i686.cfg $(TEMP_ISO)/limine.cfg
 	@cp $(KERNEL_ELF) $(TEMP_ISO)/kernel.elf
 	@xorriso -as mkisofs -b limine-bios-cd.bin \
@@ -35,7 +35,7 @@ wiso: wall
 	@-rmdir $(TEMP_ISO_WIN)
 	@mkdir $(TEMP_ISO_WIN)
 	@copy meta\limine-cfg\limine.cfg $(TEMP_ISO_WIN)
-	@copy meta\limine-cfg\wallp.jpg $(TEMP_ISO_WIN)
+	@copy meta\res\wallp.jpg $(TEMP_ISO_WIN)
 	@copy meta\limine\limine-bios.sys $(TEMP_ISO_WIN)
 	@copy meta\limine\limine-bios-cd.bin $(TEMP_ISO_WIN)
 	@copy meta\limine\limine-uefi-cd.bin $(TEMP_ISO_WIN)

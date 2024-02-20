@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['c_1621',['c',['../structlimine__uuid.html#ac7fb971ebe96210f205a0a96e52bce60',1,'limine_uuid']]],
+  ['cache_5fdisabled_1622',['cache_disabled',['../structpage__table__entry.html#a010b2572c3298dd3df141f5c2fdedec3',1,'page_table_entry']]],
+  ['cc_1623',['CC',['../classTarget.html#a16d6d51208d6b6b1fc7ac00899b78e5a',1,'Target']]],
+  ['ccflags_1624',['CCFlags',['../classTarget.html#ad6a052b4543be9736a8694594934898e',1,'Target']]],
+  ['checksum_1625',['checksum',['../structmultiboot__header.html#a07a8cc62277601b51d73020101c6ff57',1,'multiboot_header']]],
+  ['cmdline_1626',['cmdline',['../structmultiboot__tag__module.html#ae28133d78349211f87ff9fcfb9ab3056',1,'multiboot_tag_module']]],
+  ['columns_1627',['columns',['../structlimine__terminal.html#ae6373fe1e31e28e8c509b38866233848',1,'limine_terminal']]],
+  ['common_1628',['common',['../structmultiboot__tag__framebuffer.html#aa08ac999e6f190bc67387683f2d1ff76',1,'multiboot_tag_framebuffer']]],
+  ['console_5fflags_1629',['console_flags',['../structmultiboot__header__tag__console__flags.html#aaea9def35e43e642a3115c20dab6ec11',1,'multiboot_header_tag_console_flags']]],
+  ['copyright_1630',['Copyright',['../classProject.html#a563a6dea2b983804307d91c3292ad353',1,'Project']]],
+  ['cr3_1631',['cr3',['../struct____attribute____.html#aad1111fc24007eda46d553857bbe0524',1,'__attribute__']]],
+  ['cs_1632',['cs',['../structREGISTERS.html#afd41ab60f9d96d198e1e7d3ffb86dd24',1,'REGISTERS::cs()'],['../struct____attribute____.html#a0079a9dc2ae95664ec75ecfbcc688dfa',1,'__attribute__::cs()']]],
+  ['cseg_1633',['cseg',['../structmultiboot__tag__apm.html#af1975b2bad1aec76d1bfb33da464ad34',1,'multiboot_tag_apm']]],
+  ['cseg_5f16_1634',['cseg_16',['../structmultiboot__tag__apm.html#aa0bb147c36c235539335f44b1f3b6e1d',1,'multiboot_tag_apm']]],
+  ['cseg_5f16_5flen_1635',['cseg_16_len',['../structmultiboot__tag__apm.html#acabea6a537b58df2bc5c8fa77a0ff828',1,'multiboot_tag_apm']]],
+  ['cseg_5flen_1636',['cseg_len',['../structmultiboot__tag__apm.html#a37d3e933be925ab3112450e4d1b1ca33',1,'multiboot_tag_apm']]],
+  ['current_5fsp_1637',['current_sp',['../kdebug_8c.html#a250f024e2722d924cd356242377e170e',1,'kdebug.c']]],
+  ['currentproject_1638',['CurrentProject',['../classProject.html#a092716290e80f5518d612c5f44b4b98a',1,'Project']]],
+  ['cxx_1639',['CXX',['../classTarget.html#a874537c8df89afa5664111c9e9f00b93',1,'Target']]],
+  ['cxxflags_1640',['CXXFlags',['../classTarget.html#a22a9561eb33227804c90f7caf4b1b914',1,'Target']]]
+];

@@ -1,0 +1,16 @@
+var searchData=
+[
+  ['b_1608',['b',['../structlimine__uuid.html#a3e2198ef1488deb36a087a866a45280b',1,'limine_uuid']]],
+  ['base_1609',['base',['../structsk__memory__mapentry.html#a79a679270b4f3cfcf55a3a89afbb0c11',1,'sk_memory_mapentry::base()'],['../structlimine__memmap__entry.html#a27ffe8338bdc73b6ae4f491914117af7',1,'limine_memmap_entry::base()']]],
+  ['base_5faddress_1610',['base_address',['../struct____attribute____.html#a55447184e8d58446e4f8a7a1203423f6',1,'__attribute__']]],
+  ['base_5fhigh_1611',['base_high',['../struct____attribute____.html#ac29d0498a7ea76287757a9b1e2d21e4a',1,'__attribute__::base_high()'],['../struct____attribute____.html#a83b3f4826804091b85094ddec0ae9a7a',1,'__attribute__::base_high()']]],
+  ['base_5flow_1612',['base_low',['../struct____attribute____.html#a8b32bc7636b20694d1c3be42c18b4ba5',1,'__attribute__']]],
+  ['base_5fmiddle_1613',['base_middle',['../struct____attribute____.html#a3ee7aa95ac8883cf2cec24362d77fd25',1,'__attribute__']]],
+  ['biosdev_1614',['biosdev',['../structmultiboot__tag__bootdev.html#ade8df68f5c71f2b2b7a07dd12cd7f785',1,'multiboot_tag_bootdev']]],
+  ['blue_1615',['blue',['../structmultiboot__color.html#a2b4fe22218db564d10c0f48c0dc081b1',1,'multiboot_color']]],
+  ['blue_5fmask_5fshift_1616',['blue_mask_shift',['../structsk__framebuffer.html#ae3b9c6965b8b1ee2be18a275783e31f8',1,'sk_framebuffer::blue_mask_shift()'],['../structlimine__framebuffer.html#aa1fb35dd595815689bac0ea43ef15998',1,'limine_framebuffer::blue_mask_shift()'],['../structlimine__video__mode.html#a1b252ef08f00b0029f11526f3589d405',1,'limine_video_mode::blue_mask_shift()']]],
+  ['blue_5fmask_5fsize_1617',['blue_mask_size',['../structsk__framebuffer.html#a4a89554b35282069289270f1cc83f836',1,'sk_framebuffer::blue_mask_size()'],['../structlimine__video__mode.html#a1f535c15dd6dfd6eaf57c863c54770bc',1,'limine_video_mode::blue_mask_size()'],['../structlimine__framebuffer.html#a64962e7919b48842f912724327309fc1',1,'limine_framebuffer::blue_mask_size()']]],
+  ['boot_5ftime_1618',['boot_time',['../structlimine__boot__time__response.html#afd90e4d04eb15b0bdaecc48017e2096b',1,'limine_boot_time_response']]],
+  ['bpp_1619',['bpp',['../structsk__framebuffer.html#acf829789a3a1ea816826ed1f0d55646f',1,'sk_framebuffer::bpp()'],['../structlimine__video__mode.html#aacc8a3b0ec70b824036cb796d9c0709d',1,'limine_video_mode::bpp()'],['../structlimine__framebuffer.html#aa32c271905e117417a6ab1107190d4ae',1,'limine_framebuffer::bpp()']]],
+  ['bss_5fend_5faddr_1620',['bss_end_addr',['../structmultiboot__header__tag__address.html#a8de38066e26cf71d401229c9b0ad3d33',1,'multiboot_header_tag_address']]]
+];

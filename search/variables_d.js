@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['p_5falign_1788',['p_align',['../structelf64__phdr.html#ad941df3941ab694d7950ef91b1ffface',1,'elf64_phdr']]],
+  ['p_5ffilesz_1789',['p_filesz',['../structelf64__phdr.html#a39783d6505c9e8ee660486d73909807a',1,'elf64_phdr']]],
+  ['p_5fflags_1790',['p_flags',['../structelf64__phdr.html#abf65a3fdb555b51b0779713441554506',1,'elf64_phdr']]],
+  ['p_5fmemsz_1791',['p_memsz',['../structelf64__phdr.html#addb156fc4919b43cb63863f40a11595b',1,'elf64_phdr']]],
+  ['p_5foffset_1792',['p_offset',['../structelf64__phdr.html#afd9bb2cb730c024731c4403eb4cc849e',1,'elf64_phdr']]],
+  ['p_5fpaddr_1793',['p_paddr',['../structelf64__phdr.html#a974097eeed423213d7568c742b4fb691',1,'elf64_phdr']]],
+  ['p_5ftype_1794',['p_type',['../structelf64__phdr.html#a5230942d825583ca57c2bc1922d90efb',1,'elf64_phdr']]],
+  ['p_5fvaddr_1795',['p_vaddr',['../structelf64__phdr.html#a4ae86302877fd29baabd5712a31a7804',1,'elf64_phdr']]],
+  ['part_1796',['part',['../structmultiboot__tag__bootdev.html#a67dc9bac386fa77d2c5cd2ca3328101c',1,'multiboot_tag_bootdev']]],
+  ['part_5fuuid_1797',['part_uuid',['../structlimine__file.html#a76f0d8f40ecbfb3fad45d035baf4cdc6',1,'limine_file']]],
+  ['partition_5findex_1798',['partition_index',['../structlimine__file.html#a88f3e551b32e49b182f9e47b215fe20b',1,'limine_file']]],
+  ['physical_5faddresses_1799',['physical_addresses',['../structpage__directory.html#af33cf98b0cc1de55821be7a0ced5e91d',1,'page_directory']]],
+  ['physical_5fbase_1800',['physical_base',['../structlimine__kernel__address__response.html#a29f73b12cf0a427cec60e21a7663b86e',1,'limine_kernel_address_response']]],
+  ['pitch_1801',['pitch',['../structlimine__video__mode.html#a5b1d4b9e9edbcab07e054da87a5bafd3',1,'limine_video_mode::pitch()'],['../structlimine__framebuffer.html#aeb59aad798c9422e1ff1eac95f5b1af4',1,'limine_framebuffer::pitch()'],['../structsk__framebuffer.html#a183143c066f4a122d60c7b7e2ded6dad',1,'sk_framebuffer::pitch()']]],
+  ['pmm_5ffree_5fblocks_1802',['pmm_free_blocks',['../pmm_8c.html#a334bb9804b9b76d88fb58c0ec94ee0ce',1,'pmm.c']]],
+  ['pmm_5fkernel_5fbase_1803',['pmm_kernel_base',['../pmm_8c.html#a131f3fc490fc8ef84d6da845e5b860a4',1,'pmm.c']]],
+  ['pmm_5fkernel_5fend_1804',['pmm_kernel_end',['../pmm_8c.html#a5ff20ad86dd8c788d6dfab982fc73ad7',1,'pmm.c']]],
+  ['pmm_5fkernel_5fsize_1805',['pmm_kernel_size',['../pmm_8c.html#ab7407c400189646a0f518e5ac6bda4ad',1,'pmm.c']]],
+  ['pmm_5fstack_1806',['pmm_stack',['../pmm_8c.html#a16a1213baf1f1dd72245e858b5b2dec0',1,'pmm.c']]],
+  ['pmm_5fstack_5ftop_1807',['pmm_stack_top',['../pmm_8c.html#a0f74c848b628f7f8cbe2b883cbff8d0b',1,'pmm.c']]],
+  ['pointer_1808',['pointer',['../structmultiboot__tag__efi32.html#a5d09ad1fadc46910e5a1e73c1f600833',1,'multiboot_tag_efi32::pointer()'],['../structmultiboot__tag__efi64.html#a4d0f313fd4a99a386a51040878c7226c',1,'multiboot_tag_efi64::pointer()'],['../structmultiboot__tag__efi32__ih.html#a9d061e5f2dd20f6ab254b21b960152bd',1,'multiboot_tag_efi32_ih::pointer()'],['../structmultiboot__tag__efi64__ih.html#a9ec7dc3902f50dacb6c8708277bc5135',1,'multiboot_tag_efi64_ih::pointer()']]],
+  ['preference_1809',['preference',['../structmultiboot__header__tag__relocatable.html#ae41a206a06778212311ca1c2aa21f778',1,'multiboot_header_tag_relocatable']]],
+  ['present_1810',['present',['../structpage__table__entry.html#ab3bc2e7e8ebe0b84c483e073feafdce5',1,'page_table_entry']]],
+  ['previous_1811',['previous',['../struct____attribute____.html#ae06e1898657c5e82ae6753111ebb891e',1,'__attribute__']]]
+];

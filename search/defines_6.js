@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['icw1_2024',['ICW1',['../8259__pic_8h.html#ac56445256ce58f14f3c61af0cbf0cdad',1,'8259_pic.h']]],
+  ['icw4_5f8086_2025',['ICW4_8086',['../8259__pic_8h.html#a42803c5ddcec9e120a6dbf7bc5c1b7af',1,'8259_pic.h']]],
+  ['irq0_5ftimer_2026',['IRQ0_TIMER',['../isr_8h.html#a68301e7fe8307667fa89a5c5ff86a5fe',1,'isr.h']]],
+  ['irq10_5freserved_2027',['IRQ10_RESERVED',['../isr_8h.html#a05e9dc4eaa36ab66ab407a7a24aed1e8',1,'isr.h']]],
+  ['irq11_5freserved_2028',['IRQ11_RESERVED',['../isr_8h.html#ab09147a9b80a5c5a97f4c115152fb17f',1,'isr.h']]],
+  ['irq12_5fauxiliary_2029',['IRQ12_AUXILIARY',['../isr_8h.html#a685398c8a26cb55c99e0762fbc7200f3',1,'isr.h']]],
+  ['irq13_5ffpu_2030',['IRQ13_FPU',['../isr_8h.html#aa81cab43f3b4f1f10600c318cf258cb0',1,'isr.h']]],
+  ['irq14_5fhard_5fdisk_2031',['IRQ14_HARD_DISK',['../isr_8h.html#a568c23469da1a5c7ba5f014f66795d08',1,'isr.h']]],
+  ['irq15_5freserved_2032',['IRQ15_RESERVED',['../isr_8h.html#aa4fd39b127c265cfeec06d3c2bf00c24',1,'isr.h']]],
+  ['irq1_5fkeyboard_2033',['IRQ1_KEYBOARD',['../isr_8h.html#a722b4b98d70e7acd42c33b308a6512a1',1,'isr.h']]],
+  ['irq2_5fcascade_2034',['IRQ2_CASCADE',['../isr_8h.html#ae90113fc1a1e16eb6838ba9e38ff1f80',1,'isr.h']]],
+  ['irq3_5fserial_5fport2_2035',['IRQ3_SERIAL_PORT2',['../isr_8h.html#afd06303ac3f74c34921b89b1fd12cb74',1,'isr.h']]],
+  ['irq4_5fserial_5fport1_2036',['IRQ4_SERIAL_PORT1',['../isr_8h.html#a4d1af9806be5cf785f49023e1609447d',1,'isr.h']]],
+  ['irq5_5freserved_2037',['IRQ5_RESERVED',['../isr_8h.html#af51ae2b5a99307beb6f09c4b1373dea3',1,'isr.h']]],
+  ['irq6_5fdiskette_5fdrive_2038',['IRQ6_DISKETTE_DRIVE',['../isr_8h.html#af3d21962db6acadea054ae8000842e87',1,'isr.h']]],
+  ['irq7_5fparallel_5fport_2039',['IRQ7_PARALLEL_PORT',['../isr_8h.html#a77d9c50a1126ef26b8f8387d02cf1ea6',1,'isr.h']]],
+  ['irq8_5fcmos_5fclock_2040',['IRQ8_CMOS_CLOCK',['../isr_8h.html#aa9499f3ce459802faa6b76158e628e8f',1,'isr.h']]],
+  ['irq9_5fcga_2041',['IRQ9_CGA',['../isr_8h.html#a50629c15f7d6ce649e1425231e60f2bd',1,'isr.h']]],
+  ['irq_5fbase_2042',['IRQ_BASE',['../isr_8h.html#add35dce3f7e463b7fbbb8ab2bebc3a1b',1,'isr.h']]]
+];

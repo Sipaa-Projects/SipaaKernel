@@ -43,6 +43,10 @@
         "8259_pic.h": "c",
         "image.h": "c",
         "vmm.h": "c",
-        "kdebug.h": "c"
+        "kdebug.h": "c",
+        "framebuffer.h": "c",
+        "fb.h": "c",
+        "flanterm.h": "c",
+        "printf.h": "c"
     }
 }

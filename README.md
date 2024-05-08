@@ -25,8 +25,3 @@ SipaaKernel aims to be:
 
 ### Will it have a desktop environment & apps?
 Nope. SipaaKernel is just an operating system kernel: the userspace (CLI commands, libraries, apps) needs to be built manually. (writing one from scratch, or using existing software)
-
-## Credits
-* Limine Contributors : The Limine bootloader & his protocol. (meta/limine-*, src/kernel/entry/limine.h)
-* Pritam Zope : i686 architecture implementation, PS2 drivers, string library
-* Charles Nicholson : The printf implementation used in SipaaKernel. (nanoprintf)

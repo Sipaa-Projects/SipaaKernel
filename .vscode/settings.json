@@ -47,6 +47,9 @@
         "framebuffer.h": "c",
         "fb.h": "c",
         "flanterm.h": "c",
-        "printf.h": "c"
+        "printf.h": "c",
+        "bootsrv.h": "c",
+        "gdbstub.h": "c",
+        "stdbool.h": "c"
     }
 }

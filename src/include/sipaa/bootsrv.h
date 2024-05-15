@@ -3,7 +3,7 @@
 #define __BOOTSRV_H
 
 #include <stdint.h>
-#include <multiboot.h>
+#include <limine.h>
 
 struct BootSrv_MBoot2Info {
     uint32_t size;
@@ -11,7 +11,16 @@ struct BootSrv_MBoot2Info {
     struct multiboot_tag *first;
 };
 
-void BootSrv_Initialize(struct BootSrv_MBoot2Info* mb2i);
-struct multiboot_tag *BootSrv_GetMBoot2Tag(uint32_t tagtype);
+/// @brief Enumerate all infos provided by Limine.
+void BootSrv_EnumerateProtocolInfos();
+
+/// @brief Get a framebuffer from Limine.
+struct limine_framebuffer *BootSrv_GetFramebuffer(int number);
+
+/// @brief Get a module provided by Limine
+struct limine_file *BootSrv_GetModule(int pos);
+
+/// @brief Get the memory map - Required for the PMM
+struct limine_memmap_response *BootSrv_GetMemoryMap();
 
 #endif

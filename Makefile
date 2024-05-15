@@ -8,8 +8,8 @@ OBJDIR=obj
 SRCS := $(shell find $(SRCDIR) -name '*.c')
 OBJS := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o,$(SRCS))
 ASMS := $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o,$(shell find src/ -name '*.asm'))
-CC = i686-sipaa-gcc
-LD = i686-sipaa-ld
+CC = x86_64-sipaa-gcc
+LD = x86_64-sipaa-ld
 
 CFLAGS := \
 	-w \
@@ -23,15 +23,23 @@ CFLAGS := \
 	-fno-PIC \
 	-Isrc/include \
 	-g \
-	-m32 \
+	-m64 \
+	-march=x86-64 \
+	-mabi=sysv \
+	-mno-80387 \
+	-mno-mmx \
+	-mno-sse \
+	-mno-sse2 \
+	-mno-red-zone \
+	-mcmodel=kernel \
 
 ASM_FLAGS := \
-	-f elf32
+	-f elf64
 
 LD_FLAGS := \
 	-nostdlib \
 	-z max-page-size=0x1000 \
-	-T meta/ld/link-i686.ld
+	-T meta/ld/link-x86_64.ld
 
 $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 	@mkdir -p $(@D)
@@ -40,7 +48,7 @@ $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 
 kernel: $(OBJS) $(ASMS)
 	@mkdir -p $(BINDIR)
-	@echo [LD] kernel.elf
+	@echo [LD] kernel.sk
 	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o $(BINDIR)/kernel.sk
 
 # Compile C files
@@ -51,12 +59,22 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 
 # Build ISO
 iso: kernel
-	@mkdir -p $(BINDIR)/iso_root/boot/grub
+	@rm -rf bin/iso_root
+	@mkdir -p bin/iso_root
+	@echo [TAR] ramdisk.tar
+	@tar -C initrd -cvf bin/ramdisk.tar $(shell find ./initrd -printf '%P\n')
 	@echo [CP] Copying kernel files to the ISO file root...
-	@cp -r $(BINDIR)/kernel.sk $(BINDIR)/iso_root/boot
-	@cp -r meta/grub.cfg $(BINDIR)/iso_root/boot/grub
-	@echo [GRUB-MKRESCUE] $(BINDIR)/sipaakernel.iso
-	@grub-mkrescue -o $(BINDIR)/sipaakernel.iso $(BINDIR)/iso_root
+	@cp bin/kernel.sk \
+		meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin meta/wallp.bmp bin/ramdisk.tar bin/iso_root/
+	@echo [XORRISO] sipaakernel.iso
+	@xorriso -as mkisofs -b limine-bios-cd.bin \
+		-no-emul-boot -boot-load-size 4 -boot-info-table \
+		--efi-boot limine-uefi-cd.bin \
+		-efi-boot-part --efi-boot-image --protective-msdos-label \
+		bin/iso_root -o bin/sipaakernel.iso
+	@echo [LIMINE-DEPLOY] bin/sipaakernel.iso
+	@meta/limine/limine bios-install bin/sipaakernel.iso
+	@rm -rf bin/iso_root
 
 # Clean
 clean:
@@ -67,34 +85,34 @@ clean:
 
 # Run
 run: iso
-	qemu-system-i386 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -device bochs-display -boot d
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -boot d -no-reboot -no-shutdown
 
 run-uefi: iso
-	qemu-system-i386 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -device bochs-display -bios ./assets/OVMF-x86_64.fd -boot d
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown
 
 run-kvm: iso
-	qemu-system-i386 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -device bochs-display -boot d
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -boot d -no-reboot -no-shutdown
 
 run-kvm-uefi: iso
-	qemu-system-i386 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -device bochs-display -bios ./assets/OVMF-x86_64.fd -boot d -smp 2
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -smp 2 -no-reboot -no-shutdown
 
 run-gtk: iso
-	qemu-system-i386 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -device bochs-display -boot d
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga std -boot d -no-reboot -no-shutdown
 
 run-gtk-uefi: iso
-	qemu-system-i386 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -device bochs-display -bios ./assets/OVMF-x86_64.fd -boot d
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown
 
 run-macos: iso
-	qemu-system-i386 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -device bochs-display -boot d
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga std -boot d -no-reboot -no-shutdown
 
 run-macos-uefi: iso
-	qemu-system-i386 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -device bochs-display -bios ./assets/OVMF-x86_64.fd -boot d
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown
 
 debug-int: iso
-	qemu-system-i386 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -d int -M smm=off -display sdl -boot d
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -d int -M smm=off -display sdl -boot d -no-reboot -no-shutdown
 
 debug: iso
-	qemu-system-i386 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -s -S -display sdl -boot d
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -s -S -display sdl -boot d -no-reboot -no-shutdown
 
 debug-kvm: iso
-	qemu-system-i386 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -s -S -display sdl -boot d
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -s -S -display sdl -boot d -no-reboot -no-shutdown

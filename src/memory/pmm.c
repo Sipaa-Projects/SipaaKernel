@@ -1,5 +1,6 @@
 #include <sipaa/pmm.h>
 #include <sipaa/bootsrv.h>
+#include <limine.h>
 
 /// @brief An array defining a stack for the PMM.
 uintptr_t pmm_stack[STACK_SIZE];
@@ -157,19 +158,17 @@ void* Pmm_Reallocate(void* ptr, size_t size) {
 
 /// @brief Initialize the PMM.
 void Pmm_Initialize() {
-    struct multiboot_tag_mmap *mmap = BootSrv_GetMBoot2Tag(MULTIBOOT_TAG_TYPE_FRAMEBUFFER);
+    struct limine_memmap_response *mmap = BootSrv_GetMemoryMap();
     pmm_stack_top = 0;
-    
-    size_t entry_count = mmap->size / sizeof(struct multiboot_mmap_entry);
 
-    for (uint64_t entry = 0; entry < entry_count; entry++)
+    for (uint64_t entry = 0; entry < mmap->entry_count; entry++)
     {
-        struct multiboot_mmap_entry mentry = mmap->entries[entry];
+        struct limine_memmap_entry *mentry = mmap->entries[entry];
         
-        if (mentry.type == MULTIBOOT_MEMORY_AVAILABLE)
+        if (mentry->type == LIMINE_MEMMAP_USABLE)
         {
-            uintptr_t addr = mentry.addr;
-            uint64_t length = mentry.len;
+            uintptr_t addr = mentry->base;
+            uint64_t length = mentry->length;
 
             while (length >= PMM_BLOCK_SIZE)
             {

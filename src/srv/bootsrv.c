@@ -1,48 +1,104 @@
 #include <sipaa/bootsrv.h>
+#include <sipaa/logger.h>
 #include <stddef.h>
 
-struct multiboot_tag_framebuffer *fb;
-struct multiboot_tag_mmap *mmap;
+#if defined(__i686__)
+#define KARCHITECTURE "x86 (32-bit)"
+#elif defined(__x86_64__)
+#define KARCHITECTURE "x86-64 (64-bit)"
+#elif defined(__arm__)
+#define KARCHITECTURE "ARM"
+#elif defined(__aarch64__)
+#define KARCHITECTURE "AArch64"
+#elif defined(__PPC__)
+#define KARCHITECTURE "PowerPC"
+#elif defined(__PPC64__)
+#define KARCHITECTURE "PowerPC64"
+#else
+#define KARCHITECTURE "Unknown Architecture"
+#endif
 
-void BootSrv_Initialize(struct BootSrv_MBoot2Info* mb2i)
+static volatile struct limine_bootloader_info_request bir = {
+    .id = LIMINE_BOOTLOADER_INFO_REQUEST,
+    .revision = 0
+};
+
+static volatile struct limine_kernel_file_request kfr = {
+    .id = LIMINE_KERNEL_FILE_REQUEST,
+    .revision = 0
+};
+
+static volatile struct limine_kernel_address_request kar = {
+    .id = LIMINE_KERNEL_ADDRESS_REQUEST,
+    .revision = 0
+};
+
+static volatile struct limine_efi_system_table_request estr = {
+    .id = LIMINE_EFI_SYSTEM_TABLE_REQUEST,
+    .revision = 0
+};
+
+static volatile struct limine_framebuffer_request fbr = {
+    .id = LIMINE_FRAMEBUFFER_REQUEST,
+    .revision = 0
+};
+
+static volatile struct limine_memmap_request memmap_request = {
+    .id = LIMINE_MEMMAP_REQUEST,
+    .revision = 0
+};
+
+static volatile struct limine_module_request module_request = {
+    .id = LIMINE_MODULE_REQUEST,
+    .revision = 0
+};
+
+void BootSrv_EnumerateFramebuffers()
 {
-    size_t add_size = 0;
-
-    // NOTE: We set i to 8 to skip size and reserved fields:
-    for (size_t i = 8; i < mb2i->size; i += add_size) {
-        struct multiboot_tag *tag = (struct multiboot_tag *)((uint8_t *)mb2i + i);
-
-        if (tag->type == MULTIBOOT_TAG_TYPE_END) {
-            break;
-        }
-
-        switch (tag->type) {
-            case MULTIBOOT_TAG_TYPE_FRAMEBUFFER:
-                fb = (struct multiboot_tag_framebuffer *)tag;
-                break;
-            case MULTIBOOT_TAG_TYPE_MMAP:
-                mmap = (struct multiboot_tag_mmap *)tag;
-                break;
-        }
-
-        add_size = tag->size;
-
-        // Align the size to 8 bytes.
-        if ((add_size % 8) != 0)
-			add_size += (8 - add_size % 8);
+    Log(LT_INFO, "BootSrv", "------ FRAMEBUFFERS ------\n");
+    for (int i = 0; i < fbr.response->framebuffer_count; i++)
+    {
+        Log(LT_INFO, "BootSrv", "Framebuffer %d: Address: %p, Width: %u, Height: %u\n", i, fbr.response->framebuffers[i]->address, fbr.response->framebuffers[i]->width, fbr.response->framebuffers[i]->height)
     }
 }
 
-struct multiboot_tag *BootSrv_GetMBoot2Tag(uint32_t tagtype)
+void BootSrv_EnumerateProtocolInfos()
 {
-    switch (tagtype)
-    {
-    case MULTIBOOT_TAG_TYPE_FRAMEBUFFER:
-        return (struct multiboot_tag *)fb;
-    case MULTIBOOT_TAG_TYPE_MMAP:
-        return (struct multiboot_tag *)mmap;
+    // Detect the used firmware
+    char *firmware = "BIOS";
+    if (estr.response != NULL)
+        firmware = "UEFI";
+
+    // Display the information
+    Log(LT_INFO, "BootSrv", "-- PROOCOL INFO START ------\n");
+    Log(LT_INFO, "BootSrv", "%s %s (booted on a %s %s system)\n", bir.response->name, bir.response->version, KARCHITECTURE, firmware);
+    Log(LT_INFO, "BootSrv", "Kernel physical address: \"0x%x\"\n", kar.response->physical_base);
+    Log(LT_INFO, "BootSrv", "Kernel virtual address: \"0x%x\"\n", kar.response->virtual_base);
+    Log(LT_INFO, "BootSrv", "Kernel command line: \"%s\"\n", kfr.response->kernel_file->cmdline);
+    BootSrv_EnumerateFramebuffers();
     
-    default:
-        return NULL;
+    Log(LT_INFO, "BootSrv", "----- MODULES -----\n");
+    for (size_t i = 0; i < module_request.response->module_count; i++)
+    {
+        struct limine_file *module = module_request.response->modules[i];
+        Log(LT_INFO, "BootSrv", "Module %d: Path: %s, Address: %p\n", i, module->path, module->address);
     }
+
+    Log(LT_INFO, "BootSrv", "-------- PROOCOL INFO END --\n");
+
+}
+
+struct limine_framebuffer *BootSrv_GetFramebuffer(int number)
+{
+    return fbr.response->framebuffers[number];
+}
+
+struct limine_memmap_response *BootSrv_GetMemoryMap()
+{
+    return memmap_request.response;
+}
+
+struct limine_file *BootSrv_GetModule(int pos)
+{
+    return module_request.response->modules[pos];
 }

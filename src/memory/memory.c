@@ -1,5 +1,8 @@
 #include <stddef.h>
 #include <stdint.h>
+#include <sipaa/memory.h>
+
+/* Since the modern compilers reserve the right to add calls to these 4 functions, keep their name intact, and add 4 new functions with SK naming. */
 
 void *memcpy(void *dest, const void *src, size_t n) {
     uint8_t *pdest = dest;
@@ -49,4 +52,20 @@ int memcmp(const void *s1, const void *s2, size_t n) {
     }
 
     return 0;
+}
+
+void *CopyMemory(void *dest, const void *src, size_t n) {
+    return memcpy(dest, src, n);
+}
+
+void *SetMemory(void *s, int c, size_t n) {
+    return memset(s, c, n);
+}
+
+void *MoveMemory(void *dest, const void *src, size_t n) {
+    return memmove(dest, src, n);
+}
+
+int CompareMemory(const void *s1, const void *s2, size_t n) {
+    return memcmp(s1, s2, n);
 }

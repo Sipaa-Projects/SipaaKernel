@@ -1,4 +1,4 @@
-#include <sipaa/i686/io.h>
+#include <sipaa/x86_64/io.h>
 
 /**
  * read a byte from given port number

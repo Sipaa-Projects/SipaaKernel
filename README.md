@@ -1,7 +1,7 @@
 <p align="center">
   <img src="meta/artwork/LogoLight.png#gh-light-mode-only" height="96" />
   <img src="meta/artwork/LogoDark.png#gh-dark-mode-only" height="96" />
-  <p align="center">The modern, multi-architecture, elegant, easy-to-understand kernel.</p>
+  <p align="center">The kernel from a modern era.</p>
 
 </p>
 

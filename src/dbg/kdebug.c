@@ -1,6 +1,6 @@
 #include <sipaa/kdebug.h>
 
-#include <sipaa/i686/io.h>
+#include <sipaa/x86_64/io.h>
 #include <sipaa/pmm.h>
 #include <nanoprintf/printf.h>
 

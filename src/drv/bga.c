@@ -1,6 +1,7 @@
 /// @brief SipaaKernel's BGA driver.
-#include <sipaa/bga.h>
-#include <sipaa/i686/io.h>
+#include <sipaa/drv/bga.h>
+#include <sipaa/logger.h>
+#include <sipaa/x86_64/io.h>
 
 void BochsGA_WriteReg(unsigned short IndexValue, unsigned short DataValue)
 {
@@ -28,6 +29,8 @@ void BochsGA_SetVideoMode(unsigned int Width, unsigned int Height, unsigned int 
     BochsGA_WriteReg(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED |
         (UseLinearFrameBuffer ? VBE_DISPI_LFB_ENABLED : 0) |
         (ClearVideoMemory ? 0 : VBE_DISPI_NOCLEARMEM));
+
+    Log(LT_INFO, "BochsGA", "Mode set to %ux%ux%u (Linear Framebuffer: %d, Clear VRAM: %d)\n", Width, Height, BitDepth, UseLinearFrameBuffer, ClearVideoMemory);
 }
  
 void BochsGA_SetBank(unsigned short BankNumber)

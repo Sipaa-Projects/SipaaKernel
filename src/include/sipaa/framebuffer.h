@@ -18,8 +18,8 @@ typedef enum FramebufferBpp FramebufferBppT;
 struct FramebufferMode
 {
     uint32_t Width, Height, Pitch;
-    FramebufferModeT Bpp;
-}
+    FramebufferBppT Bpp;
+};
 typedef struct FramebufferMode FramebufferModeT;
 
 struct Framebuffer

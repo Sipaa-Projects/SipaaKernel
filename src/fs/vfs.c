@@ -39,7 +39,7 @@ int Vfs_Mount(const char *target, FilesystemNodeT *node)
         }
 
         mount_points[empty_slot].mount_path = target;
-        mount_points[empty_slot].filesystem = devfs;
+        mount_points[empty_slot].node = node;
 
         // TODO: Perform any additional setup or initialization as needed for the specific filesystem
 
@@ -56,7 +56,7 @@ int Vfs_Unmount(const char *target)
     // Find the mount point based on the target path
     for (size_t i = 0; i < sizeof(mount_points) / sizeof(mount_points[0]); ++i)
     {
-        if (mount_points[i].mount_path != NULL && strcmp(mount_points[i].mount_path, target) == 0)
+        if (mount_points[i].mount_path != NULL && CompareStrings(mount_points[i].mount_path, target) == 0)
         {
             // TODO: Perform any cleanup or finalization as needed for the specific filesystem
             if (target == FS_PATHSEP_STR) // check if the file path is equal to the path separator, aka the root directory.
@@ -66,7 +66,7 @@ int Vfs_Unmount(const char *target)
             }
 
             mount_points[i].mount_path = NULL;
-            mount_points[i].filesystem = NULL;
+            mount_points[i].node = NULL;
 
             return VFS_SUCCESS; // Unmount successful
         }

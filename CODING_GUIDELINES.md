@@ -6,8 +6,8 @@ This document provides guidelines to make reading and understanding the SipaaKer
 
 SipaaKernel uses a specific naming convention for different elements of the code. Here's a summary of the naming conventions used:
 
-- **Enums and Structures**: PascalCase is used for the naming of enums and structures. For typedefs, PascalCase is used with an additional uppercase 'T' at the end.
-- **Functions and Variables**: A mix of PascalCase and snake_case is used for function and variable declarations. Uppercase snake case is used for preprocessor definitions. Function parameters and variables inside data structures use camelCase.
+- **Enums and Structures**: PascalCase is used for the naming of enums and structures. All the variables & function also uses PascalCase. For typedefs, PascalCase is used with an additional uppercase 'T' at the end.
+- **Functions and Variables**: A mix of PascalCase and snake_case is used for function and variable declarations.
 - **Enum Values and Preprocessor Definitions**: Uppercase snake case is used for enum values.
 
 Here's a breakdown of the naming convention for enums and structs:
@@ -42,7 +42,7 @@ void Pmm_Initialize(void* memoryMap);
 ```
 
 ## Commenting Guidelines
-We require that you put short & descriptive comments in your functions, and that you comment with @brief, @param and @return like that (VSCode automatically does it):
+We require that you put short & descriptive comments in your functions, and that you comment with `/// @` character followed by `brief`, `param` and `return` like that (VSCode automatically does it) (By the way, this is a real kernel function):
 
 ```c
 /// @brief A pointer to the memory map

@@ -1,6 +1,7 @@
 #include <sipaa/x86_64/idt.h>
 #include <sipaa/x86_64/io.h>
 #include <sipaa/logger.h>
+#include <sipaa/kdebug.h>
 
 IdtEntryT idt[256];
 uint64_t pit_ticks = 0;
@@ -192,6 +193,8 @@ void general_interrupt_handler(RegistersT *regs)
 {
     if (regs->int_no < 32)
     {
+        Dbg_SystemPanic();
+
         Log(LT_ERROR, "CPU", "Exception: %s\n", exception_messages[regs->int_no]);
         Log(LT_ERROR, "CPU", "Interrupt number: %d\n", regs->int_no);
         Log(LT_ERROR, "CPU", "Error code: %d\n", regs->err_code);

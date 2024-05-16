@@ -33,6 +33,9 @@ enum VfsStatus {
 
   /// @brief Returned when trying to unmount an inexistant mount point.
   VFS_NOT_MOUNTED = -1,
+
+  /// @brief Returned when trying to set a new root filesystem
+  VFS_NOT_ALLOWED = -5
 };
 
 typedef enum VfsStatus VfsStatusT;
@@ -67,18 +70,20 @@ struct Vfs_MountPoint {
 
 typedef struct Vfs_MountPoint Vfs_MountPointT;
 
-
 // FUNCTIONS
 
 /// @brief Initialize the VFS' root node.
 void Vfs_Initialize();
+
+/// @brief Sets the root filesystem. Can be called only 1 time.
+/// @param node The root filesystem node.
+VfsStatusT Vfs_SetRoot(FilesystemNodeT *node);
 
 /// @brief Mount a filesystem on a path
 /// @param target The target path (exemple: /dev)
 /// @param node The corresponding node (exemple: a DevFS node containing devices)
 /// @return A status indicating the success or an error.
 VfsStatusT Vfs_Mount(const char* target, FilesystemNodeT *node);
-
 
 /// @brief Unmount a filesystem
 /// @param target A path where a file system is mounted

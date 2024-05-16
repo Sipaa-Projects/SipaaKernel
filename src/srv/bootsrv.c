@@ -58,7 +58,7 @@ void BootSrv_EnumerateFramebuffers()
     Log(LT_INFO, "BootSrv", "------ FRAMEBUFFERS ------\n");
     for (int i = 0; i < fbr.response->framebuffer_count; i++)
     {
-        Log(LT_INFO, "BootSrv", "Framebuffer %d: Address: %p, Width: %u, Height: %u\n", i, fbr.response->framebuffers[i]->address, fbr.response->framebuffers[i]->width, fbr.response->framebuffers[i]->height)
+        Log(LT_INFO, "BootSrv", "Framebuffer %d: Address: %p, Width: %u, Height: %u, Bpp: %u\n", i, fbr.response->framebuffers[i]->address, fbr.response->framebuffers[i]->width, fbr.response->framebuffers[i]->height, fbr.response->framebuffers[i]->bpp);
     }
 }
 

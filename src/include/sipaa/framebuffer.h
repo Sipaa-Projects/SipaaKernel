@@ -41,6 +41,7 @@ struct Framebuffer
 };
 typedef struct Framebuffer FramebufferT;
 
+/// @brief Initialize the framebuffer
 void Fbuf_Initialize();
 
 /// @brief Resize the framebuffer, if supported.

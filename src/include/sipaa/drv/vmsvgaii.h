@@ -80,4 +80,4 @@ static void graphics_install_vmware(uint16_t w, uint16_t h) {
 	finalize_graphics("vmware");
 }**/
 
-#end
+#endif

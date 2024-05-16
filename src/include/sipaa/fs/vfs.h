@@ -55,7 +55,7 @@ struct FilesystemNode {
   uint32_t Type;
   uint32_t Size;
   uint32_t Inode;
-  uint32_t(*Read)(struct FilesystemNode* vnode, uint32_t offset, uint32_t count, uint8_t* buffer);
+  void(*Read)(struct FilesystemNode* vnode, uint32_t offset, uint32_t count, uint8_t* buffer);
   DirectoryEntryT*(*ReadDirectory)(struct FilesystemNode* vnode, uint32_t index);
   struct FilesystemNode*(*FindDirectory)(struct FilesystemNode* vnode, char* path);
 };

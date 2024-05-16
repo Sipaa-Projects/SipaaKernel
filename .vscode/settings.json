@@ -51,6 +51,7 @@
         "bootsrv.h": "c",
         "gdbstub.h": "c",
         "stdbool.h": "c",
-        "vfs.h": "c"
+        "vfs.h": "c",
+        "pci.h": "c"
     }
 }

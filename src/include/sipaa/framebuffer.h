@@ -1,3 +1,6 @@
+/// @file src/include/sipaa/framebuffer.h
+/// @brief Interface to control graphic adapters - Header
+
 #ifndef __FRAMEBUFFER_H
 #define __FRAMEBUFFER_H
 

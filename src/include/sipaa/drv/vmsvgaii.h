@@ -1,5 +1,4 @@
-/// @brief SipaaKernel's VMware SVGA II driver. Credit to Klange for the driver.
-// TODO: implement PCI.
+/// @brief SipaaKernel's VMware SVGA II driver. Credit to K. Lange for the driver.
 
 #ifndef __VMSVGAII_H
 #define __VMSVGAII_H

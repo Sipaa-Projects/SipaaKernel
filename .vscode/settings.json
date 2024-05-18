@@ -52,6 +52,10 @@
         "gdbstub.h": "c",
         "stdbool.h": "c",
         "vfs.h": "c",
-        "pci.h": "c"
+        "pci.h": "c",
+        "memory.h": "c",
+        "vmsvgaii.h": "c",
+        "stb_image.h": "c",
+        "emmintrin.h": "c"
     }
 }

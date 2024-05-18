@@ -19,6 +19,7 @@
 #include <sipaa/libc/string.h>
 #include <sipaa/pci.h>
 #include <sipaa/logger.h>
+#include <sipaa/pmm.h>
 #include <sipaa/x86_64/io.h>
 
 static uintptr_t pcie_addr(uint32_t device, int field) {
@@ -136,4 +137,30 @@ void Pci_Scan(pci_func_t f, int type, void * extra) {
 
 int Pci_GetInterrupt(uint32_t device) {
 	return Pci_ReadField(device, PCI_INTERRUPT_LINE, 1);
+}
+
+// Check if a PCI device exists
+uint32_t Pci_ProbeCache_Vid = 0;
+uint32_t Pci_ProbeCache_Did = 0;
+
+void Pci_Exists_Callback(uint32_t device, uint16_t vendor_id, uint16_t device_id, void * extra)
+{
+	if (vendor_id = Pci_ProbeCache_Vid && device_id == Pci_ProbeCache_Did)
+	{
+		int *extraint = (int *)extra;
+		*extraint = 1;
+	}
+}
+
+int Pci_Exists(uint32_t vendorId, uint32_t deviceId)
+{
+	int *found = (int *)Pmm_Allocate(1);
+	*found = 0;
+
+	Pci_ProbeCache_Did = deviceId;
+	Pci_ProbeCache_Vid = vendorId;
+
+	Pci_Scan(&Pci_Exists_Callback, -1, found);
+
+	return *found;
 }

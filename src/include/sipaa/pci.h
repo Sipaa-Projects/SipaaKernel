@@ -68,5 +68,6 @@ void Pci_ScanFunc(pci_func_t f, int type, int bus, int slot, int func, void * ex
 void Pci_ScanSlot(pci_func_t f, int type, int bus, int slot, void * extra);
 void Pci_ScanBus(pci_func_t f, int type, int bus, void * extra);
 void Pci_Scan(pci_func_t f, int type, void * extra);
-void pci_remap(void);
+void Pci_Remap(void);
 int Pci_GetInterrupt(uint32_t device);
+int Pci_Exists(uint32_t vendorId, uint32_t deviceId);

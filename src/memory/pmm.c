@@ -2,128 +2,123 @@
 #include <sipaa/bootsrv.h>
 #include <limine.h>
 
-/// @brief An array defining a stack for the PMM.
-uintptr_t pmm_stack[STACK_SIZE];
+PmmNodeT *Pmm_Head = NULL;
 
-/// @brief The top of 'pmm_stack'
-uint32_t pmm_stack_top;
-
-/// @brief Free blocks
-pmm_memory_block *pmm_free_blocks;
-
-/// @brief The kernel base address
-uintptr_t pmm_kernel_base = 0;
-
-/// @brief The kernel end address
-uintptr_t pmm_kernel_end = 0;
-
-/// @brief The kernel size
-uintptr_t pmm_kernel_size = 0;
-
-/// @brief Free a memory block (internal)
-/// @param block The memory block to free
-void pmm_free_block(void *block)
+void Pmm_Initialize()
 {
-    if (pmm_stack_top == STACK_SIZE)
-        return;
+    PmmNodeT *prev_node = NULL;
 
-    pmm_stack[pmm_stack_top] = (uintptr_t)block;
-    pmm_stack_top++;
+    struct limine_memmap_response *mmap = BootSrv_GetMemoryMap();
+
+    for (int i = 0; i < mmap->entry_count; i++)
+    {
+        struct limine_memmap_entry *entry = mmap->entries[i];
+        if (entry->type == LIMINE_MEMMAP_USABLE)
+        {
+            for (uint64_t j = 0; j < entry->length; j += PAGE_SIZE)
+            {
+                PmmNodeT *cur_node = (PmmNodeT *)(entry->base + j);
+                cur_node->Base = entry->base + j;
+                cur_node->Flags = 0;
+                cur_node->Next = NULL;
+                if (prev_node != NULL)
+                {
+                    prev_node->Next = cur_node;
+                }
+                else
+                {
+                    Pmm_Head = cur_node;
+                }
+                prev_node = cur_node;
+            }
+        }
+    }
 }
 
-/// @brief Allocate a new block from free memory (internal)
-/// @return A memory block
-void *pmm_alloc_block()
+void *Pmm_AllocatePage()
 {
-    if (pmm_stack_top == 0)
-        return NULL;
-
-    pmm_stack_top--;
-    return (void *)pmm_stack[pmm_stack_top];
+    PmmNodeT *node = Pmm_Head;
+    if (node != NULL)
+    {
+        Pmm_Head = node->Next;
+        node->Next = NULL;
+        node->Flags = 1;
+        return (void *)node->Base;
+    }
+    
+    return NULL;
 }
 
-/// @brief Allocate a memory space of the wanted size
-/// @param size The size of the memory block
-/// @return The new memory block. NULL if something did go wrong
+void Pmm_FreePage(void *page)
+{
+    PmmNodeT *node = (PmmNodeT *)page;
+    node->Flags = 0;
+    node->Next = Pmm_Head;
+    Pmm_Head = node;
+}
+
 void *Pmm_Allocate(size_t size)
 {
-    if (size == 0)
-        return NULL;
+    size_t num_pages = (size + PAGE_SIZE - 1) / PAGE_SIZE;
 
-    size += sizeof(pmm_memory_block);
-
-    pmm_memory_block *block = pmm_free_blocks;
-    pmm_memory_block *prev_block = NULL;
-
-    while (block)
+    PmmNodeT *prev_node = NULL;
+    PmmNodeT *cur_node = Pmm_Head;
+    while (cur_node != NULL && num_pages > 0)
     {
-        if (block->is_free && block->size >= size)
+        if (cur_node->Flags == 0)
         {
-            block->is_free = false;
+            cur_node->Flags = 1;
+            num_pages--;
 
-            if (block->size > size + sizeof(pmm_memory_block))
+            if (prev_node == NULL)
             {
-                pmm_memory_block *new_block = (pmm_memory_block *)((uint8_t *)block + size);
-                new_block->size = block->size - size;
-                new_block->next = block->next;
-                new_block->is_free = true;
-
-                block->size = size;
-                block->next = new_block;
+                Pmm_Head = cur_node->Next;
+            }
+            else
+            {
+                prev_node->Next = cur_node->Next;
             }
 
-            return (uint8_t *)block + sizeof(pmm_memory_block);
+            prev_node = cur_node;
+            cur_node = cur_node->Next;
         }
-
-        prev_block = block;
-        block = block->next;
+        else
+        {
+            prev_node = cur_node;
+            cur_node = cur_node->Next;
+        }
     }
 
-    block = (pmm_memory_block *)pmm_alloc_block();
-    if (!block)
+    if (num_pages == 0)
     {
-        return NULL;
+        return (void *)prev_node->Base;
     }
 
-    block->size = size;
-    block->is_free = false;
-    block->next = NULL;
-
-    if (prev_block)
-    {
-        prev_block->next = block;
-    }
-    else
-    {
-        pmm_free_blocks = block;
-    }
-
-    return (uint8_t *)block + sizeof(pmm_memory_block);
+    return NULL;
 }
 
-/// @brief Free a memory space
-/// @param ptr The pointer to the memory space
 void Pmm_Free(void *ptr)
 {
-    if (!ptr)
+    uint64_t addr = (uint64_t)ptr & ~(PAGE_SIZE - 1);
+
+    PmmNodeT *node = Pmm_Head;
+
+    while (node != NULL && node->Base < addr)
     {
-        return;
+        node = node->Next;
     }
 
-    pmm_memory_block *block = (pmm_memory_block *)((uint8_t *)ptr - sizeof(pmm_memory_block));
-    block->is_free = true;
-
-    while (block->next && block->next->is_free)
+    if (node != NULL && node->Base == addr)
     {
-        block->size += block->next->size;
-        block->next = block->next->next;
+        Pmm_Head = node->Next;
     }
+
+    node->Flags = 0;
+
+    node->Next = Pmm_Head;
+    Pmm_Head = node;
 }
 
-/// @brief Reallocate a memory block
-/// @param ptr 
-/// @param size 
-/// @return 
 void* Pmm_Reallocate(void* ptr, size_t size) {
     if (size == 0) {
         Pmm_Free(ptr);
@@ -154,28 +149,4 @@ void* Pmm_Reallocate(void* ptr, size_t size) {
     Pmm_Free(ptr);  // Free the old block
 
     return new_ptr;
-}
-
-/// @brief Initialize the PMM.
-void Pmm_Initialize() {
-    struct limine_memmap_response *mmap = BootSrv_GetMemoryMap();
-    pmm_stack_top = 0;
-
-    for (uint64_t entry = 0; entry < mmap->entry_count; entry++)
-    {
-        struct limine_memmap_entry *mentry = mmap->entries[entry];
-        
-        if (mentry->type == LIMINE_MEMMAP_USABLE)
-        {
-            uintptr_t addr = mentry->base;
-            uint64_t length = mentry->length;
-
-            while (length >= PMM_BLOCK_SIZE)
-            {
-                pmm_free_block((void *)addr);
-                addr += PMM_BLOCK_SIZE;
-                length -= PMM_BLOCK_SIZE;
-            }
-        }
-    }
 }

@@ -23,4 +23,16 @@ struct limine_file *BootSrv_GetModule(int pos);
 /// @brief Get the memory map - Required for the PMM
 struct limine_memmap_response *BootSrv_GetMemoryMap();
 
+/// @brief Get the HHDM offset for converting physical addresses to virtual address and vice-versa.
+/// @return The HHDM offset
+uint64_t BootSrv_GetHHDMOffset();
+
+/// @brief Get a pointer to the physical base of the kernel.
+/// @return A pointer to the physical base of the kernel
+uint64_t *BootSrv_GetKernelPhysicalBase();
+
+/// @brief Get a pointer to the virtual base of the kernel.
+/// @return A pointer to the virtual base of the kernel
+uint64_t *BootSrv_GetKernelVirtualBase();
+
 #endif

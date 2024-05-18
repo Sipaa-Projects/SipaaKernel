@@ -53,6 +53,23 @@ static volatile struct limine_module_request module_request = {
     .revision = 0
 };
 
+static volatile struct limine_hhdm_request hhdm_request = {
+    .id = LIMINE_HHDM_REQUEST,
+    .revision = 1
+};
+
+static volatile struct limine_paging_mode_request paging_mode_request = {
+    .id = LIMINE_PAGING_MODE_REQUEST,
+    .revision = 0,
+    .response = NULL,
+#ifdef __x86_64__
+    .mode = LIMINE_PAGING_MODE_X86_64_4LVL,
+#else
+    .mode = LIMINE_PAGING_MODE_DEFAULT
+#endif
+    .flags = 0
+};
+
 void BootSrv_EnumerateFramebuffers()
 {
     Log(LT_INFO, "BootSrv", "------ FRAMEBUFFERS ------\n");
@@ -60,6 +77,11 @@ void BootSrv_EnumerateFramebuffers()
     {
         Log(LT_INFO, "BootSrv", "Framebuffer %d: Address: %p, Width: %u, Height: %u, Bpp: %u\n", i, fbr.response->framebuffers[i]->address, fbr.response->framebuffers[i]->width, fbr.response->framebuffers[i]->height, fbr.response->framebuffers[i]->bpp);
     }
+}
+
+uint64_t BootSrv_GetHHDMOffset()
+{
+    return hhdm_request.response->offset;
 }
 
 void BootSrv_EnumerateProtocolInfos()
@@ -102,3 +124,6 @@ struct limine_file *BootSrv_GetModule(int pos)
 {
     return module_request.response->modules[pos];
 }
+
+uint64_t *BootSrv_GetKernelPhysicalBase() { return kar.response->physical_base; }
+uint64_t *BootSrv_GetKernelVirtualBase() { return kar.response->virtual_base; }

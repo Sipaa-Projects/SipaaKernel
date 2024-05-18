@@ -65,7 +65,7 @@ iso: kernel
 	@tar -C initrd -cvf bin/ramdisk.tar $(shell find ./initrd -printf '%P\n')
 	@echo [CP] Copying kernel files to the ISO file root...
 	@cp bin/kernel.sk \
-		meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin meta/wallp.bmp bin/ramdisk.tar bin/iso_root/
+		meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin meta/wallp.bmp meta/img.jpg bin/ramdisk.tar bin/iso_root/
 	@echo [XORRISO] sipaakernel.iso
 	@xorriso -as mkisofs -b limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
@@ -85,28 +85,22 @@ clean:
 
 # Run
 run: iso
-	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -boot d -no-reboot -no-shutdown
+	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -boot d -no-reboot -no-shutdown
 
 run-uefi: iso
-	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown
+	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown
 
-run-kvm: iso
-	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -boot d -no-reboot -no-shutdown
-
-run-kvm-uefi: iso
-	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -smp 2 -no-reboot -no-shutdown
-
-run-gtk: iso
-	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga std -boot d -no-reboot -no-shutdown
-
-run-gtk-uefi: iso
-	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown
+run-vmware: iso
+	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -display sdl -vga vmware -boot d -no-reboot -no-shutdown
 
 run-macos: iso
 	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga std -boot d -no-reboot -no-shutdown
 
 run-macos-uefi: iso
 	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown
+
+run-macos-vmware: iso
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -vga vmware -boot d -no-reboot -no-shutdown
 
 debug-int: iso
 	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/sipaakernel.iso -d int -M smm=off -display sdl -boot d -no-reboot -no-shutdown

@@ -7,8 +7,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/// @brief All bytes-per-pixel values
 enum FramebufferBpp
 {
+    /// @brief BPP24 but with alpha channel. More recommended over BPP24.
     BPP32 = 0x20,
     BPP24 = 0x18,
     BPP16 = 0x10,
@@ -41,25 +43,56 @@ struct Framebuffer
 };
 typedef struct Framebuffer FramebufferT;
 
+enum FramebufferGraphicsAcceleration
+{
+    /// @brief The Bochs graphics adapter
+    BOCHSGA,
+
+    /// @brief The VMware SVGA II graphics adapter
+    VMSVGAII,
+
+    /// @brief The Intel i915 driver
+    I915,
+
+    /// @brief No graphics acceleration - pure VBE/GOP.
+    NONE
+};
+typedef enum FramebufferGraphicsAcceleration FramebufferGraphicsAccelerationT;
+
+// Functions used in FramebufferCapabilitesT
+typedef void(*Framebuffer_SetModeT)(FramebufferT *, FramebufferModeT);
+typedef void(*Framebuffer_EnableT)(int);
+
+/// @brief Defines the capabilities of the actual graphics adapter.
+typedef struct FramebufferCapabilities
+{
+    FramebufferGraphicsAccelerationT FramebufferGraphicsAccelertion;
+
+    bool CanSetModes;
+    Framebuffer_SetModeT SetMode;
+    bool CanBeDisabled;
+    Framebuffer_EnableT Enable;
+
+    FramebufferModeT MaxMode;
+};
+typedef struct FramebufferCapabilities FramebufferCapabilitiesT;
+
 /// @brief Initialize the framebuffer
 void Fbuf_Initialize();
 
 /// @brief Resize the framebuffer, if supported.
-/// @param width The new width. Must be a multiple of 8 and less than 2560.
-/// @param height The new height. Must be less than 1600.
-/// @param bpp The BPP (bytes per pixel)
-/// @param clearScreen If set to true, clear the screen before setting the mode.
-/// @remark Framebuffer mode change is only supported with BGA (Bochs Graphics Adapter)
-void Fbuf_SetMode(uint32_t width, uint32_t height, FramebufferBppT bpp, bool clearScreen);
+/// @param mode The new mode
+/// @remark Framebuffer mode change is only supported with BGA (Bochs Graphics Adapter) and VMware SVGA II
+void Fbuf_SetMode(FramebufferModeT mode);
 
 /// @brief Get the max mode supported.
 /// @return A framebuffer mode.
 /// @remark If the max mode is unknown, the returned mode will be 0x0x4 (with pitch: 0)
 FramebufferModeT Fbuf_GetMaxMode();
 
-/// @brief Get the current framebuffer mode.
-/// @return A framebuffer mode.
-FramebufferModeT Fbuf_GetCurrentMode();
+/// @brief Get a pointer to the framebuffer.
+/// @return A framebuffer.
+FramebufferT *Fbuf_Get();
 
 /// @brief Enable/disable the framebuffer. Only supported with BGA.
 /// @param enabled True -> enabled, False -> disabled.

@@ -9,6 +9,9 @@
 //#include <sipaa/fs/ramdisk.h>
 #include <sipaa/x86_64/gdt.h>
 #include <sipaa/x86_64/idt.h>
+#include <sipaa/x86_64/vmm.h>
+#include <sipaa/pci.h>
+#include <sipaa/framebuffer.h>
 
 void usr_main() {}
 
@@ -25,9 +28,16 @@ void SKEntry()
     Idt_Initialize();
 
     Pmm_Initialize();
-    //RamDisk_Initialize();
+    vmm_init();
 
-    asm("int $0x03");
+    // At this point, SK should crash since the framebuffer doesn't use virtual addresses right now.
+    /**Fbuf_Initialize();
+
+    FramebufferT *fb = Fbuf_Get();
+    uint32_t *fbufaddr = fb->Address;
+    
+    for (int i = 0; i < fb->Size; i++)
+        fbufaddr[i] = 0xFFFFFF;**/
 
     for(;;) ;;
 }

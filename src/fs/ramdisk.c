@@ -1,67 +1,103 @@
-/*
+#include <sipaa/fs/ramdisk.h>
+#include <sipaa/bootsrv.h>
 #include <sipaa/logger.h>
 #include <sipaa/pmm.h>
-#include <sipaa/bootsrv.h>
-#include <sipaa/memory.h>
 #include <sipaa/libc/string.h>
+#include <stdbool.h>
 #include <limine.h>
-#include <tar.h>
 
-struct limine_file *initrd = NULL;
-struct ustar_header *tarfile = NULL;
-unsigned int num_headers = 0;
+FilesystemNodeT *RamDisk_Node;
+TarHeaderT **RamDisk_Headers;
+struct limine_file *RamDisk_File;
+unsigned int RamDisk_HeaderCount;
+bool RamDisk_Created = false;
 
-int ramdisk_read_file(const char *filename, void *addr, size_t nbytes)
+unsigned int getsize(const char *in)
 {
-    unsigned int i;
-    for (i = 0; ; i++)
+    unsigned int size = 0;
+    unsigned int j;
+    unsigned int count = 1;
+
+    for (j = 11; j > 0; j--, count *= 8)
+        size += ((in[j - 1] - '0') * count);
+
+    return size;
+}
+
+void RamDisk_Read(struct FilesystemNode* vnode, uint32_t offset, uint32_t count, char* buffer)
+{
+    if (vnode)
     {
-        struct TarHeader *header = headers[i];
 
-        if (CompareStrings(header->filename, filename) == 0)
+    }
+}
+
+const char *ramdisk_get_file_content(const char *filename, unsigned int *size)
+{
+    for (unsigned int i = 0; i < RamDisk_HeaderCount; i++)
+    {
+        if (CompareStrings(RamDisk_Headers[i]->FileName, filename) == 0)
         {
-            size_t size = (size_t)getsize(header->size);
-            if (nbytes > size)
-                return -2;
-            
-            void *ctaddr = initrd->address + (512 * i) + 512;
-
-            memcpy(addr, (void *)ctaddr, nbytes);
-
-            return size;
+            *size = getsize(RamDisk_Headers[i]->Size);
+            return (const char *)((uintptr_t)RamDisk_Headers[i] + 512); // Add the header size to the header pointer. If changing the size (512), you will have total bull$hit!
         }
     }
-
-    return -1;
+    *size = 0;
+    return NULL;
 }
 
-void RamDisk_Initialize()
+FilesystemNodeT *RamDisk_Create(unsigned int address)
 {
-    Log(LT_INFO, "RamDisk", "Trying getting ramdisk module...\n");
+    // Check if already created
+    if (RamDisk_Created)
+        return RamDisk_Node;
 
-    // In SipaaKernel, the ramdisk should ALWAYS be the first module.
-    initrd = BootSrv_GetModule(0);
-    if (!initrd)
+    // Get the ramdisk from limine
+    RamDisk_File = BootSrv_GetModule(0);
+    if (!RamDisk_File)
     {
-        Log(LT_WARNING, "RamDisk", "No ramdisk present! Skipping the ramdisk initialization process...\n");
-        return;
+        Log(LT_WARNING, "RamDisk", "No ramdisk available!\n");
+        return NULL;
     }
 
-    Log(LT_INFO, "RamDisk", "Parsing ramdisk...\n");
+    // Parse the ramdisk
+    unsigned int i;
 
-    tarfile = (struct ustar_header *)initrd->address;
+    for (i = 0;; i++)
+    {
+        TarHeaderT *header = (TarHeaderT *)address;
 
-    struct ustar_header *header = tarfile;
-    while (strcmp(header->name, "./") != 0 || header->size[0] != '\0') {
-        // Process file contents
-        // ...
-        Log(LT_INFO, "RamDisk", "File %s", hea)
+        if (header->FileName[0] == '\0')
+            break;
 
-        // Move to next header
-        void *next_header_ptr = (void *)header + ALIGN(header->size, 512) + 512;
-        header = (struct ustar_header *)next_header_ptr;
+        unsigned int size = getsize(header->Size);
+
+        if (i == RamDisk_HeaderCount) {
+            RamDisk_HeaderCount += 16; // increase by 16 each time
+            RamDisk_Headers = Pmm_Reallocate(RamDisk_Headers, RamDisk_HeaderCount * sizeof(struct TarHeader*));
+            if (!RamDisk_Headers) {
+                // handle allocation error
+                Log(LT_ERROR, "RamDisk", "Pmm_Reallocate failed! Halting system");
+                for (;;) ;;
+            }
+        }
+
+        RamDisk_Headers[i] = header;
+
+        address += ((size / 512) + 1) * 512;
+
+        if (size % 512)
+            address += 512;
     }
 
-    Log(LT_INFO, "RamDisk", "Ramdisk parsed!\n");
+    RamDisk_Headers = Pmm_Reallocate(RamDisk_Headers, i * sizeof(TarHeaderT*));
+
+    // Create & return a file system node.
+    RamDisk_Node = Pmm_Allocate(sizeof(FilesystemNodeT*));
+    RamDisk_Node->Name = "ramdisk";
+    RamDisk_Node->Read = RamDisk_Read;
+
+    RamDisk_Created = true;
+
+    return RamDisk_Node;
 }
-*/

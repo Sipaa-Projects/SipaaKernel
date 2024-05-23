@@ -7,6 +7,9 @@ enum LogType {
     LT_INFO,
     LT_WARNING,
     LT_ERROR,
+    LT_SUCCESS,
+    LT_FATAL,
+    LT_DEBUG,
     LT_LENGTH
 };
 

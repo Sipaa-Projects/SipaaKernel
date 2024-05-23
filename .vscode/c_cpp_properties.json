@@ -14,14 +14,12 @@
         {
             "name": "SipaaKernel",
             "includePath": [
-                "${workspaceFolder}/src/include",
-                "${workspaceFolder}/src/trdparty"
+                "${workspaceFolder}/src/include"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/i686-sipaa-gcc",
+            "compilerPath": "/usr/local/bin/x86_64-elf-gcc",
             "cStandard": "c17",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "gcc-x86"
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4

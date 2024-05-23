@@ -56,6 +56,9 @@
         "memory.h": "c",
         "vmsvgaii.h": "c",
         "stb_image.h": "c",
-        "emmintrin.h": "c"
+        "emmintrin.h": "c",
+        "stdint-gcc.h": "c",
+        "nighterm.h": "c",
+        "types.h": "c"
     }
 }

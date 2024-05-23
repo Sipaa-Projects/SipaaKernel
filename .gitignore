@@ -10,3 +10,5 @@ obj-AArch64/
 bin/
 obj/
 *.o
+limine.dSYM/
+.vscode/

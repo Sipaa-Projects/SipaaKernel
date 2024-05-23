@@ -9,9 +9,19 @@ bool created = false;
 char *hello = NULL;
 size_t hello_size = 6; // The size of the hello string, including the null terminator
 
-void HelloFS_Read(struct FilesystemNode* vnode, uint32_t offset, uint32_t count, uint8_t* buffer)
+void HelloFS_Read(struct FilesystemNode* vnode, UI32 offset, UI32 count, UI8* buffer)
 {
+    if (count > (hello_size - offset))
+        buffer = NULL;
 
+    if (buffer == NULL)
+        return;
+
+
+    for (int i = offset; i < count; i++)
+    {
+        buffer[i] = hello[i];
+    } 
 }
 
 FilesystemNodeT *HelloFS_Create()
@@ -20,6 +30,7 @@ FilesystemNodeT *HelloFS_Create()
         return NULL;
 
     hello = Pmm_Allocate(hello_size);
+    *hello = "Hello"; 
 
     hellofs_node = (FilesystemNodeT *)Pmm_Allocate(sizeof(FilesystemNodeT));
     hellofs_node->Read = HelloFS_Read;

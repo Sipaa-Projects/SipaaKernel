@@ -1,5 +1,6 @@
 #include <sipaa/x86_64/idt.h>
 #include <sipaa/x86_64/io.h>
+#include <sipaa/x86_64/io.h>
 #include <sipaa/logger.h>
 #include <sipaa/kdebug.h>
 
@@ -171,6 +172,7 @@ void Idt_Initialize()
     outb(0xa1, 0x00);
 
     Idt_Load();
+    //asm("sti");
 }
 
 /**void save_state(registers_t *regs)
@@ -191,6 +193,9 @@ void restore_state(registers_t *regs)
 
 void general_interrupt_handler(RegistersT *regs)
 {
+    if (regs->int_no != 32)
+        Log(LT_DEBUG, "CPU", "Received interrupt %u\n", regs->int_no);
+
     if (regs->int_no < 32)
     {
         Dbg_SystemPanic();
@@ -209,30 +214,23 @@ void general_interrupt_handler(RegistersT *regs)
     }
     else
     {
-        /**if (regs->int_no == 32)
+        if (regs->int_no == 32)
         {
-            tick++;
-            save_state(regs);
-            schedule();
-            restore_state(regs);
+            //tick++;
+            //save_state(regs);
+            //schedule();
+            //restore_state(regs);
 
-            pic_eoi();
+            //pic_eoi();
         }
         else if (regs->int_no == 33)
         {
             uint8_t scancode = inb(0x60);
             if (scancode < 0x80)
             {
-                char key = keymap[scancode];
-                if (key)
-                {
-                    char str[2] = {key, '\0'};
-                    printf("%s", str);
-                }
+                Log(LT_DEBUG, "CPU", "PS/2 keyboard interrupt.");
             }
-
-            pic_eoi();
-        }**/
+        }
         Idt_EndOfInterrupt();
     }
 }

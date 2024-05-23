@@ -4,7 +4,7 @@
 #ifndef __FRAMEBUFFER_H
 #define __FRAMEBUFFER_H
 
-#include <stdint.h>
+#include <sipaa/libc/types.h>
 #include <stdbool.h>
 
 /// @brief All bytes-per-pixel values
@@ -22,24 +22,24 @@ typedef enum FramebufferBpp FramebufferBppT;
 
 struct FramebufferMode
 {
-    uint32_t Width, Height, Pitch;
+    UI32 Width, Height, Pitch;
     FramebufferBppT Bpp;
 };
 typedef struct FramebufferMode FramebufferModeT;
 
 struct Framebuffer
 {
-    uint64_t Address;
+    UI64 Address;
     int Size;
 
     FramebufferModeT Mode;
 
-    uint8_t RedMaskShift;
-    uint8_t RedMaskSize;
-    uint8_t GreenMaskShift;
-    uint8_t GreenMaskSize;
-    uint8_t BlueMaskShift;
-    uint8_t BlueMaskSize;
+    UI8 RedMaskShift;
+    UI8 RedMaskSize;
+    UI8 GreenMaskShift;
+    UI8 GreenMaskSize;
+    UI8 BlueMaskShift;
+    UI8 BlueMaskSize;
 };
 typedef struct Framebuffer FramebufferT;
 
@@ -79,6 +79,9 @@ typedef struct FramebufferCapabilities FramebufferCapabilitiesT;
 
 /// @brief Initialize the framebuffer
 void Fbuf_Initialize();
+
+/// @brief Initialize the graphics acceleration.
+void Fbuf_InitializeGPU();
 
 /// @brief Resize the framebuffer, if supported.
 /// @param mode The new mode

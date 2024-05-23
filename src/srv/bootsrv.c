@@ -70,6 +70,12 @@ static volatile struct limine_paging_mode_request paging_mode_request = {
     .flags = 0
 };
 
+static volatile struct limine_smp_request _smp_request = {
+    .id = LIMINE_SMP_REQUEST,
+    .revision = 0, 
+    .response = NULL
+};
+
 void BootSrv_EnumerateFramebuffers()
 {
     Log(LT_INFO, "BootSrv", "------ FRAMEBUFFERS ------\n");
@@ -77,6 +83,12 @@ void BootSrv_EnumerateFramebuffers()
     {
         Log(LT_INFO, "BootSrv", "Framebuffer %d: Address: %p, Width: %u, Height: %u, Bpp: %u\n", i, fbr.response->framebuffers[i]->address, fbr.response->framebuffers[i]->width, fbr.response->framebuffers[i]->height, fbr.response->framebuffers[i]->bpp);
     }
+}
+
+
+struct limine_bootloader_info_response *BootSrv_GetBootloaderInfo()
+{
+    return bir.response;
 }
 
 uint64_t BootSrv_GetHHDMOffset()
@@ -94,8 +106,8 @@ void BootSrv_EnumerateProtocolInfos()
     // Display the information
     Log(LT_INFO, "BootSrv", "-- PROOCOL INFO START ------\n");
     Log(LT_INFO, "BootSrv", "%s %s (booted on a %s %s system)\n", bir.response->name, bir.response->version, KARCHITECTURE, firmware);
-    Log(LT_INFO, "BootSrv", "Kernel physical address: \"0x%x\"\n", kar.response->physical_base);
-    Log(LT_INFO, "BootSrv", "Kernel virtual address: \"0x%x\"\n", kar.response->virtual_base);
+    Log(LT_INFO, "BootSrv", "Kernel physical address: 0x%x\n", kar.response->physical_base);
+    Log(LT_INFO, "BootSrv", "Kernel virtual address: 0x%x\n", kar.response->virtual_base);
     Log(LT_INFO, "BootSrv", "Kernel command line: \"%s\"\n", kfr.response->kernel_file->cmdline);
     BootSrv_EnumerateFramebuffers();
     
@@ -123,6 +135,18 @@ struct limine_memmap_response *BootSrv_GetMemoryMap()
 struct limine_file *BootSrv_GetModule(int pos)
 {
     return module_request.response->modules[pos];
+}
+
+struct limine_smp_info *BootSrv_GetCPU(int pos)
+{
+    if (pos < _smp_request.response->cpu_count)
+    {
+        return _smp_request.response->cpus[pos];
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 uint64_t *BootSrv_GetKernelPhysicalBase() { return kar.response->physical_base; }

@@ -1,11 +1,13 @@
 #include <sipaa/pmm.h>
 #include <sipaa/bootsrv.h>
+#include <sipaa/logger.h>
 #include <limine.h>
 
 PmmNodeT *Pmm_Head = NULL;
 
 void Pmm_Initialize()
 {
+    Log(LT_INFO, "Pmm", "Starting initialization\n");
     PmmNodeT *prev_node = NULL;
 
     struct limine_memmap_response *mmap = BootSrv_GetMemoryMap();
@@ -13,6 +15,8 @@ void Pmm_Initialize()
     for (int i = 0; i < mmap->entry_count; i++)
     {
         struct limine_memmap_entry *entry = mmap->entries[i];
+        uint64_t length_mb = entry->length / 1024;
+        Log(LT_INFO, "Pmm", "Entry: Type: %d, Base: 0x%x, Size: %dkb\n", entry->type, entry->base, length_mb);
         if (entry->type == LIMINE_MEMMAP_USABLE)
         {
             for (uint64_t j = 0; j < entry->length; j += PAGE_SIZE)

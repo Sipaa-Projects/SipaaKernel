@@ -7,6 +7,13 @@
 // Define structure for mounted filesystem
 
 Vfs_MountPointT mount_points[50];
+FilesystemNodeT *root;
+
+VfsStatusT Vfs_SetRoot(FilesystemNodeT *node)
+{
+    if (node != NULL)
+        root = node;
+}
 
 int Vfs_Mount(const char *target, FilesystemNodeT *node)
 {

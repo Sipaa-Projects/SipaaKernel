@@ -35,4 +35,8 @@ uint64_t *BootSrv_GetKernelPhysicalBase();
 /// @return A pointer to the virtual base of the kernel
 uint64_t *BootSrv_GetKernelVirtualBase();
 
+/// @brief Get a CPU
+/// @return SMP information of the CPU. NULL if the cpu pos is too high.
+struct limine_smp_info *BootSrv_GetCPU(int pos);
+
 #endif

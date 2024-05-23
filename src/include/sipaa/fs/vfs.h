@@ -1,7 +1,7 @@
 /// @brief SipaaKernel's VFS
 #pragma once
 
-#include <stdint.h>
+#include <sipaa/libc/types.h>
 
 // Path separator
 #define FS_PATHSEP '/'
@@ -43,7 +43,7 @@ typedef enum VfsStatus VfsStatusT;
 
 struct DirectoryEntry {
   char* Name;
-  uint32_t Inode;
+  UI32 Inode;
 };
 
 typedef struct DirectoryEntry DirectoryEntryT;
@@ -51,12 +51,12 @@ typedef struct DirectoryEntry DirectoryEntryT;
 
 struct FilesystemNode {
   char* Name;
-  uint32_t Permissions;
-  uint32_t Type;
-  uint32_t Size;
-  uint32_t Inode;
-  void(*Read)(struct FilesystemNode* vnode, uint32_t offset, uint32_t count, uint8_t* buffer);
-  DirectoryEntryT*(*ReadDirectory)(struct FilesystemNode* vnode, uint32_t index);
+  UI32 Permissions;
+  UI32 Type;
+  UI32 Size;
+  UI32 Inode;
+  void(*Read)(struct FilesystemNode* vnode, UI32 offset, UI32 count, UI8* buffer);
+  DirectoryEntryT*(*ReadDirectory)(struct FilesystemNode* vnode, UI32 index);
   struct FilesystemNode*(*FindDirectory)(struct FilesystemNode* vnode, char* path);
 };
 

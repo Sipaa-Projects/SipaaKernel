@@ -12,6 +12,16 @@
 FramebufferT Framebuffer = { };
 FramebufferCapabilitiesT Framebuffer_Capabilities = { };
 
+void Fbuf_SetupBasicCapabilities()
+{
+    Framebuffer_Capabilities.CanBeDisabled = false;
+    Framebuffer_Capabilities.Enable = (Framebuffer_EnableT)0;
+    Framebuffer_Capabilities.CanSetModes = false;
+    Framebuffer_Capabilities.SetMode = (Framebuffer_SetModeT)0;
+    Framebuffer_Capabilities.FramebufferGraphicsAccelertion = NONE;
+    Framebuffer_Capabilities.MaxMode = Framebuffer.Mode;
+}
+
 void Fbuf_Initialize()
 {
     struct limine_framebuffer *fb = BootSrv_GetFramebuffer(0);
@@ -29,7 +39,7 @@ void Fbuf_Initialize()
         Framebuffer.Mode.Bpp = fb->bpp;
 
         Framebuffer.RedMaskShift = fb->red_mask_shift;
-        Framebuffer.RedMaskShift = fb->red_mask_size;
+        Framebuffer.RedMaskSize = fb->red_mask_size;
         Framebuffer.GreenMaskShift = fb->green_mask_shift;
         Framebuffer.GreenMaskSize = fb->green_mask_size;
         Framebuffer.BlueMaskShift = fb->blue_mask_shift;
@@ -37,24 +47,29 @@ void Fbuf_Initialize()
 
         Log(LT_INFO, "Framebuffer", "Initializing framebuffer capabilities structure...\n");
 
-        Framebuffer_Capabilities.CanBeDisabled = false;
-        Framebuffer_Capabilities.Enable = (Framebuffer_EnableT)0;
-        Framebuffer_Capabilities.CanSetModes = false;
-        Framebuffer_Capabilities.SetMode = (Framebuffer_SetModeT)0;
-        Framebuffer_Capabilities.FramebufferGraphicsAccelertion = NONE;
-        Framebuffer_Capabilities.MaxMode.Width = fb->width;
-        Framebuffer_Capabilities.MaxMode.Height = fb->height;
-        Framebuffer_Capabilities.MaxMode.Pitch = fb->pitch;
-        Framebuffer_Capabilities.MaxMode.Bpp = fb->bpp;
+        Fbuf_SetupBasicCapabilities();
+
+        Log(LT_INFO, "Framebuffer", "The framebuffer is now available\n");
+        return;
     }
 
+    Log(LT_WARNING, "Framebuffer", "No framebuffer available! Good luck with the serial console!\n");
+    Framebuffer.Address = (UI64)0;
+}
+
+void Fbuf_InitializeGPU()
+{
     Log(LT_INFO, "Framebuffer", "Checking for available graphics accelerations\n");
 
     if (Pci_Exists(0x15AD, 0x0405))
     {
         Log(LT_INFO, "Framebuffer", "Found a VMware SVGA II!\n");
         
-        VMSVGA_Install(&Framebuffer, &Framebuffer_Capabilities);
+        if (!VMSVGA_Install(&Framebuffer, &Framebuffer_Capabilities))
+        {
+            Log(LT_INFO, "Framebuffer", "Unfortunately, the VMware SVGA II adapter installation failed. We will stick to the bootloader-provided framebuffer.\n");
+            return;
+        }
 
         Log(LT_INFO, "Framebuffer", "Installed the VMware SVGA II!\n");
         return;
@@ -73,8 +88,6 @@ void Fbuf_Initialize()
 
         return;
     }
-
-    Log(LT_WARNING, "Framebuffer", "No framebuffer available! Good luck with the serial console!\n");
 }
 
 void Fbuf_SetMode(FramebufferModeT mode)

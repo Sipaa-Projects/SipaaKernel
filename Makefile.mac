@@ -1,3 +1,4 @@
+# This Makefile assumes you installed GNU tools with the Homebrew package manager.
 MAKEFLAGS += --no-print-directory
 
 ARCH=x86_64
@@ -64,7 +65,7 @@ iso: kernel
 	@rm -rf bin/iso_root
 	@mkdir -p bin/iso_root
 	@echo [TAR] ramdisk.tar
-	@tar -C initrd -cvf bin/ramdisk.tar $(shell find ./initrd -printf '%P\n')
+	@tar -C initrd -cvf bin/ramdisk.tar $(shell gfind ./initrd -printf '%P\n')
 	@echo [CP] Copying kernel files to the ISO file root...
 	@cp bin/kernel.sk \
 		meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin meta/wallp.bmp meta/img.jpg bin/ramdisk.tar bin/iso_root/
@@ -87,13 +88,13 @@ clean:
 
 # Run
 run: iso
-	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga std -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -vga std -boot d -no-reboot -no-shutdown -smp 2
 
 run-uefi: iso
-	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown -smp 2
 
 run-vmware: iso
-	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga vmware -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -vga vmware -boot d -no-reboot -no-shutdown -smp 2
 
 debug-int: iso
 	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -d int -M smm=off -display sdl -boot d -no-reboot -no-shutdown -smp 2
@@ -102,4 +103,4 @@ debug: iso
 	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -s -S -display sdl -boot d -no-reboot -no-shutdown -smp 2
 
 debug-accel: iso
-	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -s -S -display sdl -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -m 1g -accel hvf -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -s -S -display sdl -boot d -no-reboot -no-shutdown -smp 2

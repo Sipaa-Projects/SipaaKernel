@@ -15,27 +15,27 @@ SECTIONS
 {
     . = 0xffffffff80000000;
 
-    TextStartLD = .;
+    text_start_ld = .;
 
     .text : {
         *(.text .text.*)
     } :text
 
-    TextEndLD = .;
+    text_end_ld = .;
 
     . += CONSTANT(MAXPAGESIZE);
 
-    RoDataStartLD = .;
+    rodata_start_ld = .;
 
     .rodata : {
         *(.rodata .rodata.*)
     } :rodata
 
-    RoDataEndLD = .;
+    rodata_end_ld = .;
     
     . += CONSTANT(MAXPAGESIZE);
 
-    DataStartLD = .;
+    data_start_ld = .;
 
     .data : {
         *(.data .data.*)
@@ -50,7 +50,7 @@ SECTIONS
         *(COMMON)
     } :data
 
-    DataEndLD = .;
+    data_end_ld = .;
 
     /DISCARD/ : {
         *(.eh_frame)

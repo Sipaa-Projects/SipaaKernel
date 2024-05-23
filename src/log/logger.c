@@ -1,8 +1,10 @@
 // SipaaKernel implementation for the logger
 #include <sipaa/logger.h>
-//#include <sipaa/conio.h>
+#include <sipaa/drv/conio.h>
 #include <stdint.h>
 #include <sipaa/kdebug.h>
+
+#define SK_SHOWDBGLINES
 
 int logger_enabled = 1; // 1 : true, 0 : false
 
@@ -10,18 +12,27 @@ int logger_enabled = 1; // 1 : true, 0 : false
 char *lineColors[LT_LENGTH] = {
     "\033[36m",
     "\033[33m",
-    "\033[31m"};
+    "\033[31m"
+    "\033[35m",
+    "\033[30m",
+    "\033[34m",};
 
 /// @brief The line colors for the graphical console.
 uint32_t graphicalLineColors[LT_LENGTH] = {
     0x03b6fc,
     0xfcc203,
-    0xff0000};
+    0xff0000,
+    0xB200DE,
+    0x505050,
+    0x00DF86};
 
 char *lineStarts[LT_LENGTH] = {
     "Info =>",
     "Warn =>",
-    "Error =>"};
+    "Error =>",
+    "Success =>",
+    "Fatal =>",
+    "Debug =>"};
 
 /*
 const char *deftermcolor = "";
@@ -50,7 +61,7 @@ void shared_vprintf(char *format, va_list args)
 
     npf_vsnprintf(buf, sizeof(buf), format, args);
 
-    //conio_print(buf);
+    ConIO_Print(buf);
 
     if (debugger_ready)
         Dbg_Print(buf);
@@ -58,7 +69,7 @@ void shared_vprintf(char *format, va_list args)
 
 void shared_print(char *buf)
 {
-    //conio_print(buf);
+    ConIO_Print(buf);
 
     if (debugger_ready)
         Dbg_Print(buf);
@@ -66,7 +77,7 @@ void shared_print(char *buf)
 
 void shared_chfg(enum LogType type)
 {
-    //conio_chfg(graphicalLineColors[type]);
+    ConIO_SetFg(graphicalLineColors[type]);
 
     if (debugger_ready)
         Dbg_Print(lineColors[type]);
@@ -74,7 +85,7 @@ void shared_chfg(enum LogType type)
 
 void shared_rstcol()
 {
-    //conio_rstcol();
+    ConIO_ResetColor();
 
     if (debugger_ready)
         Dbg_Print("\033[0m");
@@ -84,6 +95,11 @@ void __internal_log(char *file, char *line, enum LogType type, char *message, ..
 {
     if (logger_enabled != 1)
         return;
+
+    #ifndef SK_SHOWDBGLINES
+    if (type == LT_DEBUG)
+        return;
+    #endif
 
     shared_chfg(type);
     shared_print(lineStarts[type]);

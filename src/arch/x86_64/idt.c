@@ -6,6 +6,7 @@
 
 IdtEntryT idt[256];
 uint64_t pit_ticks = 0;
+bool Idt_PendingReboot = false;
 
 extern void Idt_Load();
 
@@ -130,6 +131,8 @@ void Idt_SetEntry(int i, uint64_t base, uint16_t sel, uint8_t flags)
     idt[i].zero = 0;
 }
 
+void Idt_PrepareReboot() { Idt_PendingReboot = true; }
+
 void Idt_Initialize()
 {
     Idt_SetEntry(0, (uint64_t)&isr0, 0x08, 0x8E);
@@ -193,10 +196,10 @@ void restore_state(registers_t *regs)
 
 void general_interrupt_handler(RegistersT *regs)
 {
-    if (regs->int_no != 32)
+    if (regs->int_no != 32 && !Idt_PendingReboot)
         Log(LT_DEBUG, "CPU", "Received interrupt %u\n", regs->int_no);
 
-    if (regs->int_no < 32)
+    if (regs->int_no < 32 && !Idt_PendingReboot)
     {
         Dbg_SystemPanic();
 

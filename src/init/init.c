@@ -16,17 +16,21 @@
 #include <sipaa/drv/conio.h>
 #include <sipaa/framebuffer.h>
 #include <sipaa/uptime.h>
+#include <sipaa/exec/elf.h>
+#include <sipaa/klang.h>
 
 void usr_main() {}
 
 uint64_t kernel_stack[8192];
+
+extern void SK_Reboot();
 
 void SKEntry()
 {
     Dbg_Initialize(Com1);
     Fbuf_Initialize();
     ConIO_Initialize();
-    ConIO_Print("Welcome to SipaaKernel!\n");
+    ConIO_Print(KLANG_WELCOMETOSK);
 
     Log(LT_INFO, "Kernel", "Starting initialization\n");
     
@@ -44,7 +48,13 @@ void SKEntry()
     Log(LT_SUCCESS, "Kernel", "SipaaKernel has been fully initialized. Halting system.\n");
 
     asm("sti");
-    
+
+    struct limine_file *elf = BootSrv_GetModule(1);
+    void (*entry)(void) = (void (*)(void))Elf64_Load((char *)elf->address);
+    //entry();
+
+    SK_Reboot();
+
     for(;;)
     {
         asm("hlt");

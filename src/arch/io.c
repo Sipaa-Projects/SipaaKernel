@@ -59,3 +59,13 @@ uint16_t inw(uint16_t port)
     __asm__ volatile("inw %1, %0" : "=a" (value) : "d" (port));
     return value;
 }
+
+void IO_Delay(uint32_t ms)
+{
+    uint32_t count = ms * 1193;
+    outb(0x43, 0x36);
+    outb(0x40, count & 0xFF);
+    outb(0x40, (count >> 8) & 0xFF);
+    while (inb(0x40) & 0x80)
+        ;
+}

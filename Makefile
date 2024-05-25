@@ -1,5 +1,6 @@
 MAKEFLAGS += --no-print-directory
 
+KLANG=EN
 ARCH=x86_64
 
 INCLUDEDIR=src/include
@@ -16,6 +17,7 @@ LD = x86_64-elf-ld
 CFLAGS := \
 	-w \
 	-std=gnu++11 \
+	-D__SIPAAKERNEL_KLANG_$(KLANG) \
 	-ffreestanding \
 	-fno-stack-protector \
 	-fpermissive \
@@ -50,8 +52,8 @@ $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 
 kernel: $(OBJS) $(ASMS)
 	@mkdir -p $(BINDIR)
-	@echo [LD] kernel.sk
-	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o $(BINDIR)/kernel.sk
+	@echo [LD] kernel-$(ARCH).sk
+	@$(LD) $(LD_FLAGS) $(OBJS) $(ASMS) -o $(BINDIR)/kernel-$(ARCH).sk -Map=$(BINDIR)/kernel-$(ARCH).sk.map
 
 # Compile C files
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
@@ -66,8 +68,8 @@ iso: kernel
 	@echo [TAR] ramdisk.tar
 	@tar -C initrd -cvf bin/ramdisk.tar $(shell find ./initrd -printf '%P\n')
 	@echo [CP] Copying kernel files to the ISO file root...
-	@cp bin/kernel.sk \
-		meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin meta/wallp.bmp meta/img.jpg bin/ramdisk.tar bin/iso_root/
+	@cp meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin meta/wallp.bmp meta/program.elf bin/ramdisk.tar bin/iso_root/
+	@cp bin/kernel-$(ARCH).sk bin/iso_root/kernel.sk
 	@echo [XORRISO] Sk-$(ARCH).iso
 	@xorriso -as mkisofs -b limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
@@ -87,19 +89,19 @@ clean:
 
 # Run
 run: iso
-	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga std -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga std -boot d  -no-shutdown -smp 2
 
 run-uefi: iso
-	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d  -no-shutdown -smp 2
 
 run-vmware: iso
-	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga vmware -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga vmware -boot d  -no-shutdown -smp 2
 
 debug-int: iso
-	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -d int -M smm=off -display sdl -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -d int -M smm=off -display sdl -boot d  -no-shutdown -smp 2
 
 debug: iso
-	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -s -S -display sdl -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -s -S -display sdl -boot d  -no-shutdown -smp 2
 
 debug-accel: iso
-	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -s -S -display sdl -boot d -no-reboot -no-shutdown -smp 2
+	qemu-system-x86_64 -m 1g -accel kvm -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -s -S -display sdl -boot d  -no-shutdown -smp 2

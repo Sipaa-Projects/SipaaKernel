@@ -1,6 +1,9 @@
 # Changelogs
 
-## Latest version (0.1.0, Flowing River)
+## Latest version (0.2.0, Flowing River)
+* Not released yet.
+
+## 0.1.0 (Flowing River)
 ### drv
 * drv: Port ConIO driver from older SipaaKernel versions.
 * framebuffer: Split the initialization process into 2 functions

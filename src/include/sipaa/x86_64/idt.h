@@ -88,4 +88,5 @@ extern uint64_t isr33;
 
 extern uint64_t CR2_Read();
 
+void Idt_PrepareReboot();
 void Idt_Initialize();

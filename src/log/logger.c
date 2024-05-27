@@ -7,6 +7,8 @@
 #define SK_SHOWDBGLINES
 
 int logger_enabled = 1; // 1 : true, 0 : false
+int logger_enableserial = 1;
+int logger_enableconio = 1;
 
 /// @brief The line colors for the serial console.
 char *lineColors[LT_LENGTH] = {
@@ -61,33 +63,37 @@ void shared_vprintf(char *format, va_list args)
 
     npf_vsnprintf(buf, sizeof(buf), format, args);
 
-    ConIO_Print(buf);
+    if (logger_enableconio)
+        ConIO_Print(buf);
 
-    if (debugger_ready)
+    if (debugger_ready && logger_enableserial)
         Dbg_Print(buf);
 }
 
 void shared_print(char *buf)
 {
-    ConIO_Print(buf);
+    if (logger_enableconio)
+        ConIO_Print(buf);
 
-    if (debugger_ready)
+    if (debugger_ready && logger_enableserial)
         Dbg_Print(buf);
 }
 
 void shared_chfg(enum LogType type)
 {
-    ConIO_SetFg(graphicalLineColors[type]);
+    if (logger_enableconio)
+        ConIO_SetFg(graphicalLineColors[type]);
 
-    if (debugger_ready)
+    if (debugger_ready && logger_enableserial)
         Dbg_Print(lineColors[type]);
 }
 
 void shared_rstcol()
 {
-    ConIO_ResetColor();
+    if (logger_enableconio)
+        ConIO_ResetColor();
 
-    if (debugger_ready)
+    if (debugger_ready && logger_enableserial)
         Dbg_Print("\033[0m");
 }
 

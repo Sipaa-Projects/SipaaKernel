@@ -49,11 +49,16 @@ void SKEntry()
 
     asm("sti");
 
-    struct limine_file *elf = BootSrv_GetModule(1);
-    void (*entry)(void) = (void (*)(void))Elf64_Load((char *)elf->address);
+    struct limine_file *kernel = BootSrv_GetModule(-2);
+    
+    Log(LT_INFO, "TestArea", "Name: %s", kernel->path);
+
+    Elf64_Ehdr *kehdr = (Elf64_Ehdr *)kernel->address;
+    Elf64_Shdr *kshdr = (Elf64_Shdr *)kehdr->e_shoff;
+    
     //entry();
 
-    SK_Reboot();
+    //SK_Reboot();
 
     for(;;)
     {

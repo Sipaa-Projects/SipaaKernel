@@ -95,6 +95,7 @@ void *Pmm_Allocate(size_t size)
 
     if (num_pages == 0)
     {
+        Log(LT_DEBUG, "Pmm", "Allocated memory block: Size: %d, Base: %p\n", size, (void *)prev_node->Base);
         return (void *)prev_node->Base;
     }
 
@@ -121,6 +122,8 @@ void Pmm_Free(void *ptr)
 
     node->Next = Pmm_Head;
     Pmm_Head = node;
+
+    Log(LT_DEBUG, "Pmm", "Freed memory block at %p", ptr);
 }
 
 void* Pmm_Reallocate(void* ptr, size_t size) {

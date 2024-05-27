@@ -17,6 +17,9 @@ enum LogType {
 extern "c" {
 #endif
 
+extern int logger_enableserial;
+extern int logger_enableconio;
+
 void __internal_log(char *file, char *line, enum LogType type, char *message, ...);
 
 void Logger_SetEnabled(int enabled);

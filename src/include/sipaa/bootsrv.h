@@ -18,6 +18,7 @@ void BootSrv_EnumerateProtocolInfos();
 struct limine_framebuffer *BootSrv_GetFramebuffer(int number);
 
 /// @brief Get a module provided by Limine
+/// @remark If the pos argument is -2, the kernel file will be returned.
 struct limine_file *BootSrv_GetModule(int pos);
 
 /// @brief Get the memory map - Required for the PMM

@@ -8,7 +8,7 @@
 #include <sipaa/bootsrv.h>
 #include <limine.h>
 
-extern uint64_t *vmm_kernel_pml4;
+extern uint64_t *vmm_kernel_address_space;
 
 #define PTE_PRESENT 1ull
 #define PTE_WRITABLE (1ull << 1)
@@ -34,8 +34,7 @@ extern SymbolT data_start_ld;
 extern SymbolT data_end_ld;
 
 void Vmm_Initialize();
-uint64_t *Vmm_NewPML4();
-void vmm_switch_pml4(uint64_t *pml4);
-void vmm_map(uint64_t *pml4, uint64_t vaddr, uint64_t paddr, uint64_t flags);
-void vmm_unmap(uint64_t *pml4, uint64_t vaddr);
-void print_kernel_size();
+uint64_t *Vmm_NewAddressSpace();
+void Vmm_SwitchAddressSpaces(uint64_t *pml4);
+void Vmm_Map(uint64_t *pml4, uint64_t vaddr, uint64_t paddr, uint64_t flags);
+void Vmm_Unmap(uint64_t *pml4, uint64_t vaddr);

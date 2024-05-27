@@ -2,13 +2,13 @@
 #include <sipaa/bootsrv.h>
 #include <sipaa/logger.h>
 
-uint64_t *vmm_kernel_address_space;
+uint64_t *vmm_kernel_pml4;
 
 void Vmm_Initialize()
 {
     Log(LT_INFO, "Vmm", "Starting initialization: Creating kernel's PML4...\n");
-    vmm_kernel_address_space = (uint64_t *)VIRTUAL_TO_PHYSICAL(Pmm_AllocatePage());
-    memset(vmm_kernel_address_space, 0, PAGE_SIZE);
+    vmm_kernel_pml4 = (uint64_t *)VIRTUAL_TO_PHYSICAL(Pmm_AllocatePage());
+    memset(vmm_kernel_pml4, 0, PAGE_SIZE);
 
     Log(LT_INFO, "Vmm", "Mapping kernel's ELF sections...\n");
     uint64_t phys_base = BootSrv_GetKernelPhysicalBase();
@@ -22,38 +22,38 @@ void Vmm_Initialize()
     uint64_t data_end = ALIGN_UP((uint64_t)data_end_ld, PAGE_SIZE);
 
     for (uint64_t text = text_start; text < text_end; text += PAGE_SIZE)
-        Vmm_Map(vmm_kernel_address_space, text, text - virt_base + phys_base, PTE_PRESENT | PTE_USER);
+        vmm_map(vmm_kernel_pml4, text, text - virt_base + phys_base, PTE_PRESENT | PTE_USER);
     for (uint64_t rodata = rodata_start; rodata < rodata_end; rodata += PAGE_SIZE)
-        Vmm_Map(vmm_kernel_address_space, rodata, rodata - virt_base + phys_base, PTE_PRESENT | PTE_NX | PTE_USER);
+        vmm_map(vmm_kernel_pml4, rodata, rodata - virt_base + phys_base, PTE_PRESENT | PTE_NX | PTE_USER);
     for (uint64_t data = data_start; data < data_end; data += PAGE_SIZE)
-        Vmm_Map(vmm_kernel_address_space, data, data - virt_base + phys_base, PTE_PRESENT | PTE_WRITABLE | PTE_NX | PTE_USER);
+        vmm_map(vmm_kernel_pml4, data, data - virt_base + phys_base, PTE_PRESENT | PTE_WRITABLE | PTE_NX | PTE_USER);
     for (uint64_t gb4 = 0; gb4 < 0x100000000; gb4 += PAGE_SIZE)
     {
-        Vmm_Map(vmm_kernel_address_space, gb4, gb4, PTE_PRESENT | PTE_WRITABLE | PTE_USER);
-        Vmm_Map(vmm_kernel_address_space, (uint64_t)VIRTUAL_TO_PHYSICAL(gb4), gb4, PTE_PRESENT | PTE_WRITABLE | PTE_USER);
+        vmm_map(vmm_kernel_pml4, gb4, gb4, PTE_PRESENT | PTE_WRITABLE | PTE_USER);
+        vmm_map(vmm_kernel_pml4, (uint64_t)VIRTUAL_TO_PHYSICAL(gb4), gb4, PTE_PRESENT | PTE_WRITABLE | PTE_USER);
     }
 
     Log(LT_INFO, "Vmm", "Switching to the kernel's PML4...\n");
-    Vmm_SwitchAddressSpaces(vmm_kernel_address_space);
+    vmm_switch_pml4(vmm_kernel_pml4);
     Log(LT_SUCCESS, "Vmm", "Initialization done!\n");
 }
 
-uint64_t *Vmm_NewAddressSpace()
+uint64_t *vmm_new_pml4()
 {
     uint64_t *pml4 = (uint64_t *)VIRTUAL_TO_PHYSICAL(Pmm_AllocatePage());
     memset(pml4, 0, PAGE_SIZE);
     for (size_t i = 256; i < 512; i++)
-        pml4[i] = vmm_kernel_address_space[i];
+        pml4[i] = vmm_kernel_pml4[i];
         
     return pml4;
 }
 
-void Vmm_SwitchAddressSpaces(uint64_t *pml4)
+void vmm_switch_pml4(uint64_t *pml4)
 {
     __asm__ volatile("mov %0, %%cr3" ::"r"((uint64_t)PHYSICAL_TO_VIRTUAL(pml4)) : "memory");
 }
 
-void Vmm_Map(uint64_t *pml4, uint64_t vaddr, uint64_t paddr, uint64_t flags)
+void vmm_map(uint64_t *pml4, uint64_t vaddr, uint64_t paddr, uint64_t flags)
 {
     uint64_t pml1_entry = (vaddr >> 12) & 0x1ff;
     uint64_t pml2_entry = (vaddr >> 21) & 0x1ff;
@@ -99,7 +99,7 @@ void Vmm_Map(uint64_t *pml4, uint64_t vaddr, uint64_t paddr, uint64_t flags)
     pml1[pml1_entry] = paddr | flags;
 }
 
-void Vmm_Unmap(uint64_t *pml4, uint64_t vaddr)
+void vmm_unmap(uint64_t *pml4, uint64_t vaddr)
 {
     uint64_t pml1_entry = (vaddr >> 12) & 0x1ff;
     uint64_t pml2_entry = (vaddr >> 21) & 0x1ff;
@@ -122,8 +122,7 @@ void Vmm_Unmap(uint64_t *pml4, uint64_t vaddr)
     __asm__ volatile("invlpg (%0)" ::"b"(vaddr) : "memory");
 }
 
-/** 
-void compute_kernel_size()
+void print_kernel_size()
 {
     uint64_t text_size = ALIGN_UP((uint64_t)text_end_ld, PAGE_SIZE) - ALIGN_DOWN((uint64_t)text_start_ld, PAGE_SIZE);
     uint64_t rodata_size = ALIGN_UP((uint64_t)rodata_end_ld, PAGE_SIZE) - ALIGN_DOWN((uint64_t)rodata_start_ld, PAGE_SIZE);
@@ -132,4 +131,3 @@ void compute_kernel_size()
     uint64_t kernel_size = text_size + rodata_size + data_size;
     uint64_t kernel_size_kb = kernel_size / 1024;
 }
-**/

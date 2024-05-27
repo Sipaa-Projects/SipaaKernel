@@ -134,7 +134,10 @@ struct limine_memmap_response *BootSrv_GetMemoryMap()
 
 struct limine_file *BootSrv_GetModule(int pos)
 {
-    return module_request.response->modules[pos];
+    if (pos == -2)
+        return kfr.response->kernel_file;
+    else
+        return module_request.response->modules[pos];
 }
 
 struct limine_smp_info *BootSrv_GetCPU(int pos)

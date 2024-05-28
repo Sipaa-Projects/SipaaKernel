@@ -14,14 +14,23 @@ It features an easy & elegant API.
 > SipaaKernel is only in his first developement stages, and isn't ready for production use.
 
 ## Objectives
-SipaaKernel aims to be:
+SipaaKernel aims to:
 
-* Usable for everyday use
-* Performant
-* Easy
-* Linux and NT-compatible (use the same syscalls, same APIs), making application porting easier.
+* Have POSIX compilancy
+* Be usable for everyday use
+* Be performant
+* Be easy
+* Be Linux and NT-compatible (use the same syscalls, same APIs), making application porting easier.
 
 ## Q&A
 
 ### Will it have a desktop environment & apps?
 Nope. SipaaKernel is just an operating system kernel: the userspace (CLI commands, libraries, apps) needs to be built manually. (writing one from scratch, or using existing software)
+
+## Credits
+### Kernel components
+* Charles Nicolson: The `printf` implementation used in SipaaKernel (don't expect me to write one without breaking everything :() )
+* Mintsuki & Limine contributors: The Limine bootloader, the Limine boot protocol and finally, Flanterm.
+
+### Special Thanks
+* Kokolor: My friend, which did put me in OSDev. Also helped me with multiple things

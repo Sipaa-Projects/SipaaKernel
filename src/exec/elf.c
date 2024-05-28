@@ -36,7 +36,7 @@ uint64_t Elf64_Load(const char *img)
 
             for (uintptr_t addr = seg_start; addr < seg_end; addr += PAGE_SIZE)
             {
-                vmm_map(vmm_kernel_pml4, addr, addr - seg_start + (uintptr_t)seg, PTE_PRESENT | PTE_WRITABLE);
+                Vmm_Map(vmm_kernel_address_space, addr, addr - seg_start + (uintptr_t)seg, PTE_PRESENT | PTE_WRITABLE);
             }
         }
     }

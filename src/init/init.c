@@ -11,6 +11,7 @@
 #include <sipaa/x86_64/gdt.h>
 #include <sipaa/x86_64/idt.h>
 #include <sipaa/x86_64/vmm.h>
+#include <sipaa/x86_64/pit.h>
 #include <sipaa/bootsrv.h>
 #include <sipaa/pci.h>
 #include <sipaa/drv/conio.h>
@@ -18,12 +19,59 @@
 #include <sipaa/uptime.h>
 #include <sipaa/exec/elf.h>
 #include <sipaa/klang.h>
+#include <sipaa/heap.h>
+#include <sipaa/process.h>
+#include <sipaa/syscall.h>
 
 void usr_main() {}
 
 uint64_t kernel_stack[8192];
 
 extern void SK_Reboot();
+
+void *execute_syscall(uint64_t num, ...)
+{
+    void *params[6];
+
+    va_list arg_list;
+    va_start(arg_list, num);
+
+    for (int j = 0; j < 6; j++)
+    {
+        void *param = va_arg(arg_list, void *);
+        if (param == NULL)
+            params[j] = 0;
+        else
+            params[j] = param;
+    }
+
+    __asm__ volatile(
+        "movq %0, %%rax;"
+        "movq %1, %%rdi;"
+        "movq %2, %%rsi;"
+        "movq %3, %%rdx;"
+        "movq %4, %%r10;"
+        "movq %5, %%r8;"
+        "movq %6, %%r9;"
+        "int $0x80;"
+        :
+        : "r"((uint64_t)num), "r"((uint64_t)params[0]), "r"((uint64_t)params[1]), "r"((uint64_t)params[2]), "r"((uint64_t)params[3]), "r"((uint64_t)params[4]), "r"((uint64_t)params[5])
+        : "rax", "rdi", "rsi", "rdx", "r10", "r8");
+
+    va_end(arg_list);
+    void *result;
+    __asm__ volatile("" : "=a"(result) : : "memory");
+    return result;
+}
+
+int Task1()
+{
+    Log(LT_INFO, "Task1", "Hello world from Task1!\n");
+
+    execute_syscall(0, "Hello, World!\n");
+
+    return 0;
+}
 
 void SKEntry()
 {
@@ -40,28 +88,21 @@ void SKEntry()
     Idt_Initialize();
 
     Pmm_Initialize();
+    KHeap_Initialize();
     Vmm_Initialize();
-    
-    Fbuf_InitializeGPU();
 
-    Log(LT_INFO, "Kernel", "Uptime counter is %d.%d\n", UptimeCounter_GetSeconds(), UptimeCounter_GetMilliseconds());
-    Log(LT_SUCCESS, "Kernel", "SipaaKernel has been fully initialized. Halting system.\n");
+    Fbuf_InitializeGPU();
+    
+    Syscall_Initialize();
+    Process_Init();
+    Pit_Initialize(1000);
+
+    Process_Create("Task1", Task1);
+
+    Log(LT_SUCCESS, "Kernel", "SipaaKernel has been fully initialized!\n");
 
     asm("sti");
 
-    struct limine_file *kernel = BootSrv_GetModule(-2);
-    
-    Log(LT_INFO, "TestArea", "Name: %s", kernel->path);
-
-    Elf64_Ehdr *kehdr = (Elf64_Ehdr *)kernel->address;
-    Elf64_Shdr *kshdr = (Elf64_Shdr *)kehdr->e_shoff;
-    
-    //entry();
-
-    //SK_Reboot();
-
     for(;;)
-    {
-        asm("hlt");
-    }
+        ;;
 }

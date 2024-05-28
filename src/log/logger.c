@@ -66,8 +66,8 @@ void shared_vprintf(char *format, va_list args)
     if (logger_enableconio)
         ConIO_Print(buf);
 
-    if (debugger_ready && logger_enableserial)
-        Dbg_Print(buf);
+    /**if (debugger_ready && logger_enableserial)
+        Dbg_Print(buf);**/
 }
 
 void shared_print(char *buf)
@@ -75,8 +75,8 @@ void shared_print(char *buf)
     if (logger_enableconio)
         ConIO_Print(buf);
 
-    if (debugger_ready && logger_enableserial)
-        Dbg_Print(buf);
+    /**if (debugger_ready && logger_enableserial)
+        Dbg_Print(buf);**/
 }
 
 void shared_chfg(enum LogType type)
@@ -84,8 +84,8 @@ void shared_chfg(enum LogType type)
     if (logger_enableconio)
         ConIO_SetFg(graphicalLineColors[type]);
 
-    if (debugger_ready && logger_enableserial)
-        Dbg_Print(lineColors[type]);
+    /**if (debugger_ready && logger_enableserial)
+        Dbg_Print(lineColors[type]);**/
 }
 
 void shared_rstcol()
@@ -93,8 +93,8 @@ void shared_rstcol()
     if (logger_enableconio)
         ConIO_ResetColor();
 
-    if (debugger_ready && logger_enableserial)
-        Dbg_Print("\033[0m");
+    /**if (debugger_ready && logger_enableserial)
+        Dbg_Print("\033[0m");**/
 }
 
 void __internal_log(char *file, char *line, enum LogType type, char *message, ...)

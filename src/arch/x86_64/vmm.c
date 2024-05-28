@@ -3,6 +3,7 @@
 #include <sipaa/logger.h>
 
 uint64_t *vmm_kernel_address_space;
+uint64_t *vmm_current_address_space;
 
 void Vmm_Initialize()
 {
@@ -50,6 +51,9 @@ uint64_t *Vmm_NewAddressSpace()
 
 void Vmm_SwitchAddressSpaces(uint64_t *pml4)
 {
+    if (!pml4) return;
+    
+    vmm_current_address_space = pml4;
     __asm__ volatile("mov %0, %%cr3" ::"r"((uint64_t)PHYSICAL_TO_VIRTUAL(pml4)) : "memory");
 }
 

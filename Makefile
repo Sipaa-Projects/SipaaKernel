@@ -89,13 +89,16 @@ clean:
 
 # Run
 run: iso
-	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga std -boot d  -no-shutdown -smp 2
+	qemu-system-x86_64 -accel kvm -m 1g -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -vga std -boot d  -no-shutdown -smp 2
 
 run-uefi: iso
-	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d  -no-shutdown -smp 2
+	qemu-system-x86_64 -accel kvm -m 1g -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -vga std -bios /usr/share/edk2/x64/OVMF.fd -boot d  -no-shutdown -smp 2
 
 run-vmware: iso
-	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga vmware -boot d  -no-shutdown -smp 2
+	qemu-system-x86_64 -accel kvm -m 1g -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -vga vmware -boot d  -no-shutdown -smp 2
+
+run-serial: iso
+	qemu-system-x86_64 -accel kvm -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -display sdl -vga std -boot d  -no-shutdown -smp 2
 
 debug-int: iso
 	qemu-system-x86_64 -m 1g -serial stdio -cdrom ./$(BINDIR)/Sk-$(ARCH).iso -d int -M smm=off -display sdl -boot d  -no-shutdown -smp 2

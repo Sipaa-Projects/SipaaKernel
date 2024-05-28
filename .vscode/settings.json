@@ -59,6 +59,9 @@
         "emmintrin.h": "c",
         "stdint-gcc.h": "c",
         "nighterm.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "*.tcc": "c",
+        "process.h": "c",
+        "compare": "cpp"
     }
 }

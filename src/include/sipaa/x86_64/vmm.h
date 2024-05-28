@@ -9,6 +9,7 @@
 #include <limine.h>
 
 extern uint64_t *vmm_kernel_address_space;
+extern uint64_t *vmm_current_address_space;
 
 #define PTE_PRESENT 1ull
 #define PTE_WRITABLE (1ull << 1)

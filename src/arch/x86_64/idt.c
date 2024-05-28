@@ -1,10 +1,16 @@
 #include <sipaa/x86_64/idt.h>
 #include <sipaa/x86_64/io.h>
-#include <sipaa/x86_64/io.h>
+#include <sipaa/x86_64/vmm.h>
+#include <sipaa/x86_64/pit.h>
+#include <sipaa/libc/string.h>
+#include <sipaa/process.h>
+#include <sipaa/heap.h>
 #include <sipaa/logger.h>
 #include <sipaa/kdebug.h>
+#include <stddef.h>
 
 IdtEntryT idt[256];
+IsrHandler isrh[256]; 
 uint64_t pit_ticks = 0;
 bool Idt_PendingReboot = false;
 
@@ -47,53 +53,6 @@ static char *exception_messages[] = {
     "Reserved",
     "Reserved"};
 
-static char keymap[128] = {
-    [0x02] = '1',
-    [0x03] = '2',
-    [0x04] = '3',
-    [0x05] = '4',
-    [0x06] = '5',
-    [0x07] = '6',
-    [0x08] = '7',
-    [0x09] = '8',
-    [0x0A] = '9',
-    [0x0B] = '0',
-
-    [0x10] = 'q',
-    [0x11] = 'w',
-    [0x12] = 'e',
-    [0x13] = 'r',
-    [0x14] = 't',
-    [0x15] = 'y',
-    [0x16] = 'u',
-    [0x17] = 'i',
-    [0x18] = 'o',
-    [0x19] = 'p',
-
-    [0x1E] = 'a',
-    [0x1F] = 's',
-    [0x20] = 'd',
-    [0x21] = 'f',
-    [0x22] = 'g',
-    [0x23] = 'h',
-    [0x24] = 'j',
-    [0x25] = 'k',
-    [0x26] = 'l',
-
-    [0x2C] = 'z',
-    [0x2D] = 'x',
-    [0x2E] = 'c',
-    [0x2F] = 'v',
-    [0x30] = 'b',
-    [0x31] = 'n',
-    [0x32] = 'm',
-
-    [0x1C] = '\n',
-    [0x39] = ' ',
-    [0x0E] = '\b',
-
-};
-
 void Idt_PicRemap()
 {
     uint8_t a1, a2;
@@ -135,6 +94,11 @@ void Idt_PrepareReboot() { Idt_PendingReboot = true; }
 
 void Idt_Initialize()
 {
+    for (int i = 0; i < 256; i++)
+    {
+        isrh[i] = NULL;
+    }
+
     Idt_SetEntry(0, (uint64_t)&isr0, 0x08, 0x8E);
     Idt_SetEntry(1, (uint64_t)&isr1, 0x08, 0x8E);
     Idt_SetEntry(2, (uint64_t)&isr2, 0x08, 0x8E);
@@ -168,6 +132,22 @@ void Idt_Initialize()
     Idt_SetEntry(31, (uint64_t)&isr31, 0x08, 0x8E);
     Idt_SetEntry(32, (uint64_t)&isr32, 0x08, 0x8E);
     Idt_SetEntry(33, (uint64_t)&isr33, 0x08, 0x8E);
+    Idt_SetEntry(34, (uint64_t)&isr34, 0x08, 0x8E);
+    Idt_SetEntry(35, (uint64_t)&isr35, 0x08, 0x8E);
+    Idt_SetEntry(36, (uint64_t)&isr36, 0x08, 0x8E);
+    Idt_SetEntry(37, (uint64_t)&isr37, 0x08, 0x8E);
+    Idt_SetEntry(38, (uint64_t)&isr38, 0x08, 0x8E);
+    Idt_SetEntry(39, (uint64_t)&isr39, 0x08, 0x8E);
+    Idt_SetEntry(40, (uint64_t)&isr40, 0x08, 0x8E);
+    Idt_SetEntry(41, (uint64_t)&isr41, 0x08, 0x8E);
+    Idt_SetEntry(42, (uint64_t)&isr42, 0x08, 0x8E);
+    Idt_SetEntry(43, (uint64_t)&isr43, 0x08, 0x8E);
+    Idt_SetEntry(44, (uint64_t)&isr44, 0x08, 0x8E);
+    Idt_SetEntry(45, (uint64_t)&isr45, 0x08, 0x8E);
+    Idt_SetEntry(46, (uint64_t)&isr46, 0x08, 0x8E);
+    Idt_SetEntry(47, (uint64_t)&isr47, 0x08, 0x8E);
+    Idt_SetEntry(48, (uint64_t)&isr48, 0x08, 0x8E);
+    Idt_SetEntry(128, (uint64_t)&isr128, 0x08, 0x8E);
 
     Idt_PicRemap();
 
@@ -178,21 +158,36 @@ void Idt_Initialize()
     //asm("sti");
 }
 
-/**void save_state(registers_t *regs)
+void Idt_SetIsrHandler(int vector, IsrHandler isr)
+{
+    // The Idt_SetIsrHandler function does not allow setting ISRs for exceptions.
+    // (btw if it was allowed, it still won't run the handler since the panic handler is integrated)
+    if (vector < 32)
+        return;
+
+    // Do NOT overwrite non-null handlers
+    if (isrh[vector] != NULL)
+        return;
+
+    // Now, we can set the handler.
+    isrh[vector] = isr;
+}
+
+void Idt_SaveState(RegistersT *regs)
 {
     if (current_process != NULL)
     {
-        memcpy(&current_process->regs, regs, sizeof(registers_t));
+        memcpy(&current_process->regs, regs, sizeof(RegistersT));
     }
 }
 
-void restore_state(registers_t *regs)
+void Idt_RestoreState(RegistersT *regs)
 {
     if (current_process != NULL)
     {
-        memcpy(regs, &current_process->regs, sizeof(registers_t));
+        memcpy(regs, &current_process->regs, sizeof(RegistersT));
     }
-}**/
+}
 
 void general_interrupt_handler(RegistersT *regs)
 {
@@ -201,39 +196,40 @@ void general_interrupt_handler(RegistersT *regs)
 
     if (regs->int_no < 32 && !Idt_PendingReboot)
     {
+        if (regs->int_no == 14)
+        {
+            if (vmm_current_address_space == current_process->pml4)
+            {
+                int pid = current_process->pid;
+
+                Process_Exit(current_process);
+
+                Log(LT_ERROR, "CPU", "Process %d exited due to a segmentation fault... At least, i didn't panic!\n", pid);
+
+                asm("int $32");
+                return;
+            }
+        }
+
         Dbg_SystemPanic();
 
-        Log(LT_ERROR, "CPU", "Exception: %s\n", exception_messages[regs->int_no]);
-        Log(LT_ERROR, "CPU", "Interrupt number: %d\n", regs->int_no);
-        Log(LT_ERROR, "CPU", "Error code: %d\n", regs->err_code);
-        Log(LT_ERROR, "CPU", "RIP: %x\n", regs->rip);
-        Log(LT_ERROR, "CPU", "CS: %x\n", regs->cs);
-        Log(LT_ERROR, "CPU", "RFLAGS: %x\n", regs->rflags);
-        Log(LT_ERROR, "CPU", "RSP: %x\n", regs->rsp);
-        Log(LT_ERROR, "CPU", "SS: %x\n", regs->ss);
+        Log(LT_FATAL, "CPU", "Exception: %s\n", exception_messages[regs->int_no]);
+        Log(LT_FATAL, "CPU", "Interrupt number: %d\n", regs->int_no);
+        Log(LT_FATAL, "CPU", "Error code: %d\n", regs->err_code);
+        Log(LT_FATAL, "CPU", "RIP: %x\n", regs->rip);
+        Log(LT_FATAL, "CPU", "CS: %x\n", regs->cs);
+        Log(LT_FATAL, "CPU", "RFLAGS: %x\n", regs->rflags);
+        Log(LT_FATAL, "CPU", "RSP: %x\n", regs->rsp);
+        Log(LT_FATAL, "CPU", "SS: %x\n", regs->ss);
 
         while (1)
             ;
     }
     else
     {
-        if (regs->int_no == 32)
-        {
-            //tick++;
-            //save_state(regs);
-            //schedule();
-            //restore_state(regs);
+        if (isrh[regs->int_no] != NULL)
+            isrh[regs->int_no](regs);
 
-            //pic_eoi();
-        }
-        else if (regs->int_no == 33)
-        {
-            uint8_t scancode = inb(0x60);
-            if (scancode < 0x80)
-            {
-                Log(LT_DEBUG, "CPU", "PS/2 keyboard interrupt.");
-            }
-        }
         Idt_EndOfInterrupt();
     }
 }

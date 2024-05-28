@@ -1,7 +1,29 @@
 # Changelogs
 
-## Latest version (0.2.0, Flowing River)
-* Not released yet.
+## Latest version (0.1.5, Flowing River)
+### arch
+* idt: Add handlers for more IRQs and syscalls
+* vmm: New variable "vmm_current_address_space"
+* pit: Implement PIT
+
+### log
+* logger: Disable serial output by default
+
+### memory
+* heap: Implement heap memory.
+
+### process
+* process: Implement process scheduler
+
+### srv
+* bootsrv: Add support for getting ACPI (R/X)SDP.
+
+### sys
+* acpi: Add ACPI RSDP detection
+
+### syscall
+* syscall: Start implementation
+* syscall: Add print syscall
 
 ## 0.1.0 (Flowing River)
 ### drv

@@ -18,6 +18,13 @@
 #define KARCHITECTURE "Unknown Architecture"
 #endif
 
+// Please, for the love of Limine, don't optimize these.
+
+static volatile struct limine_rsdp_request rsdp_request = {
+  .id = LIMINE_RSDP_REQUEST,
+  .revision = 0
+};
+
 static volatile struct limine_bootloader_info_request bir = {
     .id = LIMINE_BOOTLOADER_INFO_REQUEST,
     .revision = 0
@@ -85,6 +92,10 @@ void BootSrv_EnumerateFramebuffers()
     }
 }
 
+struct limine_rsdp_response *BootSrv_GetAcpiRSDP()
+{
+    return rsdp_request.response;
+}
 
 struct limine_bootloader_info_response *BootSrv_GetBootloaderInfo()
 {

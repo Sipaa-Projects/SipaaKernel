@@ -3,6 +3,7 @@
 #include <sipaa/x86_64/io.h>
 #include <sipaa/pmm.h>
 #include <nanoprintf/printf.h>
+#include <sipaa/logger.h>
 
 unsigned short current_sp;
 bool debugger_ready = false;
@@ -41,7 +42,7 @@ bool Dbg_Initialize(unsigned short sp)
 
     current_sp = sp;
     debugger_ready = true;
-
+    
     return true;
 }
 

@@ -14,6 +14,9 @@ struct BootSrv_MBoot2Info {
 /// @brief Enumerate all infos provided by Limine.
 void BootSrv_EnumerateProtocolInfos();
 
+/// @brief Get the ACPI RSDP address.
+struct limine_rsdp_response *BootSrv_GetAcpiRSDP();
+
 /// @brief Get a framebuffer from Limine.
 struct limine_framebuffer *BootSrv_GetFramebuffer(int number);
 

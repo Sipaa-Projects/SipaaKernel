@@ -52,6 +52,8 @@ typedef struct Registers
     uint64_t ss;
 } __attribute__((packed)) RegistersT;
 
+typedef void(*IsrHandler)(RegistersT *);
+
 extern uint64_t isr0;
 extern uint64_t isr1;
 extern uint64_t isr2;
@@ -85,8 +87,25 @@ extern uint64_t isr30;
 extern uint64_t isr31;
 extern uint64_t isr32;
 extern uint64_t isr33;
+extern uint64_t isr34;
+extern uint64_t isr35;
+extern uint64_t isr36;
+extern uint64_t isr37;
+extern uint64_t isr38;
+extern uint64_t isr39;
+extern uint64_t isr40;
+extern uint64_t isr41;
+extern uint64_t isr42;
+extern uint64_t isr43;
+extern uint64_t isr44;
+extern uint64_t isr45;
+extern uint64_t isr46;
+extern uint64_t isr47;
+extern uint64_t isr48;
+extern uint64_t isr128;
 
 extern uint64_t CR2_Read();
 
+void Idt_SetIsrHandler(int vector, IsrHandler isr);
 void Idt_PrepareReboot();
 void Idt_Initialize();

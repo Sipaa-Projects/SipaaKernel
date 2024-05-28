@@ -3,7 +3,7 @@
 #include <sipaa/x86_64/vmm.h>
 #include <sipaa/x86_64/pit.h>
 #include <sipaa/libc/string.h>
-#include <sipaa/process.h>
+#include <sipaa/sched.h>
 #include <sipaa/heap.h>
 #include <sipaa/logger.h>
 #include <sipaa/kdebug.h>
@@ -202,7 +202,7 @@ void general_interrupt_handler(RegistersT *regs)
             {
                 int pid = current_process->pid;
 
-                Process_Exit(current_process);
+                Scheduler_ExitProcess(current_process);
 
                 Log(LT_ERROR, "CPU", "Process %d exited due to a segmentation fault... At least, i didn't panic!\n", pid);
 

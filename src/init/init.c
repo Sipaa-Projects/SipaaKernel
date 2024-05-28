@@ -20,7 +20,7 @@
 #include <sipaa/exec/elf.h>
 #include <sipaa/klang.h>
 #include <sipaa/heap.h>
-#include <sipaa/process.h>
+#include <sipaa/sched.h>
 #include <sipaa/syscall.h>
 
 void usr_main() {}
@@ -94,12 +94,13 @@ void SKEntry()
     Fbuf_InitializeGPU();
     
     Syscall_Initialize();
-    Process_Init();
+    Scheduler_Initialize();
     Pit_Initialize(1000);
 
-    Process_Create("Task1", Task1);
+    Scheduler_CreateProcess("Task1", Task1);
 
-    Log(LT_SUCCESS, "Kernel", "SipaaKernel has been fully initialized!\n");
+    Log(LT_SUCCESS, "Kernel", "SipaaKernel has been fully initialized! We will now hide logs.\n");
+    Logger_SetEnabled(0);
 
     asm("sti");
 

@@ -1,6 +1,6 @@
 #include <sipaa/x86_64/pit.h>
 #include <sipaa/x86_64/idt.h>
-#include <sipaa/process.h>
+#include <sipaa/sched.h>
 
 uint32_t tick = 0;
 
@@ -8,7 +8,7 @@ void Pit_Handler(RegistersT *regs)
 {
     tick++;
 
-    Schedule(regs);
+    Scheduler_Schedule(regs);
 }
 
 void Pit_Initialize(uint32_t frequency)

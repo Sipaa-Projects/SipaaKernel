@@ -1,7 +1,7 @@
 section .text
-global Process_ContextSwitch
+global Scheduler_ContextSwitch
 
-Process_ContextSwitch:
+Scheduler_ContextSwitch:
     push rax
     push rbx
     push rcx

@@ -18,11 +18,11 @@ typedef struct Process
 extern ProcessT *current_process;
 extern ProcessT *process_list;
 
-void Process_Init();
-ProcessT *Process_Create(char *name, int (*entry_point)());
-void Process_Exit(ProcessT *proc);
-void Schedule(RegistersT *regs);
+void Scheduler_Initialize();
+ProcessT *Scheduler_CreateProcess(char *name, int (*entry_point)());
+void Scheduler_ExitProcess(ProcessT *proc);
+void Scheduler_Schedule(RegistersT *regs);
 
-extern void Process_ContextSwitch(RegistersT *regs);
+extern void Scheduler_ContextSwitch(RegistersT *regs);
 
 #endif

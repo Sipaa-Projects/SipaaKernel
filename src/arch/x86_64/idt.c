@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 #include <sipaa/x86_64/idt.h>
 #include <sipaa/x86_64/io.h>
 #include <sipaa/x86_64/vmm.h>
@@ -189,6 +191,23 @@ void Idt_RestoreState(RegistersT *regs)
     }
 }
 
+struct Idt_StackFrame {
+    struct Idt_StackFrame* rbp;
+    uint64_t rip;
+}__attribute__((packed));
+
+void Idt_DumpBackTrace(RegistersT *r)
+{
+    Log(LT_FATAL, "CPU", "Backtrace : \n");
+    struct Idt_StackFrame* frame = (struct Idt_StackFrame*)r->rbp;
+
+    while (frame) {
+        Log(LT_FATAL, "CPU", "- %p\n", frame->rip);
+        frame = frame->rbp;
+    }
+
+}
+
 void general_interrupt_handler(RegistersT *regs)
 {
     if (regs->int_no != 32 && !Idt_PendingReboot)
@@ -211,7 +230,7 @@ void general_interrupt_handler(RegistersT *regs)
             }
         }
 
-        Dbg_SystemPanic();
+        //Dbg_SystemPanic();
 
         Log(LT_FATAL, "CPU", "Exception: %s\n", exception_messages[regs->int_no]);
         Log(LT_FATAL, "CPU", "Interrupt number: %d\n", regs->int_no);
@@ -221,6 +240,8 @@ void general_interrupt_handler(RegistersT *regs)
         Log(LT_FATAL, "CPU", "RFLAGS: %x\n", regs->rflags);
         Log(LT_FATAL, "CPU", "RSP: %x\n", regs->rsp);
         Log(LT_FATAL, "CPU", "SS: %x\n", regs->ss);
+
+        Idt_DumpBackTrace(regs);
 
         while (1)
             ;
@@ -233,3 +254,5 @@ void general_interrupt_handler(RegistersT *regs)
         Idt_EndOfInterrupt();
     }
 }
+
+#endif

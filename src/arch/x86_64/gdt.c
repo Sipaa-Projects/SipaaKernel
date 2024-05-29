@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 #include <sipaa/x86_64/gdt.h>
 #include <sipaa/logger.h>
 #include <sipaa/memory.h>
@@ -69,3 +71,5 @@ void Gdt_SetKernelStack(void *stack)
 {
     tss_entry.rsp0 = (uint64_t)stack;
 }
+
+#endif

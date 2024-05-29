@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 #include <sipaa/x86_64/vmm.h>
 #include <sipaa/bootsrv.h>
 #include <sipaa/logger.h>
@@ -137,3 +139,5 @@ void compute_kernel_size()
     uint64_t kernel_size_kb = kernel_size / 1024;
 }
 **/
+
+#endif

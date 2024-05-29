@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 #include <sipaa/libc/types.h>
 #include <sipaa/exec/elf.h>
 #include <sipaa/logger.h>
@@ -44,3 +46,5 @@ uint64_t Elf64_Load(const char *img)
     Log(LT_SUCCESS, "ElfLoad", "Loaded ELF file. Entry: %p\n", hdr->e_entry);
     return hdr->e_entry;
 }
+
+#endif

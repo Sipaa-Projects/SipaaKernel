@@ -10,10 +10,12 @@
  * but it has been removed for the moment.
  *
  * TODO: Implement MSI configuration?
+ * TODO: SKDevs: PCI should be available on AArch64, but this implementation is only for x86_64...
  *
- * @copyright
- * Copyright (C) 2011-2021 K. Lange
+ * @copyright Copyright (C) 2011-2021 K. Lange
  */
+
+#ifdef __x86_64__
 
 #include <stdint.h>
 #include <sipaa/libc/string.h>
@@ -164,3 +166,5 @@ int Pci_Exists(uint32_t vendorId, uint32_t deviceId)
 
 	return *found;
 }
+
+#endif

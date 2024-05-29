@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 #include <sipaa/x86_64/idt.h>
 #include <sipaa/logger.h>
 
@@ -12,3 +14,5 @@ void SK_Reboot()
     void (*reboot)(void) = (void (*)(void))0xFFFF;
     reboot();
 }
+
+#endif

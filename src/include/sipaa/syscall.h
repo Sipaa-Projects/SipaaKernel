@@ -17,4 +17,6 @@ typedef struct Syscall_Arguments Syscall_ArgumentsT;
 
 typedef void *(*Syscall_Function)(Syscall_ArgumentsT);
 
+extern Syscall_Function syscall_table[SYSCALL_TABLE_SIZE];
+
 void Syscall_Initialize();

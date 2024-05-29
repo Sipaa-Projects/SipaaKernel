@@ -1,3 +1,5 @@
+; No need to add arch checks, since NASM doesn't support RISC-based architectures.
+
 [bits 64]
 
 global Gdt_Load, Tss_Load

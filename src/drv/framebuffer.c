@@ -59,6 +59,7 @@ void Fbuf_Initialize()
 
 void Fbuf_InitializeGPU()
 {
+    #ifdef __x86_64__
     Log(LT_INFO, "Framebuffer", "Checking for available graphics accelerations\n");
 
     if (Pci_Exists(0x15AD, 0x0405))
@@ -88,6 +89,9 @@ void Fbuf_InitializeGPU()
 
         return;
     }
+    #else
+    Log(LT_WARNING, "Framebuffer", "Currently implemented GPUs are only available for x86_64.\n");
+    #endif
 }
 
 void Fbuf_SetMode(FramebufferModeT mode)

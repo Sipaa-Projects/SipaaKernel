@@ -12,3 +12,4 @@ obj/
 *.o
 limine.dSYM/
 .vscode/
+.ccls-cache/

@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 #include <sipaa/x86_64/pit.h>
 #include <sipaa/x86_64/idt.h>
 #include <sipaa/sched.h>
@@ -48,3 +50,5 @@ void SleepUs(uint32_t milliseconds)
         __asm__ __volatile__("hlt");
     }
 }
+
+#endif

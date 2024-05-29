@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 #include <sipaa/x86_64/io.h>
 
 /**
@@ -69,3 +71,5 @@ void IO_Delay(uint32_t ms)
     while (inb(0x40) & 0x80)
         ;
 }
+
+#endif

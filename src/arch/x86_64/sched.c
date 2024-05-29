@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 #include <sipaa/x86_64/vmm.h>
 #include <sipaa/x86_64/pit.h>
 #include <sipaa/libc/string.h>
@@ -89,3 +91,5 @@ void Scheduler_Schedule(RegistersT *regs)
     Vmm_SwitchAddressSpaces(current_process->pml4);
     Scheduler_ContextSwitch(regs); 
 }
+
+#endif

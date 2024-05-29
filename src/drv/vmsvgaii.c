@@ -1,5 +1,7 @@
 /// @brief VMware SVGA II driver (WIP)
 
+#ifdef __x86_64__
+
 #include <sipaa/drv/vmsvgaii.h>
 #include <sipaa/logger.h>
 #include <sipaa/x86_64/io.h>
@@ -130,3 +132,5 @@ bool VMSVGA_Install(FramebufferT *fb, FramebufferCapabilitiesT *cp)
 		Log(LT_INFO, "VMwareSVGA", "* ScreenObj2\n");
     return true;
 }
+
+#endif

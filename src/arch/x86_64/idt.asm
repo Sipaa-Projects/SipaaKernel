@@ -1,3 +1,5 @@
+; No need to add arch checks, since NASM doesn't support RISC-based architectures.
+
 [extern idt]
 idt_descriptor:
   dw 4095

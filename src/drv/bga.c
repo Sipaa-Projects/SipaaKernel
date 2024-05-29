@@ -1,4 +1,6 @@
 /// @brief SipaaKernel's BGA driver.
+#ifdef __x86_64__
+
 #include <sipaa/drv/bga.h>
 #include <sipaa/logger.h>
 #include <sipaa/x86_64/io.h>
@@ -37,3 +39,5 @@ void BochsGA_SetBank(unsigned short BankNumber)
 {
     BochsGA_WriteReg(VBE_DISPI_INDEX_BANK, BankNumber);
 }
+
+#endif

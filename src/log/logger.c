@@ -99,7 +99,7 @@ void shared_rstcol()
 
 void __internal_log(char *file, char *line, enum LogType type, char *message, ...)
 {
-    if (logger_enabled != 1)
+    if (logger_enabled != 1 && type != LT_FATAL)
         return;
 
     #ifndef SK_SHOWDBGLINES

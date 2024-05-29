@@ -1,6 +1,7 @@
 // SipaaKernel implementation for the logger
 #include <sipaa/logger.h>
 #include <sipaa/drv/conio.h>
+#include <sipaa/spinlock.h>
 #include <stdint.h>
 #include <sipaa/kdebug.h>
 
@@ -9,6 +10,7 @@
 int logger_enabled = 1; // 1 : true, 0 : false
 int logger_enableserial = 1;
 int logger_enableconio = 1;
+SpinlockT logger_lock = SPINLOCK_INIT;
 
 /// @brief The line colors for the serial console.
 char *lineColors[LT_LENGTH] = {
@@ -107,6 +109,8 @@ void __internal_log(char *file, char *line, enum LogType type, char *message, ..
         return;
     #endif
 
+    Spinlock_Acquire(&logger_lock);
+
     shared_chfg(type);
     shared_print(lineStarts[type]);
     shared_rstcol();
@@ -122,4 +126,6 @@ void __internal_log(char *file, char *line, enum LogType type, char *message, ..
     shared_vprintf(message, args);
 
     va_end(args);
+
+    Spinlock_Release(&logger_lock);
 }

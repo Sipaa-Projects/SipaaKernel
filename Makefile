@@ -26,6 +26,7 @@ CFLAGS := \
 	-fno-PIE \
 	-fno-PIC \
 	-Isrc/include \
+	-Isrc/doomgeneric \
 	-g \
 	-m64 \
 	-march=x86-64 \

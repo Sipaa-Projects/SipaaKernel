@@ -99,7 +99,6 @@ void SKEntry()
 
     KernelSymbols_Initialize();
     Fbuf_InitializeGPU();
-    Filesystem_Initialize();
 
     Syscall_Initialize();
     Scheduler_Initialize();

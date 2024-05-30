@@ -1,6 +1,6 @@
 // SipaaKernel implementation for the logger
 #include <sipaa/logger.h>
-#include <sipaa/drv/conio.h>
+#include <sipaa/dev/conio.h>
 #include <sipaa/spinlock.h>
 #include <stdint.h>
 #include <sipaa/kdebug.h>

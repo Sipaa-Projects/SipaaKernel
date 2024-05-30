@@ -19,6 +19,10 @@
         "text_encoding": "c",
         "typeinfo": "c",
         "fstream": "c",
-        "pmm.h": "c"
+        "pmm.h": "c",
+        "cstdint": "c",
+        "doomtype.h": "c",
+        "stdio.h": "c",
+        "doomstat.h": "c"
     }
 }

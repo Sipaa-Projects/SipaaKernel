@@ -1,6 +1,6 @@
 #include <sipaa/syscall.h>
 
-#include <sipaa/drv/conio.h>
+#include <sipaa/dev/conio.h>
 
 void *Syscall_Print(Syscall_ArgumentsT args)
 {

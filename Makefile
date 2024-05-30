@@ -68,7 +68,7 @@ iso: kernel
 	@echo [TAR] ramdisk.tar
 	@tar -C initrd -cvf bin/ramdisk.tar $(shell find ./initrd -printf '%P\n')
 	@echo [CP] Copying kernel files to the ISO file root...
-	@cp meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin meta/wallp.bmp meta/program.elf bin/ramdisk.tar bin/iso_root/
+	@cp meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin bin/iso_root/
 	@cp bin/kernel-$(ARCH).sk bin/iso_root/kernel.sk
 	@echo [XORRISO] Sk-$(ARCH).iso
 	@xorriso -as mkisofs -b limine-bios-cd.bin \

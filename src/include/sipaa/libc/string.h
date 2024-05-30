@@ -10,3 +10,4 @@ int StringLength(char *s);
 void StringRemove(char *str, char *sub);
 void CopyStringN(char* dst, const char* src, size_t n);
 char *CharFromString(const char *s, int c);
+int CompareStringsN(const char * s1, const char * s2, size_t n);

@@ -4,13 +4,18 @@
 #include <sipaa/x86_64/io.h>
 #include <sipaa/x86_64/vmm.h>
 #include <sipaa/x86_64/pit.h>
+#include <sipaa/drv/conio.h>
 #include <sipaa/libc/string.h>
 #include <sipaa/sched.h>
 #include <sipaa/heap.h>
 #include <sipaa/logger.h>
 #include <sipaa/kdebug.h>
+#include <sipaa/ksym.h>
 #include <stddef.h>
 
+#define ARCH_CONTEXT_IS_KERNEL(context)         ((context)->cs == GDT_GET_SEGMENT(GDT_KERNEL_CODE) || (context)->cs == GDT_GET_SEGMENT(GDT_NULL_0))
+
+uint64_t *idt_stackaddr;
 IdtEntryT idt[256];
 IsrHandler isrh[256]; 
 uint64_t pit_ticks = 0;
@@ -96,6 +101,7 @@ void Idt_PrepareReboot() { Idt_PendingReboot = true; }
 
 void Idt_Initialize()
 {
+    Log(LT_INFO, "CPU", "Stack address: 0x%x\n", idt_stackaddr);
     for (int i = 0; i < 256; i++)
     {
         isrh[i] = NULL;
@@ -198,14 +204,17 @@ struct Idt_StackFrame {
 
 void Idt_DumpBackTrace(RegistersT *r)
 {
-    Log(LT_FATAL, "CPU", "Backtrace : \n");
+    Log(LT_FATAL, "CPU", "--------------------------\n");
+    Log(LT_FATAL, "CPU", "BACKTRACE : \n");
     struct Idt_StackFrame* frame = (struct Idt_StackFrame*)r->rbp;
 
     while (frame) {
-        Log(LT_FATAL, "CPU", "- %p\n", frame->rip);
+        Elf64_Sym *symbol = KernelSymbols_GetFromIP(frame->rip);
+        if (symbol)
+            Log(LT_FATAL, "CPU", "- %s (START: %p, IP: %p)\n", KernelSymbols_GetSymbolName(symbol->st_name), symbol->st_value, frame->rip);
         frame = frame->rbp;
     }
-
+    Log(LT_FATAL, "CPU", "<end of backtrace>\n");
 }
 
 void general_interrupt_handler(RegistersT *regs)
@@ -231,20 +240,17 @@ void general_interrupt_handler(RegistersT *regs)
         }
 
         //Dbg_SystemPanic();
-
-        Log(LT_FATAL, "CPU", "Exception: %s\n", exception_messages[regs->int_no]);
-        Log(LT_FATAL, "CPU", "Interrupt number: %d\n", regs->int_no);
-        Log(LT_FATAL, "CPU", "Error code: %d\n", regs->err_code);
-        Log(LT_FATAL, "CPU", "RIP: %x\n", regs->rip);
-        Log(LT_FATAL, "CPU", "CS: %x\n", regs->cs);
-        Log(LT_FATAL, "CPU", "RFLAGS: %x\n", regs->rflags);
-        Log(LT_FATAL, "CPU", "RSP: %x\n", regs->rsp);
-        Log(LT_FATAL, "CPU", "SS: %x\n", regs->ss);
-
+        ConIO_Clear();
+        ConIO_Print("-- KERNEL PANIC -----------------------------------\n");
+        Log(LT_FATAL, "CPU", "Exception: %s (%d)\n", exception_messages[regs->int_no], regs->int_no);
+        
         Idt_DumpBackTrace(regs);
+        Log(LT_FATAL, "CPU", "--------------------------\n");
+        Log(LT_FATAL, "CPU", "System halted.");
 
+        asm("cli");
         while (1)
-            ;
+            asm("hlt");
     }
     else
     {

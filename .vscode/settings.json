@@ -62,6 +62,10 @@
         "types.h": "c",
         "*.tcc": "c",
         "process.h": "c",
-        "compare": "cpp"
+        "compare": "cpp",
+        "elf.h": "c",
+        "stddef.h": "c",
+        "ramdisk.h": "c",
+        "ksym.h": "c"
     }
 }

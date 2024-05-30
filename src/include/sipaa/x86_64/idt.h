@@ -103,6 +103,7 @@ extern uint64_t isr46;
 extern uint64_t isr47;
 extern uint64_t isr48;
 extern uint64_t isr128;
+extern uint64_t *idt_stackaddr;
 
 extern uint64_t CR2_Read();
 

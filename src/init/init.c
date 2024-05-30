@@ -22,6 +22,7 @@
 #include <sipaa/heap.h>
 #include <sipaa/sched.h>
 #include <sipaa/syscall.h>
+#include <sipaa/ksym.h>
 
 void usr_main() {}
 
@@ -75,6 +76,9 @@ int Task1()
 
 void SKEntry()
 {
+    asm("mov %%rsp, %0" : "=r"(idt_stackaddr));
+    idt_stackaddr = VIRTUAL_TO_PHYSICAL(idt_stackaddr);
+    
     Dbg_Initialize(Com1);
     Fbuf_Initialize();
     ConIO_Initialize();
@@ -91,12 +95,13 @@ void SKEntry()
     KHeap_Initialize();
     Vmm_Initialize();
 
+    KernelSymbols_Initialize();
     Fbuf_InitializeGPU();
     
     Syscall_Initialize();
     Scheduler_Initialize();
     Pit_Initialize(1000);
-
+    
     Scheduler_CreateProcess("Task1", Task1);
 
     Log(LT_SUCCESS, "Kernel", "SipaaKernel has been fully initialized! We will now hide logs.\n");

@@ -18,6 +18,8 @@ typedef struct Heap
     Heap_BlockT *block_head;
 } HeapT;
 
+extern HeapT *kernel_heap;
+
 void KHeap_Initialize();
 void *KHeap_Allocate(uint64_t size);
 void KHeap_Free(void *ptr);

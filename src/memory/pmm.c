@@ -1,131 +1,129 @@
 #include <sipaa/pmm.h>
-#include <sipaa/bootsrv.h>
 #include <sipaa/logger.h>
-#include <limine.h>
+#include <sipaa/bootsrv.h>
 
-PmmNodeT *Pmm_Head = NULL;
+/// @brief An array defining a stack for the PMM.
+uintptr_t pmm_stack[STACK_SIZE];
 
-void Pmm_Initialize()
+/// @brief The top of 'pmm_stack'
+uint32_t pmm_stack_top;
+
+/// @brief Free blocks
+Pmm_MemoryBlockT *pmm_free_blocks;
+
+/// @brief The kernel base address
+uintptr_t pmm_kernel_base = 0;
+
+/// @brief The kernel end address
+uintptr_t pmm_kernel_end = 0;
+
+/// @brief The kernel size
+uintptr_t pmm_kernel_size = 0;
+
+/// @brief Free a memory block (internal)
+/// @param block The memory block to free
+void Pmm_FreePage(void *block)
 {
-    Log(LT_INFO, "Pmm", "Starting initialization\n");
-    PmmNodeT *prev_node = NULL;
+    if (pmm_stack_top == STACK_SIZE)
+        return;
 
-    struct limine_memmap_response *mmap = BootSrv_GetMemoryMap();
-
-    for (int i = 0; i < mmap->entry_count; i++)
-    {
-        struct limine_memmap_entry *entry = mmap->entries[i];
-        uint64_t length_mb = entry->length / 1024;
-        Log(LT_INFO, "Pmm", "Entry: Type: %d, Base: 0x%x, Size: %dkb\n", entry->type, entry->base, length_mb);
-        if (entry->type == LIMINE_MEMMAP_USABLE)
-        {
-            for (uint64_t j = 0; j < entry->length; j += PAGE_SIZE)
-            {
-                PmmNodeT *cur_node = (PmmNodeT *)(entry->base + j);
-                cur_node->Base = entry->base + j;
-                cur_node->Flags = 0;
-                cur_node->Next = NULL;
-                if (prev_node != NULL)
-                {
-                    prev_node->Next = cur_node;
-                }
-                else
-                {
-                    Pmm_Head = cur_node;
-                }
-                prev_node = cur_node;
-            }
-        }
-    }
+    pmm_stack[pmm_stack_top] = (uintptr_t)block;
+    pmm_stack_top++;
 }
 
+/// @brief Allocate a new block from free memory (internal)
+/// @return A memory block
 void *Pmm_AllocatePage()
 {
-    PmmNodeT *node = Pmm_Head;
-    if (node != NULL)
-    {
-        Pmm_Head = node->Next;
-        node->Next = NULL;
-        node->Flags = 1;
-        return (void *)node->Base;
-    }
-    
-    return NULL;
+    if (pmm_stack_top == 0)
+        return NULL;
+
+    pmm_stack_top--;
+    return (void *)pmm_stack[pmm_stack_top];
 }
 
-void Pmm_FreePage(void *page)
-{
-    PmmNodeT *node = (PmmNodeT *)page;
-    node->Flags = 0;
-    node->Next = Pmm_Head;
-    Pmm_Head = node;
-}
-
+/// @brief Allocate a memory space of the wanted size
+/// @param size The size of the memory block
+/// @return The new memory block. NULL if something did go wrong
 void *Pmm_Allocate(size_t size)
 {
-    size_t num_pages = (size + PAGE_SIZE - 1) / PAGE_SIZE;
+    if (size == 0)
+        return NULL;
 
-    PmmNodeT *prev_node = NULL;
-    PmmNodeT *cur_node = Pmm_Head;
-    while (cur_node != NULL && num_pages > 0)
+    size += sizeof(Pmm_MemoryBlockT);
+
+    Pmm_MemoryBlockT *block = pmm_free_blocks;
+    Pmm_MemoryBlockT *prev_block = NULL;
+
+    while (block)
     {
-        if (cur_node->Flags == 0)
+        if (block->is_free && block->size >= size)
         {
-            cur_node->Flags = 1;
-            num_pages--;
+            block->is_free = false;
 
-            if (prev_node == NULL)
+            if (block->size > size + sizeof(Pmm_MemoryBlockT))
             {
-                Pmm_Head = cur_node->Next;
-            }
-            else
-            {
-                prev_node->Next = cur_node->Next;
+                Pmm_MemoryBlockT *new_block = (Pmm_MemoryBlockT *)((uint8_t *)block + size);
+                new_block->size = block->size - size;
+                new_block->next = block->next;
+                new_block->is_free = true;
+
+                block->size = size;
+                block->next = new_block;
             }
 
-            prev_node = cur_node;
-            cur_node = cur_node->Next;
+            return (uint8_t *)block + sizeof(Pmm_MemoryBlockT);
         }
-        else
-        {
-            prev_node = cur_node;
-            cur_node = cur_node->Next;
-        }
+
+        prev_block = block;
+        block = block->next;
     }
 
-    if (num_pages == 0)
+    block = (Pmm_MemoryBlockT *)Pmm_AllocatePage();
+    if (!block)
     {
-        Log(LT_DEBUG, "Pmm", "Allocated memory block: Size: %d, Base: %p\n", size, (void *)prev_node->Base);
-        return (void *)prev_node->Base;
+        return NULL;
     }
 
-    return NULL;
+    block->size = size;
+    block->is_free = false;
+    block->next = NULL;
+
+    if (prev_block)
+    {
+        prev_block->next = block;
+    }
+    else
+    {
+        pmm_free_blocks = block;
+    }
+
+    return (uint8_t *)block + sizeof(Pmm_MemoryBlockT);
 }
 
+/// @brief Free a memory space
+/// @param ptr The pointer to the memory space
 void Pmm_Free(void *ptr)
 {
-    uint64_t addr = (uint64_t)ptr & ~(PAGE_SIZE - 1);
-
-    PmmNodeT *node = Pmm_Head;
-
-    while (node != NULL && node->Base < addr)
+    if (!ptr)
     {
-        node = node->Next;
+        return;
     }
 
-    if (node != NULL && node->Base == addr)
+    Pmm_MemoryBlockT *block = (Pmm_MemoryBlockT *)((uint8_t *)ptr - sizeof(Pmm_MemoryBlockT));
+    block->is_free = true;
+
+    while (block->next && block->next->is_free)
     {
-        Pmm_Head = node->Next;
+        block->size += block->next->size;
+        block->next = block->next->next;
     }
-
-    node->Flags = 0;
-
-    node->Next = Pmm_Head;
-    Pmm_Head = node;
-
-    Log(LT_DEBUG, "Pmm", "Freed memory block at %p", ptr);
 }
 
+/// @brief Reallocate a memory block
+/// @param ptr 
+/// @param size 
+/// @return 
 void* Pmm_Reallocate(void* ptr, size_t size) {
     if (size == 0) {
         Pmm_Free(ptr);
@@ -156,4 +154,30 @@ void* Pmm_Reallocate(void* ptr, size_t size) {
     Pmm_Free(ptr);  // Free the old block
 
     return new_ptr;
+}
+
+/// @brief Initialize the PMM.
+void Pmm_Initialize() {
+    Log(LT_INFO, "Pmm", "Initializing...\n");
+    struct limine_memmap_response *mmap = BootSrv_GetMemoryMap();
+    pmm_stack_top = 0;
+
+    for (uint64_t entry = 0; entry < mmap->entry_count; entry++)
+    {
+        struct limine_memmap_entry *mentry = mmap->entries[entry];
+        
+        if (mentry->type == LIMINE_MEMMAP_USABLE)
+        {
+            uintptr_t addr = mentry->base;
+            uint64_t length = mentry->length;
+
+            while (length >= PMM_BLOCK_SIZE)
+            {
+                Pmm_FreePage((void *)addr);
+                addr += PMM_BLOCK_SIZE;
+                length -= PMM_BLOCK_SIZE;
+            }
+        }
+    }
+    Log(LT_SUCCESS, "Pmm", "Initialized!\n");
 }

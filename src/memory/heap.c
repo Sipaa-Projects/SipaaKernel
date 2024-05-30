@@ -6,6 +6,11 @@
 
 HeapT *kernel_heap;
 
+void KHeap_Dummy() {
+    // GCC manages to link KHeap_Initialize to 0xFFFFFFFF80000000, and the CPU doesn't like that.
+    // Make a dummy function so KHeap_Initialize doesn't get to 0xFFFFFFFF80000000
+}
+
 void KHeap_Initialize() {
     HeapT *h = (HeapT *)VIRTUAL_TO_PHYSICAL(Pmm_Allocate(1));
     h->block_head = (HeapT *)VIRTUAL_TO_PHYSICAL(Pmm_Allocate(1));

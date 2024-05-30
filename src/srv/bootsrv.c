@@ -123,10 +123,16 @@ void BootSrv_EnumerateProtocolInfos()
     BootSrv_EnumerateFramebuffers();
     
     Log(LT_INFO, "BootSrv", "----- MODULES -----\n");
-    for (size_t i = 0; i < module_request.response->module_count; i++)
+    if (module_request.response) {
+        for (size_t i = 0; i < module_request.response->module_count; i++)
+        {
+            struct limine_file *module = module_request.response->modules[i];
+            Log(LT_INFO, "BootSrv", "Module %d: Path: %s, Address: %p\n", i, module->path, module->address);
+        }
+    }
+    else
     {
-        struct limine_file *module = module_request.response->modules[i];
-        Log(LT_INFO, "BootSrv", "Module %d: Path: %s, Address: %p\n", i, module->path, module->address);
+        Log(LT_INFO, "BootSrv", "<no modules provided>\n");
     }
 
     Log(LT_INFO, "BootSrv", "-------- PROOCOL INFO END --\n");

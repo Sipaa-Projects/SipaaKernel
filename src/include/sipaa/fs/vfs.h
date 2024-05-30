@@ -1,19 +1,22 @@
 /// @brief SipaaKernel's VFS
 #pragma once
 
-#include <sipaa/libc/types.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 // Path separator
 #define FS_PATHSEP '/'
 #define FS_PATHSEP_STR "/"
-#define FS_PATHUP "."
+#define FS_PATHUP ".."
 #define FS_PATHCURRENT "."
 
 // File types
-#define FS_TYPE_DIRECTORY 0
-#define FS_TYPE_FILE 0
-#define FS_TYPE_CHARDEV 1
-#define FS_TYPE_IODEV 1
+#define FS_TYPE_DIRECTORY 1
+#define FS_TYPE_FILE 2
+#define FS_TYPE_DEVICE 3
+
+// Permissions
+#define FS_PERM_DESTROY 1
 
 enum VfsStatus {
   /// @brief Returned when succeded.
@@ -35,7 +38,10 @@ enum VfsStatus {
   VFS_NOT_MOUNTED = -1,
 
   /// @brief Returned when trying to set a new root filesystem
-  VFS_NOT_ALLOWED = -5
+  VFS_NOT_ALLOWED = -6,
+
+  /// @brief Returned when a VFS operation is not supported or implemented
+  VFS_NOT_SUPPORTED = -7,
 };
 
 typedef enum VfsStatus VfsStatusT;
@@ -43,7 +49,7 @@ typedef enum VfsStatus VfsStatusT;
 
 struct DirectoryEntry {
   char* Name;
-  UI32 Inode;
+  uint32_t Inode;
 };
 
 typedef struct DirectoryEntry DirectoryEntryT;
@@ -51,16 +57,25 @@ typedef struct DirectoryEntry DirectoryEntryT;
 
 struct FilesystemNode {
   char* Name;
-  UI32 Permissions;
-  UI32 Type;
-  UI32 Size;
-  UI32 Inode;
-  void(*Read)(struct FilesystemNode* vnode, UI32 offset, UI32 count, UI8* buffer);
-  DirectoryEntryT*(*ReadDirectory)(struct FilesystemNode* vnode, UI32 index);
+  struct FilesystemNode* Parent;
+  bool Open;
+  uint32_t Permissions;
+  uint32_t Type;
+  uint32_t Size;
+  uint32_t Inode;
+  int(*Read)(struct FilesystemNode* vnode, uint8_t *buffer, uint32_t count);
+  int(*Write)(struct FilesystemNode* vnode, uint8_t *buffer, uint32_t count);
+  DirectoryEntryT*(*ReadDirectory)(struct FilesystemNode* vnode, uint32_t index);
   struct FilesystemNode*(*FindDirectory)(struct FilesystemNode* vnode, char* path);
 };
 
 typedef struct FilesystemNode FilesystemNodeT;
+
+
+typedef struct Directory {
+  FilesystemNodeT* node;
+  uint32_t Index;
+} DirectoryT; // Used mainly for syscalls
 
 
 struct Vfs_MountPoint {
@@ -70,22 +85,16 @@ struct Vfs_MountPoint {
 
 typedef struct Vfs_MountPoint Vfs_MountPointT;
 
+extern FilesystemNodeT *vfs_root;
+
 // FUNCTIONS
 
-/// @brief Initialize the VFS' root node.
-void Vfs_Initialize();
+/// @brief Set the VFS' root node.
+VfsStatusT Vfs_SetRootNode(FilesystemNodeT *node);
 
-/// @brief Sets the root filesystem. Can be called only 1 time.
-/// @param node The root filesystem node.
-VfsStatusT Vfs_SetRoot(FilesystemNodeT *node);
-
-/// @brief Mount a filesystem on a path
-/// @param target The target path (exemple: /dev)
-/// @param node The corresponding node (exemple: a DevFS node containing devices)
-/// @return A status indicating the success or an error.
-VfsStatusT Vfs_Mount(const char* target, FilesystemNodeT *node);
-
-/// @brief Unmount a filesystem
-/// @param target A path where a file system is mounted
-/// @return A status indicating the success or an error.
-VfsStatusT Vfs_Unmount(const char* target);
+int Vfs_Write(FilesystemNodeT* node, uint8_t* buffer, uint32_t count);
+int Vfs_Read(FilesystemNodeT* node, uint8_t* buffer, uint32_t count);
+DirectoryEntryT* Vfs_ReadDirectory(FilesystemNodeT* node, uint32_t index);
+FilesystemNodeT* Vfs_FindDirectory(FilesystemNodeT* node, char* path);
+FilesystemNodeT* Vfs_Open(FilesystemNodeT* node, char* path); // traverse directories
+void Vfs_Destroy(FilesystemNodeT* node);

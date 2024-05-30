@@ -1,7 +1,7 @@
 /// @brief SipaaKernel's BGA driver.
 #ifdef __x86_64__
 
-#include <sipaa/drv/bga.h>
+#include <sipaa/dev/bga.h>
 #include <sipaa/logger.h>
 #include <sipaa/x86_64/io.h>
 

@@ -2,19 +2,20 @@
 #include <stddef.h>
 #include <limine.h>
 #include <sipaa/bootsrv.h>
-#include <sipaa/drv/bga.h>
+#include <sipaa/dev/bga.h>
 #include <sipaa/pmm.h>
 #include <sipaa/kdebug.h>
 #include <sipaa/logger.h>
 #include <sipaa/fs/vfs.h>
 #include <sipaa/fs/hellofs.h>
+#include <sipaa/fs/ext2.h>
 #include <sipaa/x86_64/gdt.h>
 #include <sipaa/x86_64/idt.h>
 #include <sipaa/x86_64/vmm.h>
 #include <sipaa/x86_64/pit.h>
 #include <sipaa/bootsrv.h>
 #include <sipaa/pci.h>
-#include <sipaa/drv/conio.h>
+#include <sipaa/dev/conio.h>
 #include <sipaa/framebuffer.h>
 #include <sipaa/uptime.h>
 #include <sipaa/exec/elf.h>
@@ -23,6 +24,7 @@
 #include <sipaa/sched.h>
 #include <sipaa/syscall.h>
 #include <sipaa/ksym.h>
+#include <sipaa/dev/block/ata.h>
 
 void usr_main() {}
 
@@ -78,14 +80,14 @@ void SKEntry()
 {
     asm("mov %%rsp, %0" : "=r"(idt_stackaddr));
     idt_stackaddr = VIRTUAL_TO_PHYSICAL(idt_stackaddr);
-    
+
     Dbg_Initialize(Com1);
     Fbuf_Initialize();
     ConIO_Initialize();
     ConIO_Print(KLANG_WELCOMETOSK);
 
     Log(LT_INFO, "Kernel", "Starting initialization\n");
-    
+
     UptimeCounter_Initialize();
     BootSrv_EnumerateProtocolInfos();
     Gdt_Initialize(kernel_stack);
@@ -97,11 +99,12 @@ void SKEntry()
 
     KernelSymbols_Initialize();
     Fbuf_InitializeGPU();
-    
+    Filesystem_Initialize();
+
     Syscall_Initialize();
     Scheduler_Initialize();
     Pit_Initialize(1000);
-    
+
     Scheduler_CreateProcess("Task1", Task1);
 
     Log(LT_SUCCESS, "Kernel", "SipaaKernel has been fully initialized! We will now hide logs.\n");
@@ -109,6 +112,7 @@ void SKEntry()
 
     asm("sti");
 
-    for(;;)
-        ;;
+    for (;;)
+        ;
+    ;
 }

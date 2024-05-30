@@ -4,7 +4,7 @@
 #include <sipaa/x86_64/io.h>
 #include <sipaa/x86_64/vmm.h>
 #include <sipaa/x86_64/pit.h>
-#include <sipaa/drv/conio.h>
+#include <sipaa/dev/conio.h>
 #include <sipaa/libc/string.h>
 #include <sipaa/sched.h>
 #include <sipaa/heap.h>

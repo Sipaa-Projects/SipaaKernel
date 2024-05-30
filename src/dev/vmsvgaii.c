@@ -2,7 +2,7 @@
 
 #ifdef __x86_64__
 
-#include <sipaa/drv/vmsvgaii.h>
+#include <sipaa/dev/vmsvgaii.h>
 #include <sipaa/logger.h>
 #include <sipaa/x86_64/io.h>
 #include <stdbool.h>

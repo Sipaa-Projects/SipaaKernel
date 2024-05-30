@@ -7,7 +7,7 @@ void SK_Reboot()
 {
     Log(LT_INFO, "PowerMgr", "See you later :)\n");
 
-    // Remove the GPF handler
+    // Make the IDT know that we want to reboot the PC, so he can disable the interrupt handlers.
     Idt_PrepareReboot();
 
     // Jump to some random bullshit, which causes the hardware to reboot since the GPF handler is inexistant.

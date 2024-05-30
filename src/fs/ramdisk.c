@@ -24,7 +24,7 @@ unsigned int getsize(const char *in)
     return size;
 }
 
-void RamDisk_Read(struct FilesystemNode* vnode, uint32_t offset, uint32_t count, char* buffer)
+void RamDisk_Read(struct FilesystemNode* vnode, uint32_t offset, char* buffer, uint32_t count)
 {
     if (vnode)
     {

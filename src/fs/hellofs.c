@@ -9,7 +9,7 @@ bool created = false;
 char *hello = NULL;
 size_t hello_size = 6; // The size of the hello string, including the null terminator
 
-void HelloFS_Read(struct FilesystemNode* vnode, UI32 offset, UI32 count, UI8* buffer)
+void HelloFS_Read(struct FilesystemNode* vnode, uint32_t offset, uint8_t* buffer, uint32_t count)
 {
     if (count > (hello_size - offset))
         buffer = NULL;

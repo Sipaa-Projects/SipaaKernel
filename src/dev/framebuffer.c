@@ -2,8 +2,8 @@
 /// @brief Interface to control graphic adapters - Source
 
 #include <sipaa/framebuffer.h>  // Include the header version of this file
-#include <sipaa/drv/bga.h>      // Include the BGA header
-#include <sipaa/drv/vmsvgaii.h> // Include the VMware SVGA II header
+#include <sipaa/dev/bga.h>      // Include the BGA header
+#include <sipaa/dev/vmsvgaii.h> // Include the VMware SVGA II header
 #include <sipaa/bootsrv.h>      // Include the boot service, allowing to get the framebuffer from Limine
 #include <sipaa/logger.h>       // Include the logger
 #include <sipaa/pci.h>          // Include the PCI

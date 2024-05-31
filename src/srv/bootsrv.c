@@ -83,15 +83,6 @@ static volatile struct limine_smp_request _smp_request = {
     .response = NULL
 };
 
-void BootSrv_EnumerateFramebuffers()
-{
-    Log(LT_INFO, "BootSrv", "------ FRAMEBUFFERS ------\n");
-    for (int i = 0; i < fbr.response->framebuffer_count; i++)
-    {
-        Log(LT_INFO, "BootSrv", "Framebuffer %d: Address: %p, Width: %u, Height: %u, Bpp: %u\n", i, fbr.response->framebuffers[i]->address, fbr.response->framebuffers[i]->width, fbr.response->framebuffers[i]->height, fbr.response->framebuffers[i]->bpp);
-    }
-}
-
 struct limine_rsdp_response *BootSrv_GetAcpiRSDP()
 {
     return rsdp_request.response;
@@ -115,28 +106,29 @@ void BootSrv_EnumerateProtocolInfos()
         firmware = "UEFI";
 
     // Display the information
-    Log(LT_INFO, "BootSrv", "-- PROOCOL INFO START ------\n");
-    Log(LT_INFO, "BootSrv", "%s %s (booted on a %s %s system)\n", bir.response->name, bir.response->version, KARCHITECTURE, firmware);
-    Log(LT_INFO, "BootSrv", "Kernel physical address: 0x%x\n", kar.response->physical_base);
-    Log(LT_INFO, "BootSrv", "Kernel virtual address: 0x%x\n", kar.response->virtual_base);
-    Log(LT_INFO, "BootSrv", "Kernel command line: \"%s\"\n", kfr.response->kernel_file->cmdline);
-    BootSrv_EnumerateFramebuffers();
+    Log(LT_INFO, "bootsrv", "bootloader infos:\n");
+    Log(LT_INFO, "bootsrv", " - %s %s (booted on a %s %s system)\n", bir.response->name, bir.response->version, KARCHITECTURE, firmware);
+    Log(LT_INFO, "bootsrv", " - kernel physical address: 0x%x\n", kar.response->physical_base);
+    Log(LT_INFO, "bootsrv", " - kernel virtual address: 0x%x\n", kar.response->virtual_base);
+    Log(LT_INFO, "bootsrv", " - kernel command line: \"%s\"\n", kfr.response->kernel_file->cmdline);
     
-    Log(LT_INFO, "BootSrv", "----- MODULES -----\n");
+    Log(LT_INFO, "bootsrv", " - framebuffers: \n");
+    for (int i = 0; i < fbr.response->framebuffer_count; i++)
+    {
+        Log(LT_INFO, "bootsrv", "   - fb%d: Address: %p, Width: %u, Height: %u, Bpp: %u\n", i, fbr.response->framebuffers[i]->address, fbr.response->framebuffers[i]->width, fbr.response->framebuffers[i]->height, fbr.response->framebuffers[i]->bpp);
+    }
+    Log(LT_INFO, "bootsrv", " - modules:\n");
     if (module_request.response) {
         for (size_t i = 0; i < module_request.response->module_count; i++)
         {
             struct limine_file *module = module_request.response->modules[i];
-            Log(LT_INFO, "BootSrv", "Module %d: Path: %s, Address: %p\n", i, module->path, module->address);
+            Log(LT_INFO, "BootSrv", "   - module %d: path: %s, addr: %p\n", i, module->path, module->address);
         }
     }
     else
     {
-        Log(LT_INFO, "BootSrv", "<no modules provided>\n");
+        Log(LT_INFO, "bootsrv", "     <no modules provided>\n");
     }
-
-    Log(LT_INFO, "BootSrv", "-------- PROOCOL INFO END --\n");
-
 }
 
 struct limine_framebuffer *BootSrv_GetFramebuffer(int number)

@@ -23,6 +23,8 @@
         "cstdint": "c",
         "doomtype.h": "c",
         "stdio.h": "c",
-        "doomstat.h": "c"
+        "doomstat.h": "c",
+        "memory.h": "c",
+        "gdt.h": "c"
     }
 }

@@ -112,13 +112,9 @@ void __internal_log(char *file, char *line, enum LogType type, char *message, ..
     //Spinlock_Acquire(&logger_lock);
 
     shared_chfg(type);
-    shared_print(lineStarts[type]);
+    shared_print(file); // "file" isn't the source file, but the component!
     shared_rstcol();
-    shared_print(" ");
-    shared_print(file);
-    shared_print(" ");
-    shared_print(line);
-    shared_print(" => ");
+    shared_print(": ");
 
     va_list args;
     va_start(args, message);

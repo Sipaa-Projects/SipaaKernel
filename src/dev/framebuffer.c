@@ -28,7 +28,7 @@ void Fbuf_Initialize()
 
     if (fb != (void *)0)
     {
-        Log(LT_INFO, "Framebuffer", "Using the bootloader-provided framebuffer\n");
+        Log(LT_INFO, "framebuf", "using the bootloader-provided framebuffer\n");
 
         Framebuffer.Address = fb->address;
         Framebuffer.Size = fb->height * fb->pitch * (fb->bpp / 8);
@@ -45,52 +45,52 @@ void Fbuf_Initialize()
         Framebuffer.BlueMaskShift = fb->blue_mask_shift;
         Framebuffer.BlueMaskSize = fb->blue_mask_size;
 
-        Log(LT_INFO, "Framebuffer", "Initializing framebuffer capabilities structure...\n");
+        Log(LT_INFO, "framebuf", "Initializing framebuffer capabilities structure...\n");
 
         Fbuf_SetupBasicCapabilities();
 
-        Log(LT_INFO, "Framebuffer", "The framebuffer is now available\n");
+        Log(LT_INFO, "framebuf", "The framebuffer is now available\n");
         return;
     }
 
-    Log(LT_WARNING, "Framebuffer", "No framebuffer available! Good luck with the serial console!\n");
+    Log(LT_WARNING, "framebuf", "no framebuffer available! good luck with the serial console!\n");
     Framebuffer.Address = (UI64)0;
 }
 
 void Fbuf_InitializeGPU()
 {
     #ifdef __x86_64__
-    Log(LT_INFO, "Framebuffer", "Checking for available graphics accelerations\n");
+    Log(LT_INFO, "framebuf", "checking for available graphics accelerations\n");
 
     if (Pci_Exists(0x15AD, 0x0405))
     {
-        Log(LT_INFO, "Framebuffer", "Found a VMware SVGA II!\n");
+        Log(LT_INFO, "framebuf", "found a VMware SVGA II!\n");
         
         if (!VMSVGA_Install(&Framebuffer, &Framebuffer_Capabilities))
         {
-            Log(LT_INFO, "Framebuffer", "Unfortunately, the VMware SVGA II adapter installation failed. We will stick to the bootloader-provided framebuffer.\n");
+            Log(LT_INFO, "framebuf", "unfortunately, the VMware SVGA II adapter installation failed. We will stick to the bootloader-provided framebuffer.\n");
             return;
         }
 
-        Log(LT_INFO, "Framebuffer", "Installed the VMware SVGA II!\n");
+        Log(LT_INFO, "framebuf", "installed the VMware SVGA II!\n");
         return;
     }
     else if (BochsGA_IsAvailable(VBE_DISPI_ID2)) // SipaaKernel supports BGA starting from ID2.
     {
-        Log(LT_INFO, "Framebuffer", "Found a Bochs Graphics Adapter!\n");
+        Log(LT_INFO, "framebuf", "found a Bochs Graphics Adapter!\n");
 
-        Log(LT_INFO, "Framebuffer", "Installed the Bochs Graphics Adapter!\n");
+        Log(LT_INFO, "framebuf", "installed the Bochs Graphics Adapter!\n");
 
         return;
     }
     else
     {
-        Log(LT_WARNING, "Framebuffer", "No graphics accelerators found! GUI may be slow.\n");
+        Log(LT_WARNING, "framebuf", "no graphics accelerators found! GUI may be slow.\n");
 
         return;
     }
     #else
-    Log(LT_WARNING, "Framebuffer", "Currently implemented GPUs are only available for x86_64.\n");
+    Log(LT_WARNING, "framebuf", "currently implemented GPUs are only available for x86_64.\n");
     #endif
 }
 
@@ -98,10 +98,10 @@ void Fbuf_SetMode(FramebufferModeT mode)
 {
     if (Framebuffer_Capabilities.CanSetModes && Framebuffer_Capabilities.SetMode) {
         Framebuffer_Capabilities.SetMode(&Framebuffer, mode);
-        Log(LT_INFO, "Framebuffer", "Mode has been set successfully!\n");
+        Log(LT_INFO, "framebuf", "mode has been set successfully!\n");
         return;
     }
-    Log(LT_WARNING, "Framebuffer", "Cannot set mode: Operation not supported.\n");
+    Log(LT_WARNING, "framebuf", "cannot set mode: Operation not supported.\n");
 }
 
 FramebufferT *Fbuf_Get()

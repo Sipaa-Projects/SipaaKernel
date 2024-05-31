@@ -4,7 +4,7 @@
 #include <sipaa/logger.h>
 #include <sipaa/memory.h>
 
-GdtEntryT gdt[0xff];
+__attribute__((aligned(4096))) GdtEntryT gdt[0xff];
 GdtPointerT gdt_ptr;
 TssEntryT tss_entry;
 
@@ -43,22 +43,22 @@ void Gdt_Initialize(uint64_t kernel_rsp[])
     gdt_ptr.offset = (uint64_t)&gdt;
 
     // 0: NULL
-    Gdt_SetEntry(0, 0, 0, 0, 0);
+    Gdt_SetEntry(GDT_NULL_0, 0, 0, 0, 0);
 
     // 1: Kernel Code Segment
-    Gdt_SetEntry(1, 0xFFFFF, 0, 0x9A, 0xAF); // exec/read, ring 0
+    Gdt_SetEntry(GDT_KERNEL_CODE, 0xFFFFF, 0, 0x9A, 0xAF); // exec/read, ring 0
 
     // 2: Kernel Data Segment
-    Gdt_SetEntry(2, 0xFFFFF, 0, 0x92, 0xAF); // read/write, ring 0
+    Gdt_SetEntry(GDT_KERNEL_DATA, 0xFFFFF, 0, 0x92, 0xAF); // read/write, ring 0
 
     // 3: NULL
-    Gdt_SetEntry(3, 0, 0, 0, 0);
+    Gdt_SetEntry(GDT_NULL_1, 0, 0, 0, 0);
 
     // 4: User Code Segment
-    Gdt_SetEntry(4, 0xFFFFF, 0, 0xFA, 0xAF); // exec/read, ring 3
+    Gdt_SetEntry(GDT_USER_CODE, 0xFFFFF, 0, 0xFA, 0xAF); // exec/read, ring 3
 
     // 5: User Data Segment
-    Gdt_SetEntry(5, 0xFFFFF, 0, 0xF2, 0xAF); // read/write, ring 3
+    Gdt_SetEntry(GDT_USER_DATA, 0xFFFFF, 0, 0xF2, 0xAF); // read/write, ring 3
 
     Tss_SetGate(6, (uint64_t)&tss_entry, sizeof(TssEntryT));
 

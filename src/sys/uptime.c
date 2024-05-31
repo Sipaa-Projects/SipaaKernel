@@ -17,7 +17,7 @@ UI32 uptime_ms = 0;
 bool UptimeCtr_Initialized = false;
 
 void UptimeCounter_Entry(struct limine_smp_info *info) {
-    Log(LT_INFO, "UptimeCtr", "Hello world! From now, i will count the system uptime.\n");
+    Log(LT_INFO, "uptime", "from now, i will count the system uptime.\n");
     UptimeCtr_Initialized = true;
     
     while (1)
@@ -52,5 +52,5 @@ void UptimeCounter_Initialize()
 
         return;
     }
-    Log(LT_WARNING, "UptimeCtr", "Unfortunately, there's not 2 CPUs or more.\n");
+    Log(LT_WARNING, "uptime", "unfortunately, there's not 2 CPUs or more.\n");
 }

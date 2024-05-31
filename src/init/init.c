@@ -73,6 +73,9 @@ int Task1()
 
     execute_syscall(0, "Hello, World!\n");
 
+    int *addr = 0xFFFFFFFFFFFFFFF;
+    *addr = 10;
+
     return 0;
 }
 
@@ -86,7 +89,7 @@ void SKEntry()
     ConIO_Initialize();
     ConIO_Print(KLANG_WELCOMETOSK);
 
-    Log(LT_INFO, "Kernel", "Starting initialization\n");
+    Log(LT_INFO, "kernel", "starting initialization...\n");
 
     UptimeCounter_Initialize();
     BootSrv_EnumerateProtocolInfos();
@@ -106,8 +109,7 @@ void SKEntry()
 
     Scheduler_CreateProcess("Task1", Task1);
 
-    Log(LT_SUCCESS, "Kernel", "SipaaKernel has been fully initialized! We will now hide logs.\n");
-    Logger_SetEnabled(0);
+    Log(LT_SUCCESS, "kernel", "SipaaKernel has been fully initialized! We will now hide logs.\n");
 
     asm("sti");
 

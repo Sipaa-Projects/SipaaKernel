@@ -9,11 +9,11 @@ uint64_t *vmm_current_address_space;
 
 void Vmm_Initialize()
 {
-    Log(LT_INFO, "Vmm", "Starting initialization: Creating kernel's PML4...\n");
+    Log(LT_INFO, "vmm", "starting initialization: Creating kernel's PML4...\n");
     vmm_kernel_address_space = (uint64_t *)VIRTUAL_TO_PHYSICAL(Pmm_AllocatePage());
     memset(vmm_kernel_address_space, 0, PAGE_SIZE);
 
-    Log(LT_INFO, "Vmm", "Mapping kernel's ELF sections...\n");
+    Log(LT_INFO, "vmm", "mapping kernel's ELF sections...\n");
     uint64_t phys_base = BootSrv_GetKernelPhysicalBase();
     uint64_t virt_base = BootSrv_GetKernelVirtualBase();
 
@@ -36,9 +36,9 @@ void Vmm_Initialize()
         Vmm_Map(vmm_kernel_address_space, (uint64_t)VIRTUAL_TO_PHYSICAL(gb4), gb4, PTE_PRESENT | PTE_WRITABLE | PTE_USER);
     }
 
-    Log(LT_INFO, "Vmm", "Switching to the kernel's PML4...\n");
+    Log(LT_INFO, "vmm", "switching to the kernel's PML4...\n");
     Vmm_SwitchAddressSpaces(vmm_kernel_address_space);
-    Log(LT_SUCCESS, "Vmm", "Initialization done!\n");
+    Log(LT_SUCCESS, "vmm", "initialization done!\n");
 }
 
 uint64_t *Vmm_NewAddressSpace()

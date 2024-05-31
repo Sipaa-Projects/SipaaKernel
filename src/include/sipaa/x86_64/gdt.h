@@ -13,6 +13,14 @@ typedef struct GdtEntry {
     uint8_t base2;
 } __attribute__((packed)) GdtEntryT;
 
+#define GDT_NULL_0 0
+#define GDT_NULL_1 3
+#define GDT_KERNEL_CODE 1
+#define GDT_KERNEL_DATA 2
+#define GDT_USER_CODE 4
+#define GDT_USER_DATA 5
+#define GDT_GET_SEGMENT(x) x * sizeof(GdtEntryT)
+
 typedef struct TssEntry {
     uint32_t reserved0;
     uint64_t rsp0;

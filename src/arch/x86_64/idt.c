@@ -1,5 +1,6 @@
 #ifdef __x86_64__
 
+#include <sipaa/x86_64/gdt.h>
 #include <sipaa/x86_64/idt.h>
 #include <sipaa/x86_64/io.h>
 #include <sipaa/x86_64/vmm.h>
@@ -13,7 +14,7 @@
 #include <sipaa/ksym.h>
 #include <stddef.h>
 
-#define ARCH_CONTEXT_IS_KERNEL(context)         ((context)->cs == GDT_GET_SEGMENT(GDT_KERNEL_CODE) || (context)->cs == GDT_GET_SEGMENT(GDT_NULL_0))
+#define ARCH_CONTEXT_IS_KERNEL(cs)         ((cs) == GDT_GET_SEGMENT(GDT_KERNEL_CODE) || (cs) == GDT_GET_SEGMENT(GDT_NULL_0))
 
 uint64_t *idt_stackaddr;
 IdtEntryT idt[256];
@@ -101,7 +102,6 @@ void Idt_PrepareReboot() { Idt_PendingReboot = true; }
 
 void Idt_Initialize()
 {
-    Log(LT_INFO, "CPU", "Stack address: 0x%x\n", idt_stackaddr);
     for (int i = 0; i < 256; i++)
     {
         isrh[i] = NULL;
@@ -204,23 +204,22 @@ struct Idt_StackFrame {
 
 void Idt_DumpBackTrace(RegistersT *r)
 {
-    Log(LT_FATAL, "CPU", "--------------------------\n");
-    Log(LT_FATAL, "CPU", "BACKTRACE : \n");
+    Log(LT_FATAL, "cpu", " - backtrace : \n");
     struct Idt_StackFrame* frame = (struct Idt_StackFrame*)r->rbp;
 
     while (frame) {
         Elf64_Sym *symbol = KernelSymbols_GetFromIP(frame->rip);
         if (symbol)
-            Log(LT_FATAL, "CPU", "- %s (START: %p, IP: %p)\n", KernelSymbols_GetSymbolName(symbol->st_name), symbol->st_value, frame->rip);
+            Log(LT_FATAL, "cpu", "   - %s (start: %p, ip: %p)\n", KernelSymbols_GetSymbolName(symbol->st_name), symbol->st_value, frame->rip);
         frame = frame->rbp;
     }
-    Log(LT_FATAL, "CPU", "<end of backtrace>\n");
+    Log(LT_FATAL, "cpu", "<end of backtrace>\n");
 }
 
 void general_interrupt_handler(RegistersT *regs)
 {
     if (regs->int_no != 32 && !Idt_PendingReboot)
-        Log(LT_DEBUG, "CPU", "Received interrupt %u\n", regs->int_no);
+        Log(LT_DEBUG, "cpu", "Received interrupt %u\n", regs->int_no);
 
     if (regs->int_no < 32 && !Idt_PendingReboot)
     {
@@ -232,21 +231,25 @@ void general_interrupt_handler(RegistersT *regs)
 
                 Scheduler_ExitProcess(current_process);
 
-                Log(LT_ERROR, "CPU", "Process %d exited due to a segmentation fault... At least, i didn't panic!\n", pid);
+                Log(LT_ERROR, "cpu", "Process %d exited due to a segmentation fault... At least, i didn't panic!\n", pid);
 
                 asm("int $32");
                 return;
             }
         }
 
+        uint64_t cs;
+        asm("mov %%cs, %0" : "=r"(cs));
+
         //Dbg_SystemPanic();
         ConIO_Clear();
         ConIO_Print("-- KERNEL PANIC -----------------------------------\n");
-        Log(LT_FATAL, "CPU", "Exception: %s (%d)\n", exception_messages[regs->int_no], regs->int_no);
+        Log(LT_FATAL, "cpu", "exception: %s (%d)\n", exception_messages[regs->int_no], regs->int_no);
+        Log(LT_FATAL, "cpu", "sizeof(GdtEntryT) = %d, cs: %d, is kernel? %d\n", sizeof(GdtEntryT), cs, ARCH_CONTEXT_IS_KERNEL(cs));
+        Log(LT_FATAL, "cpu", "you may put a breakpoint on the kernel's \"panic\" function with GDB.\n");
         
         Idt_DumpBackTrace(regs);
-        Log(LT_FATAL, "CPU", "--------------------------\n");
-        Log(LT_FATAL, "CPU", "System halted.");
+        Log(LT_FATAL, "cpu", "system halted.");
 
         asm("cli");
         while (1)

@@ -12,7 +12,7 @@ __attribute__((noinline)) int Spinlock_Acquire(SpinlockT *lock) {
             break;
         }
         if (++deadlock_counter >= 100000000) {
-            Log(LT_ERROR, "Spinlock", "Resource not available!\n");
+            Log(LT_ERROR, "spinlock", "resource not available!\n");
             return -1;
         }
 #if defined (__x86_64__)

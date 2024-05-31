@@ -62,7 +62,7 @@ ProcessT *Scheduler_CreateProcess(char *name, int (*entry_point)())
 
     pid_counter++;
     
-    Log(LT_INFO, "Scheduler", "Created process \"%s\": PID: %d, RIP: %p, AddrSpace: %p\n", new_proc->name, new_proc->pid, new_proc->regs.rip, new_proc->pml4);
+    Log(LT_INFO, "sched", "created process \"%s\": PID: %d, RIP: %p, AddrSpace: %p\n", new_proc->name, new_proc->pid, new_proc->regs.rip, new_proc->pml4);
 
     return new_proc;
 }

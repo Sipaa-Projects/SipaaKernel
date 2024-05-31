@@ -76,41 +76,41 @@ bool Elf64_DoChecks(Elf64_Ehdr *ehdr)
     if (ehdr->e_ident[0] != 0x7f || ehdr->e_ident[1] != 'E' ||
         ehdr->e_ident[2] != 'L' || ehdr->e_ident[3] != 'F')
     {
-        Log(LT_ERROR, "ElfLoad", "Not a valid ELF file.\n");
+        Log(LT_ERROR, "elf", "Not a valid ELF file.\n");
         return false;
     }
 
-    Log(LT_INFO, "ElfLoad", "EHDR: e_type     : %d\n", ehdr->e_type);
-    Log(LT_INFO, "ElfLoad", "      e_machine  : %d\n", ehdr->e_machine);
-    Log(LT_INFO, "ElfLoad", "      e_version  : %d\n", ehdr->e_version);
-    Log(LT_INFO, "ElfLoad", "      e_entry    : %p\n", ehdr->e_entry);
-    Log(LT_INFO, "ElfLoad", "      e_phoff    : 0x%x\n", ehdr->e_phoff);
-    Log(LT_INFO, "ElfLoad", "      e_shoff    : 0x%x\n", ehdr->e_shoff);
-    Log(LT_INFO, "ElfLoad", "      e_flags    : %d\n", ehdr->e_flags);
-    Log(LT_INFO, "ElfLoad", "      e_ehsize   : %d\n", ehdr->e_ehsize);
-    Log(LT_INFO, "ElfLoad", "      e_phentsize: %d\n", ehdr->e_phentsize);
-    Log(LT_INFO, "ElfLoad", "      e_phnum    : %d\n", ehdr->e_phnum);
-    Log(LT_INFO, "ElfLoad", "      e_shentsize: %d\n", ehdr->e_shentsize);
-    Log(LT_INFO, "ElfLoad", "      e_shnum    : %d\n", ehdr->e_shnum);
-    Log(LT_INFO, "ElfLoad", "      e_shstrndx : %d\n", ehdr->e_shstrndx);
-    Log(LT_INFO, "ElfLoad", "Additional infos:\n");
-    Log(LT_INFO, "ElfLoad", "      Target ABI : %s\n", Elf64_GetTargetABI(ehdr));
+    Log(LT_INFO, "elf", "ehdr: e_type     : %d\n", ehdr->e_type);
+    Log(LT_INFO, "elf", "      e_machine  : %d\n", ehdr->e_machine);
+    Log(LT_INFO, "elf", "      e_version  : %d\n", ehdr->e_version);
+    Log(LT_INFO, "elf", "      e_entry    : %p\n", ehdr->e_entry);
+    Log(LT_INFO, "elf", "      e_phoff    : 0x%x\n", ehdr->e_phoff);
+    Log(LT_INFO, "elf", "      e_shoff    : 0x%x\n", ehdr->e_shoff);
+    Log(LT_INFO, "elf", "      e_flags    : %d\n", ehdr->e_flags);
+    Log(LT_INFO, "elf", "      e_ehsize   : %d\n", ehdr->e_ehsize);
+    Log(LT_INFO, "elf", "      e_phentsize: %d\n", ehdr->e_phentsize);
+    Log(LT_INFO, "elf", "      e_phnum    : %d\n", ehdr->e_phnum);
+    Log(LT_INFO, "elf", "      e_shentsize: %d\n", ehdr->e_shentsize);
+    Log(LT_INFO, "elf", "      e_shnum    : %d\n", ehdr->e_shnum);
+    Log(LT_INFO, "elf", "      e_shstrndx : %d\n", ehdr->e_shstrndx);
+    Log(LT_INFO, "elf", "additional infos:\n");
+    Log(LT_INFO, "elf", "      Target ABI : %s\n", Elf64_GetTargetABI(ehdr));
 
     if (ehdr->e_type != ET_EXEC)
     {
-        Log(LT_ERROR, "ElfLoad", "Not an executable ELF file.\n");
+        Log(LT_ERROR, "elf", "not an executable ELF file.\n");
         return false;
     }
     
     if (ehdr->e_machine != EM_X86_64)
     {
-        Log(LT_ERROR, "ElfLoad", "Not a x86_64 ELF file! Do you want to break your PC?\n");
+        Log(LT_ERROR, "elf", "not a x86_64 ELF file! Do you want to break your PC?\n");
         return false;
     }
 
     if (ehdr->e_ident[7] != ELFOSABI_SYSV && ehdr->e_ident[7] != ELFOSABI_LINUX && ehdr->e_ident[7] != ELFOSABI_SIPAAKERNEL)
     {
-        Log(LT_ERROR, "ElfLoad", "This ELF file does not target a supported ABI (UNIX System V, Linux or SipaaKernel)\n");
+        Log(LT_ERROR, "elf", "this ELF file does not target a supported ABI (UNIX System V, Linux or SipaaKernel)\n");
         return false;
     }
 
@@ -126,9 +126,9 @@ void Elf64_DumpSymbols(const char *img, Elf64_Ehdr *ehdr)
     const char *shstrtab = img + shdr[ehdr->e_shstrndx].sh_offset;
     const char *strtab = NULL;
 
-    Log(LT_INFO, "ElfLoad", "Sections:\n");
+    Log(LT_INFO, "elf", "sections:\n");
     for (int j = 0; j < ehdr->e_shnum; j++) {
-        Log(LT_INFO, "ElfLoad", "[%2d] %s: %d\n", j, shstrtab + shdr[j].sh_name, shdr[j].sh_type);
+        Log(LT_INFO, "elf", "[%2d] %s: %d\n", j, shstrtab + shdr[j].sh_name, shdr[j].sh_type);
         if (shdr[j].sh_type == SHT_SYMTAB)
         {
             symtab = (Elf64_Sym *)(img + shdr[j].sh_offset);
@@ -140,12 +140,12 @@ void Elf64_DumpSymbols(const char *img, Elf64_Ehdr *ehdr)
         }
     }
 
-    Log(LT_INFO, "ElfLoad", "\n");
-    Log(LT_INFO, "ElfLoad", "Symbols:\n");
+    Log(LT_INFO, "elf", "\n");
+    Log(LT_INFO, "elf", "symbols:\n");
 
     for (int k = 0; k < symnum; k++)
     {
-        Log(LT_INFO, "ElfLoad", "[%d] %p: %s\n", k, symtab[k].st_value, strtab + symtab[k].st_name);
+        Log(LT_INFO, "elf", "[%d] %p: %s\n", k, symtab[k].st_value, strtab + symtab[k].st_name);
     }
 }
 
@@ -178,7 +178,7 @@ uint64_t Elf64_Load(const char *img)
 
     Elf64_DumpSymbols(img, hdr);
 
-    Log(LT_SUCCESS, "ElfLoad", "Loaded ELF file. Entry: %p\n", hdr->e_entry);
+    Log(LT_SUCCESS, "elf", "loaded ELF file. entry: %p\n", hdr->e_entry);
     return hdr->e_entry;
 }
 

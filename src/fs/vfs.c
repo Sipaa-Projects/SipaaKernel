@@ -7,7 +7,6 @@
 
 // Define structure for mounted filesystem
 
-Vfs_MountPointT mount_points[50];
 FilesystemNodeT *vfs_root;
 
 VfsStatusT Vfs_SetRootNode(FilesystemNodeT *node)
@@ -17,6 +16,11 @@ VfsStatusT Vfs_SetRootNode(FilesystemNodeT *node)
         return VFS_SUCCESS;
     }
     return VFS_NULL_NODE;
+}
+
+void Vfs_TryFindFS()
+{
+    
 }
 
 int Vfs_Write(FilesystemNodeT *node, uint8_t *buffer, uint32_t count)

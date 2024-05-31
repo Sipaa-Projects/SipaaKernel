@@ -45,11 +45,11 @@ void KernelSymbols_Initialize()
     Elf64_Sym *sym = KernelSymbols_GetFromIP(0xffffffff8000a6d9);
     if (sym)
     {
-        Log(LT_INFO, "KSymbols", "Got symbol %s from 0xffffffff8000a6d9\n", KernelSymbols_StrTable + sym->st_name);
+        Log(LT_INFO, "ksymbols", "got symbol %s from 0xffffffff8000a6d9\n", KernelSymbols_StrTable + sym->st_name);
     }
     else
     {
-        Log(LT_ERROR, "KSymbols", "I didn't get any symbol :-(\n");
+        Log(LT_ERROR, "ksymbols", "i didn't get any symbol :-(\n");
     }
 }
 

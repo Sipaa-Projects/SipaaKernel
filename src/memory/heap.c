@@ -21,7 +21,7 @@ void KHeap_Initialize() {
 
     kernel_heap = h;
 
-    Log(LT_SUCCESS, "KHeap", "Initialized!\n");
+    Log(LT_SUCCESS, "kheap", "initialized!\n");
 }
 
 void *KHeap_Allocate(uint64_t size) {

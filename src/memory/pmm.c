@@ -158,7 +158,7 @@ void* Pmm_Reallocate(void* ptr, size_t size) {
 
 /// @brief Initialize the PMM.
 void Pmm_Initialize() {
-    Log(LT_INFO, "Pmm", "Initializing...\n");
+    Log(LT_INFO, "pmm", "initializing...\n");
     struct limine_memmap_response *mmap = BootSrv_GetMemoryMap();
     pmm_stack_top = 0;
 
@@ -179,5 +179,5 @@ void Pmm_Initialize() {
             }
         }
     }
-    Log(LT_SUCCESS, "Pmm", "Initialized!\n");
+    Log(LT_SUCCESS, "pmm", "initialized!\n");
 }

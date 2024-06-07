@@ -6,19 +6,21 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "linux-gcc-x64"
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-clang-x64"
         },
         {
-            "name": "SipaaKernel",
+            "name": "Sk",
             "includePath": [
-                "${workspaceFolder}/src/include"
+                "${workspaceFolder}/kernel/src/trdparty",
+                "${workspaceFolder}/kernel/src/include"
             ],
             "defines": [],
-            "compilerPath": "/usr/local/bin/x86_64-elf-gcc",
-            "cStandard": "c17",
+            "compilerPath": "/usr/bin/cc",
+            "cStandard": "c23",
+            "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x64"
         }
     ],

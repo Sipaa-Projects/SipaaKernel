@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['elf64_5fload_3525',['Elf64_Load',['../elf_8h.html#a5937386ab0f9ae7e9c43243f1a0457ff',1,'elf.h']]],
+  ['endswap16_3526',['endswap16',['../limine_8c.html#aea31f535bfd0590494cf6feeab2d1ae1',1,'limine.c']]],
+  ['endswap32_3527',['endswap32',['../limine_8c.html#a7031aacf5224057747bac8b00045e1b9',1,'limine.c']]],
+  ['endswap64_3528',['endswap64',['../limine_8c.html#a6ff0da9d15675ddc8c45d169c627d372',1,'limine.c']]],
+  ['enroll_5fconfig_3529',['enroll_config',['../limine_8c.html#a185a20e9f680b44ea24bda9e1cb288d7',1,'limine.c']]],
+  ['enroll_5fconfig_5fusage_3530',['enroll_config_usage',['../limine_8c.html#a90f07197fd66a7314a583cae7ca8247b',1,'limine.c']]],
+  ['escape_5fparse_3531',['escape_parse',['../flanterm_8c.html#a71189cf065ab6192a8a33255d4689350',1,'flanterm.c']]],
+  ['ext2_5ffinddirectory_3532',['Ext2_FindDirectory',['../ext2_8h.html#afd1864645dd89111ce0350113158af08',1,'ext2.h']]],
+  ['ext2_5fgetinode_3533',['Ext2_GetInode',['../ext2_8h.html#a326ba6b57b6ffd68fff0e3891b95c78d',1,'ext2.h']]],
+  ['ext2_5fgetrootnode_3534',['Ext2_GetRootNode',['../ext2_8h.html#a92df5c7fb330a3abfee82882ba214a17',1,'ext2.h']]],
+  ['ext2_5finitialize_3535',['Ext2_Initialize',['../ext2_8h.html#a5fa5d83e77f2b984988469634e5bf262',1,'ext2.h']]],
+  ['ext2_5fread_3536',['Ext2_Read',['../ext2_8h.html#a0a43b7afc5e3e5618b02521ce3591532',1,'ext2.h']]],
+  ['ext2_5freadblock_3537',['Ext2_ReadBlock',['../ext2_8h.html#abceffd1837729da278457fed75bb1d5e',1,'ext2.h']]],
+  ['ext2_5freaddirectory_3538',['Ext2_ReadDirectory',['../ext2_8h.html#a770fa1e1604e8de63efe8e8a4714ef99',1,'ext2.h']]],
+  ['ext2_5freadfile_3539',['Ext2_ReadFile',['../ext2_8h.html#aeebc60db438b6acd00959780085c582e',1,'ext2.h']]],
+  ['ext2_5freadinode_3540',['Ext2_ReadInode',['../ext2_8h.html#a66955109300fcec7d4c7e1cbd3553b67',1,'ext2.h']]],
+  ['ext2_5freadinodeblocks_3541',['Ext2_ReadInodeBlocks',['../ext2_8h.html#a1333b24436cfbc19da0d57d757b7a4b7',1,'ext2.h']]]
+];

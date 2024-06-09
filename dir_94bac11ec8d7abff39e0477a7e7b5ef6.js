@@ -1,0 +1,26 @@
+var dir_94bac11ec8d7abff39e0477a7e7b5ef6 =
+[
+    [ "dev", "dir_a535e20fe8c128661f4e9db55c78f01d.html", "dir_a535e20fe8c128661f4e9db55c78f01d" ],
+    [ "exec", "dir_e99937a21a6ed3901d9ad9b8fb2ba682.html", "dir_e99937a21a6ed3901d9ad9b8fb2ba682" ],
+    [ "fs", "dir_9402915f5d8e328bf327f7396a45ec17.html", "dir_9402915f5d8e328bf327f7396a45ec17" ],
+    [ "klang", "dir_7ff1e4d4204aae3251ddf41186c4ea68.html", "dir_7ff1e4d4204aae3251ddf41186c4ea68" ],
+    [ "libc", "dir_bc656b0a3d509707c103d47372dc3ed3.html", "dir_bc656b0a3d509707c103d47372dc3ed3" ],
+    [ "x86_64", "dir_d658f2b53d44b0d0a45944116d95d9b1.html", "dir_d658f2b53d44b0d0a45944116d95d9b1" ],
+    [ "acpi.h", "acpi_8h.html", "acpi_8h" ],
+    [ "arch.h", "arch_8h.html", "arch_8h" ],
+    [ "bootsrv.h", "bootsrv_8h.html", "bootsrv_8h" ],
+    [ "framebuffer.h", "framebuffer_8h.html", "framebuffer_8h" ],
+    [ "heap.h", "heap_8h.html", "heap_8h" ],
+    [ "kdebug.h", "kdebug_8h.html", "kdebug_8h" ],
+    [ "kinfo.h", "kinfo_8h.html", "kinfo_8h" ],
+    [ "klang.h", "klang_8h.html", null ],
+    [ "ksym.h", "ksym_8h.html", "ksym_8h" ],
+    [ "logger.h", "logger_8h.html", "logger_8h" ],
+    [ "memory.h", "memory_8h.html", "memory_8h" ],
+    [ "panic.h", "panic_8h.html", "panic_8h" ],
+    [ "pci.h", "pci_8h.html", "pci_8h" ],
+    [ "pmm.h", "pmm_8h.html", "pmm_8h" ],
+    [ "sched.h", "sched_8h.html", "sched_8h" ],
+    [ "spinlock.h", "spinlock_8h.html", "spinlock_8h" ],
+    [ "syscall.h", "syscall_8h.html", "syscall_8h" ]
+];

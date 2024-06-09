@@ -1,0 +1,30 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "spinlock.h": "c",
+        "array": "c",
+        "bitset": "c",
+        "string_view": "c",
+        "format": "c",
+        "initializer_list": "c",
+        "span": "c",
+        "logger.h": "c",
+        "heap.h": "c",
+        "syscall.h": "c",
+        "ata.h": "c",
+        "*.tcc": "c",
+        "vfs.h": "c",
+        "string.h": "c",
+        "chrono": "c",
+        "text_encoding": "c",
+        "typeinfo": "c",
+        "fstream": "c",
+        "pmm.h": "c",
+        "cstdint": "c",
+        "doomtype.h": "c",
+        "stdio.h": "c",
+        "doomstat.h": "c",
+        "memory.h": "c",
+        "gdt.h": "c"
+    }
+}

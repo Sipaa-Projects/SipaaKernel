@@ -1,0 +1,26 @@
+var vmm_8h =
+[
+    [ "PHYSICAL_TO_VIRTUAL", "vmm_8h.html#a83c31ec58c99290339539fd335598115", null ],
+    [ "PTE_ADDR_MASK", "vmm_8h.html#a85a159e372991b9ebcda1380c877c310", null ],
+    [ "PTE_GET_ADDR", "vmm_8h.html#ad51143a254fbc24aa0e0cc1e88d616e6", null ],
+    [ "PTE_GET_FLAGS", "vmm_8h.html#a3e69b85515d8ca16e91358e899254b59", null ],
+    [ "PTE_NX", "vmm_8h.html#a8375b19f1f0749ebb6fd5946d074faf3", null ],
+    [ "PTE_PRESENT", "vmm_8h.html#af9af740187fb7e39f96c435ff17269e4", null ],
+    [ "PTE_USER", "vmm_8h.html#a35cf32d035efb2f4b272b6e2959302b9", null ],
+    [ "PTE_WRITABLE", "vmm_8h.html#a333bdddcf2da08d311953d68861d23a1", null ],
+    [ "VIRTUAL_TO_PHYSICAL", "vmm_8h.html#a4cc721951dccfe8f995abf0dcb95a959", null ],
+    [ "SymbolT", "vmm_8h.html#ae07d8b593952ba991ef9e901db658f89", null ],
+    [ "Vmm_Initialize", "vmm_8h.html#ac0233a10a738010f1caba80e7715d4ef", null ],
+    [ "Vmm_Map", "vmm_8h.html#a513641155f897dbf2071491318a123c6", null ],
+    [ "Vmm_NewAddressSpace", "vmm_8h.html#a6e3e30e63ce1b402c7fca72b8c9138c5", null ],
+    [ "Vmm_SwitchAddressSpaces", "vmm_8h.html#aff10857a64753cdb68ec7f127c0c2f67", null ],
+    [ "Vmm_Unmap", "vmm_8h.html#a5b8b0633fe03cf462e4de1fb1ee695b3", null ],
+    [ "data_end_ld", "vmm_8h.html#aa511bb673460a253c2da8e39bfe56400", null ],
+    [ "data_start_ld", "vmm_8h.html#ab73c01b2cf142a2f15cb2c1e43d9b04f", null ],
+    [ "rodata_end_ld", "vmm_8h.html#a313e71d9e2c9e0c9a85442e351da6162", null ],
+    [ "rodata_start_ld", "vmm_8h.html#aff833f10d4cdb7ddebcdcc7260777fbb", null ],
+    [ "text_end_ld", "vmm_8h.html#ad72945fea96ae57cdc1b1781f35abe5f", null ],
+    [ "text_start_ld", "vmm_8h.html#a88d23dbfca98fbe6dd69fcabc9819f1a", null ],
+    [ "vmm_current_address_space", "vmm_8h.html#ab9f208624a3e072374475057b21eae10", null ],
+    [ "vmm_kernel_address_space", "vmm_8h.html#ac773820f3ad625f2c489e358c3905c84", null ]
+];

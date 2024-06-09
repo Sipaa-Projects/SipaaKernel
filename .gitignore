@@ -1,0 +1,12 @@
+latex/
+html/
+.skb/
+.vs/
+output/
+bin*/
+obj*/
+*.o
+limine.dSYM/
+.vscode/
+.ccls-cache/
+meta/limine*

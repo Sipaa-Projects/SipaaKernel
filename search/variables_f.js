@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['oemid_4075',['OEMID',['../structAcpiRsdp.html#ae1ee183ad96cfdbcea6078a928b50e65',1,'AcpiRsdp::OEMID()'],['../structAcpiXsdp.html#a68441b5a62650f5c455dab015c212608',1,'AcpiXsdp::OEMID()'],['../acpi_8h.html#ae46a5445db022dd10a931001f14998a1',1,'OEMID():&#160;acpi.h']]],
+  ['offset_4076',['offset',['../structlimine__hhdm__response.html#a9689f75278eabb364187affbf923a79e',1,'limine_hhdm_response::offset()'],['../structGdtPointer.html#a7ba8682a61272603a61c6633dd69039e',1,'GdtPointer::offset()'],['../gdt_8h.html#a612bb2807d848cca89ea1437cceea886',1,'offset():&#160;gdt.h']]],
+  ['offset_5fhigh_4077',['offset_high',['../structIdtEntry.html#a608efbc39e807609dd4332ca64f6ed39',1,'IdtEntry::offset_high()'],['../idt_8h.html#a8ae200aa7aa01feab491177777fc0dd9',1,'offset_high():&#160;idt.h']]],
+  ['offset_5flow_4078',['offset_low',['../structIdtEntry.html#abb8e0e87248ec0d9b30a07597c3eadba',1,'IdtEntry::offset_low()'],['../idt_8h.html#a11b1c6ed61493da558a28e77fa1efee6',1,'offset_low():&#160;idt.h']]],
+  ['offset_5fmid_4079',['offset_mid',['../idt_8h.html#a53f1fc81461c3837b1f868359f547b18',1,'offset_mid():&#160;idt.h'],['../structIdtEntry.html#a9f4ac9c276341873932b072ba2c8b61d',1,'IdtEntry::offset_mid()']]],
+  ['offset_5fx_4080',['offset_x',['../structflanterm__fb__context.html#afb48b4831f283e7d007adbe2485078b5',1,'flanterm_fb_context']]],
+  ['offset_5fy_4081',['offset_y',['../structflanterm__fb__context.html#ad9e83e4ced9bdb238e9e66ca25e5b861',1,'flanterm_fb_context']]],
+  ['old_5fcursor_5fx_4082',['old_cursor_x',['../structflanterm__fb__context.html#a7eba46bbc0e59945d3d8fd4dc42d6278',1,'flanterm_fb_context']]],
+  ['old_5fcursor_5fy_4083',['old_cursor_y',['../structflanterm__fb__context.html#a8eafdfeed1656e8df36721e79166dd31',1,'flanterm_fb_context']]],
+  ['oob_5foutput_4084',['oob_output',['../structflanterm__context.html#ae8b1fe64d471f12a733bcb1891f0829c',1,'flanterm_context']]],
+  ['open_4085',['Open',['../structFilesystemNode.html#ad56aa2397ad603e7044fffab914820eb',1,'FilesystemNode']]],
+  ['opt_5ffeatures_4086',['opt_features',['../structExt2__Superblock.html#a4ded3bd35b60cbe78c480b62302d983b',1,'Ext2_Superblock']]],
+  ['orphan_5finode_5flist_4087',['orphan_inode_list',['../structExt2__Superblock.html#a9a515a7569b79db04831f2d8d1e39057',1,'Ext2_Superblock']]],
+  ['os_5fid_4088',['os_id',['../structExt2__Superblock.html#aa160fa3fe3e7d19bacb40b23d93693f7',1,'Ext2_Superblock']]],
+  ['os_5fspec_4089',['os_spec',['../structExt2__Inode.html#ad8a69d4cd5a63e49b421c78d3b807c34',1,'Ext2_Inode']]],
+  ['os_5fspec2_4090',['os_spec2',['../structExt2__Inode.html#a2c453a9474f40ef1a4448c2056c7be0c',1,'Ext2_Inode']]],
+  ['osc_4091',['osc',['../structflanterm__context.html#a6ebc4ebe688a08718da640eb81db5a55',1,'flanterm_context']]],
+  ['osc_5fescape_4092',['osc_escape',['../structflanterm__context.html#a945bdb30ecbc97cb4639842fc092926f',1,'flanterm_context']]]
+];

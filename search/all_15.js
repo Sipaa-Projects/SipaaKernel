@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['ui16_3089',['UI16',['../types_8h.html#a856f2824c76ceb15028ae146388d7cd8',1,'types.h']]],
+  ['ui32_3090',['UI32',['../types_8h.html#a5114c7fd4cd4cdb7fe5a228122ff58b1',1,'types.h']]],
+  ['ui64_3091',['UI64',['../types_8h.html#a25bfc92e3d2264a71313fac9637fbb81',1,'types.h']]],
+  ['ui8_3092',['UI8',['../types_8h.html#a3a626820a8a37e674ef0082ee8c55fec',1,'types.h']]],
+  ['unicode_3093',['unicode',['../structterminal.html#a9033d94d248e25cbbcfc762a1569afc8',1,'terminal']]],
+  ['unicode_5fremaining_3094',['unicode_remaining',['../structflanterm__context.html#aaf108ad73fb2edba0dfebb90d83d1976',1,'flanterm_context']]],
+  ['unicode_5fto_5fcp437_3095',['unicode_to_cp437',['../flanterm_8c.html#acfa681eea628759971f8363885432135',1,'flanterm.c']]],
+  ['uninstall_3096',['uninstall',['../limine_8c.html#a5bb5e9ebb765c2fab8db6cb1003eb804',1,'limine.c']]],
+  ['uninstall_5fdata_3097',['uninstall_data',['../limine_8c.html#a49345d96ef52e41c68ae8e902894ac75',1,'limine.c']]],
+  ['uninstall_5fdata_5fi_3098',['uninstall_data_i',['../limine_8c.html#acf23977646f229747be247a87df61f8f',1,'limine.c']]],
+  ['uninstall_5fdata_5fmax_3099',['UNINSTALL_DATA_MAX',['../limine_8c.html#a284c06f80cc003416d311af83c0e7730',1,'limine.c']]],
+  ['uninstall_5fdata_5frev_3100',['uninstall_data_rev',['../limine_8c.html#a887ea1b8f86d735463e0dab541e09c14',1,'limine.c']]],
+  ['uninstall_5ffile_3101',['uninstall_file',['../limine_8c.html#abed0a3eb9b8445fa0083f513438993ca',1,'limine.c']]],
+  ['uninstalling_3102',['uninstalling',['../limine_8c.html#a196743e47e2edc54199b17ffe3ee5d79',1,'limine.c']]],
+  ['unused_3103',['unused',['../structExt2__Superblock.html#a22447f3942549c9f44e203ded2ca336b',1,'Ext2_Superblock::unused()'],['../structlimine__framebuffer.html#a7a40023d1a511a8b3a553ff75220a29c',1,'limine_framebuffer::unused()'],['../structlimine__file.html#ab12af7e4d780036c111ba07311ee8cf5',1,'limine_file::unused()']]],
+  ['unused_5fext_3104',['unused_ext',['../structExt2__Superblock.html#a2a8fdeced2f8d38c95ed45f3a3c6eca8',1,'Ext2_Superblock']]],
+  ['user_5fid_3105',['user_id',['../structExt2__Inode.html#a5e91b1f5b0c344a5cdc1a4fd7eac00d4',1,'Ext2_Inode']]],
+  ['usr_5fmain_3106',['usr_main',['../init_8c.html#a691b2f7baae9293426e08be33dd62d6d',1,'init.c']]],
+  ['uuid_3107',['Uuid',['../structTarHeader.html#a32a5de33d5bc17a153d0326171111b32',1,'TarHeader']]]
+];

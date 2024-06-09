@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['l_5fchecksum_4013',['l_checksum',['../structElf64__Lib.html#a11f09b77bcae792d5e5c120b4a0fbcca',1,'Elf64_Lib::l_checksum()'],['../structElf32__Lib.html#a290248b0a3cecff9d43f796dd5c50b12',1,'Elf32_Lib::l_checksum()']]],
+  ['l_5fflags_4014',['l_flags',['../structElf32__Lib.html#a4a0feb8162591596d3653f561ee8759e',1,'Elf32_Lib::l_flags()'],['../structElf64__Lib.html#ac78fa7eafc377b04fcaf575c61dc2b60',1,'Elf64_Lib::l_flags()']]],
+  ['l_5fname_4015',['l_name',['../structElf32__Lib.html#af40827a2882aaf96d42ae60dac6551ee',1,'Elf32_Lib::l_name()'],['../structElf64__Lib.html#ac7f21d23c86f56c6583aa563eb960af0',1,'Elf64_Lib::l_name()']]],
+  ['l_5ftime_5fstamp_4016',['l_time_stamp',['../structElf32__Lib.html#ae7119079569dcf7ecebccc47cb6350be',1,'Elf32_Lib::l_time_stamp()'],['../structElf64__Lib.html#ace001f85c3f31e91fedf4a1a1f923af5',1,'Elf64_Lib::l_time_stamp()']]],
+  ['l_5fversion_4017',['l_version',['../structElf32__Lib.html#ab1be8296800ef7b233adb56f1cfb901c',1,'Elf32_Lib::l_version()'],['../structElf64__Lib.html#ab03d7034a6f1113717a9eefe33cb8343',1,'Elf64_Lib::l_version()']]],
+  ['last_5faccess_5ftime_4018',['last_access_time',['../structExt2__Inode.html#a91518bb9b45cb2e377d647ab535d91b6',1,'Ext2_Inode']]],
+  ['last_5facquirer_4019',['last_acquirer',['../structSpinlock.html#aba05f7473297c7ecd901b6b543b05bdf',1,'Spinlock']]],
+  ['last_5fconsistency_5fcheck_4020',['last_consistency_check',['../structExt2__Superblock.html#a71b542bf6e96833bf52e1196589eae92',1,'Ext2_Superblock']]],
+  ['last_5fmount_5ftime_4021',['last_mount_time',['../structExt2__Superblock.html#a074f5861a6d27fb9cdaed39f4cc3d38a',1,'Ext2_Superblock']]],
+  ['last_5fwrite_5ftime_4022',['last_write_time',['../structExt2__Superblock.html#a9d1b61430f69935513cae4f92bfeceea',1,'Ext2_Superblock']]],
+  ['length_4023',['length',['../structlimine__memmap__entry.html#a34c1e960716f18d50e6b19bba21457f6',1,'limine_memmap_entry']]],
+  ['length_4024',['Length',['../structAcpiXsdp.html#a675339ff5449e7cee10637dffb9891c8',1,'AcpiXsdp::Length()'],['../acpi_8h.html#af8d8a0e464944d6e219e87ef2f33d2e0',1,'Length():&#160;acpi.h']]],
+  ['limine_5fterminal_4025',['limine_terminal',['../meta_2limine_2limine_8h.html#af02d3fe7ec16f522a5c0b479e508e487',1,'limine.h']]],
+  ['limit0_4026',['limit0',['../structGdtEntry.html#a853aaea79a3745e45f19d0286e08b5f1',1,'GdtEntry::limit0()'],['../gdt_8h.html#a551bb55cda1b8d5f090b2e3e1aab1501',1,'limit0():&#160;gdt.h']]],
+  ['limit1_5fflags_4027',['limit1_flags',['../structGdtEntry.html#a33e04df812b21c54923fcc5c720fe12b',1,'GdtEntry::limit1_flags()'],['../gdt_8h.html#afce1a567000570691d50a2303f433ad7',1,'limit1_flags():&#160;gdt.h']]],
+  ['linecolors_4028',['lineColors',['../logger_8c.html#a6d28f4327315a3288289b95a589bb29e',1,'logger.c']]],
+  ['linestarts_4029',['lineStarts',['../logger_8c.html#a925defb3a04b956a19acbfe3800efcc2',1,'logger.c']]],
+  ['lock_4030',['Lock',['../structSpinlock.html#ada77c058c3055da95475ed9b409ff17c',1,'Spinlock']]],
+  ['log2_5fblock_4031',['log2_block',['../structExt2__Superblock.html#ab3e268192fc48ef462c209a7bc6f218f',1,'Ext2_Superblock']]],
+  ['log2_5ffrag_4032',['log2_frag',['../structExt2__Superblock.html#a78338101c6ed05d858b2a491a995b5b7',1,'Ext2_Superblock']]],
+  ['logger_5fenableconio_4033',['logger_enableconio',['../logger_8h.html#aba8d7081ce6f8dcb56535ccbfc0bf898',1,'logger_enableconio():&#160;logger.c'],['../logger_8c.html#aba8d7081ce6f8dcb56535ccbfc0bf898',1,'logger_enableconio():&#160;logger.c']]],
+  ['logger_5fenabled_4034',['logger_enabled',['../logger_8c.html#a8eab33d1aa2dd645c520a413320d22a0',1,'logger.c']]],
+  ['logger_5fenableserial_4035',['logger_enableserial',['../logger_8h.html#aa549314678a4b55b79512570659bc121',1,'logger_enableserial():&#160;logger.c'],['../logger_8c.html#aa549314678a4b55b79512570659bc121',1,'logger_enableserial():&#160;logger.c']]],
+  ['logger_5flock_4036',['logger_lock',['../logger_8c.html#a73b72c9c8f9fa22543fccbdef104a94b',1,'logger.c']]]
+];

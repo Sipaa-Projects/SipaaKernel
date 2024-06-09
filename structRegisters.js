@@ -1,0 +1,25 @@
+var structRegisters =
+[
+    [ "cs", "structRegisters.html#a02e112600e6e18941259e453080e4910", null ],
+    [ "err_code", "structRegisters.html#a880881617b4051371cfa3efa101a94be", null ],
+    [ "int_no", "structRegisters.html#a9e15315dadad267a9213f5dad9bd3b1a", null ],
+    [ "r10", "structRegisters.html#a3aee00e5f8f9ce3a2c2b10d69f65dce4", null ],
+    [ "r11", "structRegisters.html#aaf364f9fd81a787e475cfcaa034e88c6", null ],
+    [ "r12", "structRegisters.html#aed6ca86ab4df8d4265dd0c0b96fa4d13", null ],
+    [ "r13", "structRegisters.html#ae2cd5b6e45e3d18809874b6d403e24e5", null ],
+    [ "r14", "structRegisters.html#aed58babe36fe175acd5d55b6012fdfa0", null ],
+    [ "r15", "structRegisters.html#a157d31a67d6e4c4b96d9f1c17c3a6928", null ],
+    [ "r8", "structRegisters.html#a66f758bf008946087e0c9ff35dbcf73e", null ],
+    [ "r9", "structRegisters.html#aa20ba31a3f43c6b3b5dd687c3088f0f2", null ],
+    [ "rax", "structRegisters.html#af1acde35d7c063bc0b06ebf64b9790dd", null ],
+    [ "rbp", "structRegisters.html#a0a171bafa414121e9a394b80c40016cd", null ],
+    [ "rbx", "structRegisters.html#aa85fd18bb2fc89b719c3bfe122be6cdf", null ],
+    [ "rcx", "structRegisters.html#a64d0b0328235ef223c1bc013e01e76fc", null ],
+    [ "rdi", "structRegisters.html#aacb04f7fe2a77d24a1d1ded055c881bb", null ],
+    [ "rdx", "structRegisters.html#acad77d94867945d7ac6a78b1b2802b7c", null ],
+    [ "rflags", "structRegisters.html#af74e5b43f6d43c96b02b9e5cb4c152df", null ],
+    [ "rip", "structRegisters.html#afb9494f822498ec6d3ac5d2f365377d7", null ],
+    [ "rsi", "structRegisters.html#a11648aed3887926ba0344288e9bc94b2", null ],
+    [ "rsp", "structRegisters.html#a5bcf3787ef3c8d231a3e77d978ebe55e", null ],
+    [ "ss", "structRegisters.html#a0a4643ff9dec7f8af542f3fecc8a4b47", null ]
+];

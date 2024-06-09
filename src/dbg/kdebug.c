@@ -10,15 +10,20 @@ bool debugger_ready = false;
 
 bool isPortConnected(uint16_t port)
 {
+    #ifdef __x86_64__
     // Read the Line Status Register
     uint8_t status = inb(port + 5);
 
     // Check if Data Ready and Empty Transmitter bits are set
     return (status & 0x01) && (status & 0x20);
+    #else
+    return 0;
+    #endif
 }
 
 bool Dbg_Initialize(unsigned short sp)
 {
+    #ifdef __x86_64__
     // Initialize the serial port
     outb(sp + 1, 0x00); // Disable all interrupts
     outb(sp + 3, 0x80); // Enable DLAB (set baud rate divisor)
@@ -44,12 +49,18 @@ bool Dbg_Initialize(unsigned short sp)
     debugger_ready = true;
     
     return true;
+    #else
+    // On AArch64, we would use UART to write text.
+    debugger_ready = false;
+    return false;
+    #endif
 }
 
 #pragma region Serial IO
 
 char Dbg_ReadTickCheck(int maxTicks)
 {
+    #ifdef __x86_64__
     int ticks = 0;
 
     while ((inb(current_sp + 5) & 1) == 0)
@@ -60,10 +71,12 @@ char Dbg_ReadTickCheck(int maxTicks)
     }
 
     return inb(current_sp);
+    #endif
 }
 
 char Dbg_Read()
 {
+    #ifdef __x86_64__
     if (debugger_ready)
     {
         while ((inb(current_sp + 5) & 1) == 0)
@@ -72,10 +85,13 @@ char Dbg_Read()
 
         return inb(current_sp);
     }
+    #endif
+    return 'h';
 }
 
 void serial_putc(char a)
 {
+    #ifdef __x86_64__
     if (debugger_ready)
     {
         while ((inb(current_sp + 5) & 0x20) == 0)
@@ -84,18 +100,22 @@ void serial_putc(char a)
 
         outb(current_sp, a);
     }
+    #endif
 }
 
 void Dbg_Print(char *format)
 {
+    #ifdef __x86_64__
     for (int i = 0; format[i] != '\0'; i++)
     {
         serial_putc(format[i]);
     }
+    #endif
 }
 
 void Dbg_PrintF(char *format, ...)
 {
+    #ifdef __x86_64__
     va_list args;
     va_start(args, format);
 
@@ -106,15 +126,18 @@ void Dbg_PrintF(char *format, ...)
     Dbg_Print(buf);
 
     va_end(args);
+    #endif
 }
 
 void dbg_vprintf(char *format, va_list args)
 {
+    #ifdef __x86_64__
     char buf[32767];
 
     npf_vsnprintf(buf, sizeof(buf), format, args);
 
     Dbg_Print(buf);
+    #endif
 }
 
 #pragma endregion
@@ -140,7 +163,11 @@ void Dbg_SystemPanic()
             return;
         else if (c == 'h')
             while (1)
-                __asm__ volatile("hlt");
+            #ifdef __x86_64__
+                asm("hlt");
+            #else
+                asm("wfi");
+            #endif
         else
             debug_sh();
     }

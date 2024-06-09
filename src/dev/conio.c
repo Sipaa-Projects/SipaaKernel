@@ -2,10 +2,11 @@
 #include <sipaa/framebuffer.h>
 #include <sipaa/libc/string.h>
 #include <sipaa/logger.h>
-#include <flanterm/backends/fb.h>
+//#include <flanterm/backends/fb.h>
+#include <sterm.h>
 
 bool ConIO_Initialized = false;
-struct flanterm_context *ftctx;
+//struct flanterm_context *ftctx;
 UI32 defbg = 0x101010; // RGB 16, 16, 16
 UI32 deffg = 0xECECEC; // RGB 236, 236, 236
 static const uint8_t VGA8[];
@@ -15,7 +16,8 @@ void ConIO_Clear()
 {
     if (!ConIO_Initialized) return;
 
-    ftctx->clear(ftctx, true);
+    sterm_clear();
+    //ftctx->clear(ftctx, true);
 }
 
 /// @brief Print to the console
@@ -24,7 +26,8 @@ void ConIO_Print(char *buf)
 {
     if (!ConIO_Initialized) return;
 
-    flanterm_write(ftctx, buf, StringLength(buf));
+    sterm_put_string(buf);
+    //flanterm_write(ftctx, buf, StringLength(buf));
 }
 
 /// @brief Change the console's background color
@@ -33,7 +36,8 @@ void ConIO_SetBg(UI32 bg)
 {
     if (!ConIO_Initialized) return;
     
-    ftctx->set_text_bg_rgb(ftctx, bg);
+    sterm_set_bg(bg);
+    //ftctx->set_text_bg_rgb(ftctx, bg);
 }
 
 /// @brief Change the console's foreground color
@@ -42,7 +46,8 @@ void ConIO_SetFg(UI32 fg)
 {
     if (!ConIO_Initialized) return;
     
-    ftctx->set_text_fg_rgb(ftctx, fg);
+    sterm_set_fg(fg);
+    //ftctx->set_text_fg_rgb(ftctx, fg);
 }
 
 /// @brief Reset the console's colors
@@ -50,8 +55,8 @@ void ConIO_ResetColor()
 {
     if (!ConIO_Initialized) return;
     
-    ftctx->set_text_bg_default(ftctx);
-    ftctx->set_text_fg_default(ftctx);
+    sterm_set_bg(defbg);
+    sterm_set_fg(deffg);
 }
 
 /// @brief Initialize the ConIO driver
@@ -63,7 +68,7 @@ void ConIO_Initialize()
 
     if (framebuffer)
     {
-        ftctx = flanterm_fb_init(
+        /**ftctx = flanterm_fb_init(
                     NULL,
                     NULL,
                     (uint32_t *)framebuffer->Address, framebuffer->Mode.Width, framebuffer->Mode.Height, framebuffer->Mode.Pitch,
@@ -77,7 +82,12 @@ void ConIO_Initialize()
                     &VGA8, 8, 16, 0,
                     1, 1,
                     0
-                );
+                );**/
+        sterm_init(
+            (uint32_t *)framebuffer->Address, framebuffer->Mode.Width, framebuffer->Mode.Height,
+            defbg, deffg,
+            &VGA8, 8, 16, 0
+        );
 
         ConIO_Initialized = true; // Set the initialized bit here and not when the function returns to say to ConIO functions that the terminal is ready.
 

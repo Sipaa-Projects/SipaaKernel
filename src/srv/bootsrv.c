@@ -72,7 +72,7 @@ static volatile struct limine_paging_mode_request paging_mode_request = {
 #ifdef __x86_64__
     .mode = LIMINE_PAGING_MODE_X86_64_4LVL,
 #else
-    .mode = LIMINE_PAGING_MODE_DEFAULT
+    .mode = LIMINE_PAGING_MODE_DEFAULT,
 #endif
     .flags = 0
 };

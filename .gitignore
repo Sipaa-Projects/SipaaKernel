@@ -3,13 +3,10 @@ html/
 .skb/
 .vs/
 output/
-obj-x86_64/
-obj-i686/
-obj-RiscV64/
-obj-AArch64/
-bin/
-obj/
+bin*/
+obj*/
 *.o
 limine.dSYM/
 .vscode/
 .ccls-cache/
+meta/limine*

@@ -21,9 +21,16 @@ void KernelSymbols_Initialize()
     {
         // sipaakernel now try to get why he booted :skull:
         Log(LT_FATAL, "SipaaKernel", "How did i even boot? I'm not a ELF file! *starts thinking forever*\n");
+
+        #ifdef __x86_64__
         asm("cli");
+        #endif
         while (true)
+        #ifdef __x86_64__
             asm("hlt");
+        #else
+            asm("wfi");
+        #endif
     }
 
     Elf64_Shdr *shdr = (Elf64_Shdr *)(img + ehdr->e_shoff);

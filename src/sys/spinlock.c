@@ -6,6 +6,7 @@
 #include <sipaa/logger.h>
 
 __attribute__((noinline)) int Spinlock_Acquire(SpinlockT *lock) {
+    #ifdef __x86_64__
     volatile size_t deadlock_counter = 0;
     for (;;) {
         if (Spinlock_TestAndAcquire(lock)) {
@@ -21,4 +22,5 @@ __attribute__((noinline)) int Spinlock_Acquire(SpinlockT *lock) {
     }
     lock->last_acquirer = __builtin_return_address(0);
     return 0;
+    #endif
 }

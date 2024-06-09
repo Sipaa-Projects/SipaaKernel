@@ -17,7 +17,6 @@
 #include <sipaa/pci.h>
 #include <sipaa/dev/conio.h>
 #include <sipaa/framebuffer.h>
-#include <sipaa/uptime.h>
 #include <sipaa/exec/elf.h>
 #include <sipaa/klang.h>
 #include <sipaa/heap.h>
@@ -32,6 +31,7 @@ uint64_t kernel_stack[8192];
 
 extern void SK_Reboot();
 
+#ifdef __x86_64__
 void *execute_syscall(uint64_t num, ...)
 {
     void *params[6];
@@ -66,24 +66,19 @@ void *execute_syscall(uint64_t num, ...)
     __asm__ volatile("" : "=a"(result) : : "memory");
     return result;
 }
+#endif
 
 int Task1()
 {
     Log(LT_INFO, "Task1", "Hello world from Task1!\n");
 
-    execute_syscall(0, "Hello, World!\n");
-
-    int *addr = 0xFFFFFFFFFFFFFFF;
-    *addr = 10;
+    //execute_syscall(0, "Hello, World!\n");
 
     return 0;
 }
 
 void SKEntry()
 {
-    asm("mov %%rsp, %0" : "=r"(idt_stackaddr));
-    idt_stackaddr = VIRTUAL_TO_PHYSICAL(idt_stackaddr);
-
     Dbg_Initialize(Com1);
     Fbuf_Initialize();
     ConIO_Initialize();
@@ -91,29 +86,35 @@ void SKEntry()
 
     Log(LT_INFO, "kernel", "starting initialization...\n");
 
-    UptimeCounter_Initialize();
-    BootSrv_EnumerateProtocolInfos();
+    //BootSrv_EnumerateProtocolInfos();
+    #ifdef __x86_64__
     Gdt_Initialize(kernel_stack);
     Idt_Initialize();
+    #endif
 
     Pmm_Initialize();
     KHeap_Initialize();
+    #ifdef __x86_64__
     Vmm_Initialize();
+    #endif
 
     KernelSymbols_Initialize();
     Fbuf_InitializeGPU();
 
+    #ifdef __x86_64__
     Syscall_Initialize();
     Scheduler_Initialize();
     Pit_Initialize(1000);
 
     Scheduler_CreateProcess("Task1", Task1);
+    #endif
 
     Log(LT_SUCCESS, "kernel", "SipaaKernel has been fully initialized! We will now hide logs.\n");
 
+    #ifdef __x86_64__
     asm("sti");
+    #endif
 
     for (;;)
-        ;
-    ;
+        ;;
 }

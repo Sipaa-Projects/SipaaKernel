@@ -4,15 +4,15 @@ KLANG=EN
 ARCH=x86_64
 
 INCLUDEDIR=src/include
-BINDIR=bin
+BINDIR=bin-$(ARCH)
 SRCDIR=src
-OBJDIR=obj
+OBJDIR=obj-$(ARCH)
 
 SRCS := $(shell find $(SRCDIR) -name '*.c')
 OBJS := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o,$(SRCS))
 ASMS := $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o,$(shell find src/ -name '*.asm'))
-CC = x86_64-elf-gcc
-LD = x86_64-elf-ld
+CC = $(ARCH)-elf-gcc
+LD = $(ARCH)-elf-ld
 
 CFLAGS := \
 	-w \
@@ -26,9 +26,10 @@ CFLAGS := \
 	-fno-PIE \
 	-fno-PIC \
 	-Isrc/include \
-	-Isrc/doomgeneric \
 	-g \
-	-m64 \
+
+ifeq ($(ARCH),x86_64)
+override CFLAGS += -m64 \
 	-march=x86-64 \
 	-mabi=sysv \
 	-mno-80387 \
@@ -36,7 +37,8 @@ CFLAGS := \
 	-mno-sse \
 	-mno-sse2 \
 	-mno-red-zone \
-	-mcmodel=kernel \
+	-mcmodel=kernel
+endif
 
 ASM_FLAGS := \
 	-f elf64
@@ -44,12 +46,16 @@ ASM_FLAGS := \
 LD_FLAGS := \
 	-nostdlib \
 	-z max-page-size=0x1000 \
-	-T meta/ld/link-x86_64.ld
+	-T meta/ld/link-$(ARCH).ld
 
 $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
+ifeq ($(ARCH),x86_64)
 	@mkdir -p $(@D)
 	@echo [NASM] $<
 	@nasm $< $(ASM_FLAGS) -o $@
+else
+	@$(CC) $(CFLAGS) -c src/arch/asm-nonx86-placeholder.c -o $@
+endif
 
 kernel: $(OBJS) $(ASMS)
 	@mkdir -p $(BINDIR)
@@ -62,23 +68,29 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@echo [CC] $<
 	@$(CC) $(CFLAGS) -c $< -o $@
 
+# Download limine
+meta/limine:
+	@rm -rf meta/limine
+	@git clone --branch v7.x-binary https://github.com/limine-bootloader/limine meta/limine/
+	@make -C meta/limine
+
 # Build ISO
-iso: kernel
-	@rm -rf bin/iso_root
-	@mkdir -p bin/iso_root
+iso: meta/limine kernel
+	@rm -rf bin-$(ARCH)/iso_root
+	@mkdir -p bin-$(ARCH)/iso_root
 	@echo [TAR] ramdisk.tar
 	@tar -C initrd -cvf bin/ramdisk.tar $(shell find ./initrd -printf '%P\n')
 	@echo [CP] Copying kernel files to the ISO file root...
-	@cp meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin bin/iso_root/
-	@cp bin/kernel-$(ARCH).sk bin/iso_root/kernel.sk
+	@cp meta/limine.cfg meta/limine/limine-bios.sys meta/limine/limine-bios-cd.bin meta/limine/limine-uefi-cd.bin bin-$(ARCH)/iso_root/
+	@cp bin-$(ARCH)/kernel-$(ARCH).sk bin-$(ARCH)/iso_root/kernel.sk
 	@echo [XORRISO] Sk-$(ARCH).iso
 	@xorriso -as mkisofs -b limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--efi-boot limine-uefi-cd.bin \
 		-efi-boot-part --efi-boot-image --protective-msdos-label \
-		bin/iso_root -o bin/Sk-$(ARCH).iso
-	@echo [LIMINE-DEPLOY] bin/Sk-$(ARCH).iso
-	@meta/limine/limine bios-install bin/Sk-$(ARCH).iso
+		bin-$(ARCH)/iso_root -o bin-$(ARCH)/Sk-$(ARCH).iso
+	@echo [LIMINE-DEPLOY] bin-$(ARCH)/Sk-$(ARCH).iso
+	@meta/limine/limine bios-install bin-$(ARCH)/Sk-$(ARCH).iso
 	@rm -rf bin/iso_root
 
 # Clean

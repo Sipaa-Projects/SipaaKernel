@@ -5,6 +5,7 @@
 #include <sipaa/x86_64/idt.h>
 #include <stddef.h>
 
+// FIXME: syscalls seems to do a triple fault
 void Syscall_Handler(RegistersT *regs)
 {
     Log(LT_INFO, "Syscall", "Handler called\n");

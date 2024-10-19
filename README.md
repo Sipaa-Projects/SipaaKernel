@@ -1,3 +1,8 @@
+# Note
+SipaaKernel has been replaced by the Soaplin kernel, available at https://github.com/Sipaa-Projects/soaplin/
+Tho, SipaaKernel is still available in an "archived" state.
+
+# Original README
 <p align="center">
   <img src="meta/artwork/LogoLight.png#gh-light-mode-only" height="96" />
   <img src="meta/artwork/LogoDark.png#gh-dark-mode-only" height="96" />
